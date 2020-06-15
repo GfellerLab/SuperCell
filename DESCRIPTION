@@ -1,0 +1,14 @@
+Package: SCimple
+Type: Package
+Title: Simplification of scRNA-seq data by merging together similar cells
+Version: 0.1.0
+Author: Mariia Bilous
+Maintainer: The package maintainer <mariia.bilous@unil.ch>
+Description: Aggregates large single-cell data into super-cell dataset by merging together gene expression of very similar cells. 
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Imports: 
+	igraph, 
+	RANN
+RoxygenNote: 7.1.0
