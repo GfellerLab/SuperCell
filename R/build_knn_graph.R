@@ -63,7 +63,7 @@ build_knn_graph <- function(X, k = 5, from = c("dist", "coordinates"), use.nn2 =
 
 
   ### now X is distance in any case
-  return(knn_graph_from_dist(D = X, k = k, return_neighbors_order = return_neighbors_order, option = option))
+  return(knn_graph_from_dist(D = X, k = k, return_neighbors_order = return_neighbors_order))
 
 }
 

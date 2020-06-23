@@ -25,7 +25,7 @@
 supercell_cluster <- function(D, k = 5, supercell_size = NULL, algorithm = c("hclust", "PAM"), method = NULL, return.hcl = T){
   res <- list()
 
-  if(!is.dist(D)){
+  if(!(class(D) == "dist" | class(D) == "matrix")){
     stop("D must be a dist object or distance matrix")
   }
 
@@ -44,7 +44,7 @@ supercell_cluster <- function(D, k = 5, supercell_size = NULL, algorithm = c("hc
   } else if(algorithm[1] == "hclust"){
     if(is.null(method)) method <- "ward.D2"
 
-    hcl <- hclust(d = D, method = method, members = cur.vsize)
+    hcl <- hclust(d = D, method = method, members = supercell_size)
 
     res$clustering <- cutree(hcl, k = k)
     res$algo       <- "hclust"

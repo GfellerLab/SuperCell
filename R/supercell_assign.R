@@ -35,14 +35,14 @@ supercell_assign <- function(clusters, supercell_membership, method = c("jaccard
         jaccard.mtrx[i,j] <- cl.gr[i,j] / (sum(cl.gr[i,]) +  sum(cl.gr[,j]) - cl.gr[i,j])
       }
     }
-    res              <- apply(jaccard.mtrx, 2, function(x){which.max(x)})
+    res              <- apply(jaccard.mtrx, 2, function(x){names(x)[which.max(x)]})
 
   } else if(method[1] == "relative"){
     cl.gr            <- sweep(cl.gr, 1, cluster.size, "/")
-    res              <- apply(cl.gr, 2, function(x){which.max(x)})
+    res              <- apply(cl.gr, 2, function(x){names(x)[which.max(x)]})
 
   } else if(method[1] == "absolute"){
-    res              <- apply(cl.gr, 2, function(x){which.max(x)})
+    res              <- apply(cl.gr, 2, function(x){names(x)[which.max(x)]})
 
   } else {
     stop(paste("Unknown value of method (", method[1] , ")", "please, use: jaccard, relative or absolute"))

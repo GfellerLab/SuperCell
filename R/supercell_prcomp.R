@@ -12,10 +12,14 @@
 
 
 
-supercell_prcomp <- function(X, supercell_size = NULL, k = 20, do.scale = TRUE, do.center = TRUE, seed = 12345){
+supercell_prcomp <- function(X, genes.use = NULL, supercell_size = NULL, k = 20, do.scale = TRUE, do.center = TRUE, seed = 12345){
   if(is.null(supercell_size)){
     supercell_size = rep(1, nrow(X))
   }
+
+  if(is.null(genes.use)) genes.use <- colnames(X)
+
+  X <- X[, genes.use]
 
   if(do.scale | do.center){
     X <- corpcor::wt.scale(X, w = supercell_size, center = do.center, scale = do.scale)

@@ -8,7 +8,7 @@
 #' @param do.median.norm whether to normalize
 #'
 #' @return a matrix of simplified (averaged withing groups) data with ncol equal to number of groups and nrows as in the initial dataset
-#'
+#' @export
 
 supercell_GE  <- function(ge, groups, do.median.norm = FALSE){
   u.groups        <- unique(groups)

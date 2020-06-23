@@ -109,12 +109,16 @@ SCimplify <- function(X,
 
   membership       <- membership.all
 
+  supercell_size   <- as.vector(table(membership))
+
   E(SC.NW)$width         <- E(SC.NW)$weight/10
-  V(SC.NW)$size          <- as.vector(table(membership))
+  V(SC.NW)$size          <- supercell_size
   V(SC.NW)$sizesqrt      <- sqrt(V(SC.NW)$size)
 
   res <- list(graph.supercells = SC.NW,
-              membership = membership)
+              membership = membership,
+              supercell_size = supercell_size,
+              genes.use = genes.use)
 
   if(return.singlecell.NW){res$graph.singlecell <- sc.nw$graph.knn}
   return(res)

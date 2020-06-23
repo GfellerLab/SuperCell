@@ -1,0 +1,54 @@
+---
+title: "Example of Supercell pipeline"
+output: html_notebook
+---
+
+
+```{r}
+library(SCimple)
+library(igraph)
+```
+
+
+#Load data from [Tian et al., 2019](https://doi.org/10.1038/s41592-019-0425-8)
+
+```{r}
+GE <- readRDS("./data/5cancer_cell_lines_10x_GE.Rds")
+dim(GE)
+cell.meta <- readRDS("./data/5cancer_cell_lines_10x_cell_line_assignment.Rds")
+```
+# Simplify single-cell data reducing numer of super-cell 20 times comparing to the number of single cells 
+```{r}
+SC <- SCimplify(GE, k.knn = 5, gamma = 20)
+plot(SC$graph.supercells)
+plot(SC$graph.singlecell, vertex.label = NA)
+```
+
+#Compute gene expression for simplified data
+```{r}
+SC.GE <- supercell_GE(GE, SC$membership)
+dim(SC.GE)
+```
+
+#Map each super-cell to a particular cell line
+```{r}
+SC2cellline  <- supercell_assign(cell.meta, SC$membership)
+SC$cell_line <- SC2cellline
+```
+
+Cluster super-cell data
+```{r}
+SC.PCA     <- supercell_prcomp(t(SC.GE), genes.use = SC$genes.use, supercell_size = SC$supercell_size, k = 20)
+dim(SC.PCA$x)
+D          <- dist(SC.PCA$x)
+
+SC.cluster <- supercell_cluster(D = D, k = 5, supercell_size = SC$supercell_size)
+SC$clustering <- SC.cluster$clustering
+```
+
+Differential expression analysis of clustered super-cell data 
+```{r}
+markers.all <- supercell_FindAllMarkers(SC.GE, SC$supercell_size, SC$clustering, logfc.threshold = 1)
+sum(markers.all[[1]]$adj.p.value < 0.05)
+```
+

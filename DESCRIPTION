@@ -13,5 +13,6 @@ Imports:
 	RANN,
         WeightedCluster,
 	corpcor,
-	weights
+	weights,
+	Hmisc
 RoxygenNote: 7.1.0
