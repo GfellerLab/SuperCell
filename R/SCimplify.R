@@ -19,7 +19,7 @@
 #' @return a list with components
 #' \itemize{
 #'   \item graph.supercells - igraph object of a simplified network (number of nodes corresponds to number of super-cells)
-#'   \item membership - assigmnent of each super-cell to a psrticlar super-cells
+#'   \item membership - assigmnent of each single cell to a particular super-cell
 #'   \item graph.singlecells - igraph object (kNN network) of single-cell data
 #' }
 #' @export

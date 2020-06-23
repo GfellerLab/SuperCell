@@ -1,8 +1,8 @@
 #' Assign super-cells to the most aboundant cluster
 #'
 #'
-#' @param clusters vector of clustering assignment
-#' @param supercell_membership vector of assignment of single-cell data to super-cells (membership field of \code{\link{SCimplify}} function output)
+#' @param clusters a vector of clustering assignment
+#' @param supercell_membership a vector of assignment of single-cell data to super-cells (membership field of \code{\link{SCimplify}} function output)
 #' @param method method to define the most abuldant cell cluster within super-cells. Available: "jaccard" (default), "relative", "absolute".
 #' \itemize{
 #'   \item jaccard - assignes super-cell to cluster with the maximum jaccard coefficient (recommended)
