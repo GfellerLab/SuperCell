@@ -1,27 +1,43 @@
 ---
 title: "Example of Supercell pipeline"
-output: html_notebook
+csl: elsevier-harvard.csl
+output:
+  github_document:
+  bookdown::pdf_document2:
+    number_sections: yes
+abstract: |
+  This is the abstract.
 ---
 
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.path = "figures/"
+)
+```
+
+# Installation
 
 ```{r}
+#devtools::install_github("mariiabilous/SCimple")
 library(SCimple)
-library(igraph)
+#library(igraph)
 ```
 
 
-#Load data from [Tian et al., 2019](https://doi.org/10.1038/s41592-019-0425-8)
+# Load data of 5 cancer cell lines sequenced with 10x from [Tian et al., 2019](https://doi.org/10.1038/s41592-019-0425-8)
 
 ```{r}
-GE <- readRDS("./data/5cancer_cell_lines_10x_GE.Rds")
-dim(GE)
-cell.meta <- readRDS("./data/5cancer_cell_lines_10x_cell_line_assignment.Rds")
+GE <- readRDS("./data/5cancer_cell_lines_10x_GE.Rds") # load gene expression matrix
+dim(GE) # genes as rows and cells as columns
+cell.meta <- readRDS("./data/5cancer_cell_lines_10x_cell_line_assignment.Rds") # load cell assignment to a cancer cell line
 ```
-# Simplify single-cell data reducing numer of super-cell 20 times comparing to the number of single cells 
+# Simplify single-cell data reducing numer of super-cell $gamma = 20$ times comparing to the number of single cells 
 ```{r}
-SC <- SCimplify(GE, k.knn = 5, gamma = 20)
-plot(SC$graph.supercells)
-plot(SC$graph.singlecell, vertex.label = NA)
+SC <- SCimplify(GE, k.knn = 5, gamma = 20, n.var.genes = 2000, use.nn2 = FALSE)
+set.seed(12345)
+supercell_plot(SC$graph.supercells)
+supercell_plot(SC$graph.singlecell, group = cell.meta, do.frames = F)
 ```
 
 #Compute gene expression for simplified data
@@ -34,6 +50,8 @@ dim(SC.GE)
 ```{r}
 SC2cellline  <- supercell_assign(cell.meta, SC$membership)
 SC$cell_line <- SC2cellline
+
+supercell_plot(SC$graph.supercells, group = SC$cell_line, lay.method = "fr")
 ```
 
 Cluster super-cell data
