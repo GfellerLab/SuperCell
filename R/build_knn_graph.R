@@ -51,6 +51,8 @@ build_knn_graph <- function(X, k = 5, from = c("dist", "coordinates"), use.nn2 =
           stop(paste("Unknown cor method:", cor_method, "Available cor methods are", paste(av.cor_methods)))
         }
         X <- as.dist(as.matrix(1 - cor(t(X), method = cor_method)))
+      } else {
+        X <- dist(X, method = dist_method)
       }
     }
   } else {
@@ -58,7 +60,7 @@ build_knn_graph <- function(X, k = 5, from = c("dist", "coordinates"), use.nn2 =
       stop("Method nn2 cannot be applied to distance, to use fast nn2 method, please provide coordinates rather than distance
              and set parameter from to coordinates")
     }
-    X <- dist(X, method = dist_method, p = p)
+    return(knn_graph_from_dist(D = X, k = k, return_neighbors_order = return_neighbors_order))
   }
 
 
@@ -143,7 +145,7 @@ knn_graph_from_dist <- function(D, k = 5, return_neighbors_order = T){
 
   graph.knn     <- igraph::graph_from_adj_list(adj.knn,  duplicate = F, mode = "all")
   graph.knn     <- igraph::simplify(graph.knn, remove.multiple = T)
-  E(graph.knn)$weight <- 1
+  igraph::E(graph.knn)$weight <- 1
 
   if(return_neighbors_order){
     res <- list(graph.knn = graph.knn,
