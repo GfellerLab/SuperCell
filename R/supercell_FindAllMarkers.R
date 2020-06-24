@@ -81,7 +81,7 @@ supercell_FindMarkers <- function(ge, supercell_size, clusters, ident.1, ident.2
   if(!only.pos){
     genes.logFC <- genes.use[which(abs(logFC) > logfc.threshold)]
   } else {
-    genes.logFC <- genes.use[which((logFC) > logfc.threshold)]
+    genes.logFC <- genes.use[which(logFC > logfc.threshold)]
   }
   genes.use <- intersect(genes.use, genes.logFC)
 
@@ -119,7 +119,7 @@ supercell_FindMarkers <- function(ge, supercell_size, clusters, ident.1, ident.2
         res[,j] <- as.numeric(as.vector(res[,j]))
     }
 
-    order <- order(x = adj.p.value, decreasing = FALSE)
+    order <- order(adj.p.value, 1/(abs(logFC)+1), decreasing = FALSE)
     res   <- res[order,]
 
     if(!return.extra.info) res <- res[,-c(1:3, 5:8)]
