@@ -37,6 +37,7 @@ SCimplify <- function(X,
                       n.pc = 10,
                       do.approx = FALSE,
                       approx.N = 20000,
+                      use.nn2 = TRUE,
                       seed = 12345,
                       igraph.clustering = c("walktrap", "louvain"),
                       return.singlecell.NW = TRUE){
@@ -63,7 +64,7 @@ SCimplify <- function(X,
 
   PCA.presampled        <- prcomp(X.for.pca, rank. = n.pc, scale. = F, center = F)
 
-  sc.nw <- build_knn_graph(X = PCA.presampled$x, k = k.knn, from = "coordinates", use.nn2 = TRUE, dist_method = "euclidean")
+  sc.nw <- build_knn_graph(X = PCA.presampled$x, k = k.knn, from = "coordinates", use.nn2 = use.nn2, dist_method = "euclidean")
 
   #simplify
   N.c <- ncol(X)
@@ -111,9 +112,9 @@ SCimplify <- function(X,
 
   supercell_size   <- as.vector(table(membership))
 
-  E(SC.NW)$width         <- E(SC.NW)$weight/10
-  V(SC.NW)$size          <- supercell_size
-  V(SC.NW)$sizesqrt      <- sqrt(V(SC.NW)$size)
+  igraph::E(SC.NW)$width         <- igraph::E(SC.NW)$weight/10
+  igraph::V(SC.NW)$size          <- supercell_size
+  igraph::V(SC.NW)$sizesqrt      <- sqrt(igraph::V(SC.NW)$size)
 
   res <- list(graph.supercells = SC.NW,
               membership = membership,
