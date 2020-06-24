@@ -14,6 +14,7 @@ SCimplify(
   n.pc = 10,
   do.approx = FALSE,
   approx.N = 20000,
+  use.nn2 = TRUE,
   seed = 12345,
   igraph.clustering = c("walktrap", "louvain"),
   return.singlecell.NW = TRUE

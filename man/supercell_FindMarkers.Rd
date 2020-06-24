@@ -14,7 +14,8 @@ supercell_FindMarkers(
   logfc.threshold = 0.25,
   min.pct = 0.1,
   seed = 12345,
-  only.pos = FALSE
+  only.pos = FALSE,
+  return.extra.info = FALSE
 )
 }
 \arguments{
@@ -35,6 +36,8 @@ supercell_FindMarkers(
 \item{seed}{random seed to use}
 
 \item{only.pos}{whether to compute only positive (upregulated) markers}
+
+\item{return.extra.info}{whether to return extra information about test and its statistics. Default is FALSE.}
 }
 \value{
 a matrix with a test name (t-test), statisctics, adjusted p-values, logFC, percenrage of detection in eacg ident and mean expresiion

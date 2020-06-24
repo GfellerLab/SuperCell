@@ -12,7 +12,8 @@ supercell_FindAllMarkers(
   logfc.threshold = 0.25,
   min.pct = 0.1,
   seed = 12345,
-  only.pos = FALSE
+  only.pos = FALSE,
+  return.extra.info = FALSE
 )
 }
 \arguments{
@@ -29,6 +30,8 @@ supercell_FindAllMarkers(
 \item{seed}{random seed to use}
 
 \item{only.pos}{whether to compute only positive (upregulated) markers}
+
+\item{return.extra.info}{whether to return extra information about test and its statistics. Default is FALSE.}
 }
 \value{
 list of results of \link[SCimple]{supercell_FindMarkers}

@@ -6,6 +6,7 @@
 \usage{
 supercell_prcomp(
   X,
+  genes.use = NULL,
   supercell_size = NULL,
   k = 20,
   do.scale = TRUE,
