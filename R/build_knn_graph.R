@@ -92,7 +92,7 @@ build_knn_graph_nn2 <- function(X, k = min(5, ncol(X))){
   graph.knn     <- igraph::graph_from_adj_list(adj.knn,  duplicate = F, mode = "all")
 
   graph.knn     <- igraph::simplify(graph.knn, remove.multiple = T)
-  E(graph.knn)$weight <- 1
+  igraph::E(graph.knn)$weight <- 1
 
   return(res <- list(graph.knn = graph.knn))
 

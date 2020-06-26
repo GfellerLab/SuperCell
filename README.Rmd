@@ -60,7 +60,8 @@ Cluster super-cell data
 SC.PCA         <- supercell_prcomp(t(SC.GE), genes.use = SC$genes.use, supercell_size = SC$supercell_size, k = 20)
 D              <- dist(SC.PCA$x)
 
-SC$clustering  <- supercell_cluster(D = D, k = 5, supercell_size = SC$supercell_size)
+SC.clusters    <- supercell_cluster(D = D, k = 5, supercell_size = SC$supercell_size)
+SC$clustering  <- SC.clusters$clustering
 ```
 
 ```{r}
