@@ -19,7 +19,7 @@
 
 
 
-supercell_FindMarkers <- function(ge, supercell_size, clusters, ident.1, ident.2 = NULL, genes.use = NULL,
+supercell_FindMarkers <- function(ge, supercell_size = NULL, clusters, ident.1, ident.2 = NULL, genes.use = NULL,
                                   logfc.threshold = 0.25, min.pct = 0.1, seed = 12345, only.pos = FALSE, return.extra.info = FALSE){
 
   total.number.of.genes <- nrow(ge)
@@ -33,6 +33,10 @@ supercell_FindMarkers <- function(ge, supercell_size, clusters, ident.1, ident.2
     }
   } else { ## ident.2 == NULL
     ident.2 <- setdiff(unique(clusters), ident.1)
+  }
+
+  if(is.null(supercell_size[1])){
+    supercell_size <- rep(1, ncol(ge))
   }
 
   cell.idx.ident.1 <- which(clusters %in% ident.1)
@@ -152,7 +156,7 @@ supercell_FindMarkers <- function(ge, supercell_size, clusters, ident.1, ident.2
 #' @export
 #'
 
-supercell_FindAllMarkers <- function(ge, supercell_size, clusters, genes.use = NULL, logfc.threshold = 0.25,
+supercell_FindAllMarkers <- function(ge, supercell_size = NULL, clusters, genes.use = NULL, logfc.threshold = 0.25,
                                      min.pct = 0.1, seed = 12345, only.pos = FALSE, return.extra.info = FALSE){
   res <- list()
   unique.ident <- sort(unique(clusters))
