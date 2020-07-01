@@ -37,7 +37,11 @@ supercell_cluster <- function(D, k = 5, supercell_size = NULL, algorithm = c("hc
   if(algorithm[1] == "PAM"){
     if(is.null(method)) method <- "PAMonce"
 
-    res$clustering <- WeightedCluster::wcKMedoids(diss = D, k = k.pam, weights = supercell_size,  cluster.only = TRUE)
+    res$clustering <- WeightedCluster::wcKMedoids(diss = D, k = k, weights = supercell_size,  cluster.only = TRUE)
+    cl.names       <- 1:k
+    names(cl.names)<- sort(unique(res$clustering))
+    res$clustering <- unname(cl.names[as.character(res$clustering)])
+
     res$algo       <- "PAM"
     res$method     <- method
 
