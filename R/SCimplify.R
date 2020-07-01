@@ -15,6 +15,7 @@
 #' @param seed seed to use to subsample cells for an approximate approach
 #' @param igraph.clustering clustering method to identify super-cells (available methods "walktrap" (default) and "louvain" (not recommended, gamma is ignored)).
 #' @param return.singlecell.NW whether return single-cell network (which consists of approx.N if \code{"do.approx"} or all cells otherwise)
+#' @param return.hierarchical.structure whether return hierarchical structure of super-cell
 #'
 #' @return a list with components
 #' \itemize{
@@ -40,7 +41,8 @@ SCimplify <- function(X,
                       use.nn2 = TRUE,
                       seed = 12345,
                       igraph.clustering = c("walktrap", "louvain"),
-                      return.singlecell.NW = TRUE){
+                      return.singlecell.NW = TRUE,
+                      return.hierarchical.structure = TRUE){
 
   if(is.null(genes.use)){
     n.var.genes <- min(n.var.genes, nrow(X))
@@ -62,7 +64,9 @@ SCimplify <- function(X,
   X.for.pca            <- t(X[genes.use, presampled.cell.ids])
   if(do.scale){ X.for.pca            <- scale(X.for.pca) }
 
-  PCA.presampled        <- prcomp(X.for.pca, rank. = n.pc, scale. = F, center = F)
+  if(is.null(n.pc[1]) | min(n.pc)<1){stop("Please, provide a range or a number of components to use: n.pc")}
+  if(length(n.pc)==1) n.pc <- 1:n.pc
+  PCA.presampled        <- prcomp(X.for.pca, rank. = max(n.pc), scale. = F, center = F)
 
   sc.nw <- build_knn_graph(X = PCA.presampled$x, k = k.knn, from = "coordinates", use.nn2 = use.nn2, dist_method = "euclidean")
 
@@ -95,7 +99,7 @@ SCimplify <- function(X,
     X.for.roration       <- t(X[genes.use, rest.cell.ids])
     if(do.scale){ X.for.roration <- scale(X.for.roration) }
 
-    PCA.ommited          <- X.for.roration %*% PCA.presampled$rotation[, 1:n.pc]
+    PCA.ommited          <- X.for.roration %*% PCA.presampled$rotation[, n.pc]
 
     D.omitted.subsampled <- proxy::dist(PCA.ommited, PCA.averaged.SC)
 
@@ -112,7 +116,7 @@ SCimplify <- function(X,
 
   supercell_size   <- as.vector(table(membership))
 
-  igraph::E(SC.NW)$width         <- igraph::E(SC.NW)$weight/10
+  igraph::E(SC.NW)$width         <- sqrt(igraph::E(SC.NW)$weight/10)
   igraph::V(SC.NW)$size          <- supercell_size
   igraph::V(SC.NW)$sizesqrt      <- sqrt(igraph::V(SC.NW)$size)
 
@@ -122,6 +126,9 @@ SCimplify <- function(X,
               genes.use = genes.use)
 
   if(return.singlecell.NW){res$graph.singlecell <- sc.nw$graph.knn}
+
+  if(igraph.clustering[1] == "walktrap" & return.hierarchical.structure)  res$h_membership <- g.s
+
   return(res)
 }
 
