@@ -68,7 +68,7 @@ SCimplify <- function(X,
   if(length(n.pc)==1) n.pc <- 1:n.pc
   PCA.presampled        <- prcomp(X.for.pca, rank. = max(n.pc), scale. = F, center = F)
 
-  sc.nw <- build_knn_graph(X = PCA.presampled$x, k = k.knn, from = "coordinates", use.nn2 = use.nn2, dist_method = "euclidean")
+  sc.nw <- build_knn_graph(X = PCA.presampled$x[,n.pc], k = k.knn, from = "coordinates", use.nn2 = use.nn2, dist_method = "euclidean")
 
   #simplify
   N.c <- ncol(X)
@@ -94,7 +94,7 @@ SCimplify <- function(X,
 
   if(do.approx){
 
-    PCA.averaged.SC      <- t(supercell_GE(t(PCA.presampled$x), groups = membership.presampled))
+    PCA.averaged.SC      <- t(supercell_GE(t(PCA.presampled$x[,n.pc]), groups = membership.presampled))
 
     X.for.roration       <- t(X[genes.use, rest.cell.ids])
     if(do.scale){ X.for.roration <- scale(X.for.roration) }
