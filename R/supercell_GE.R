@@ -11,6 +11,27 @@
 #' @export
 
 supercell_GE  <- function(ge, groups, do.median.norm = FALSE){
+  goups.idx <-  plyr:::split_indices(groups)
+
+  fun <- function(idx){
+    Matrix::rowMeans(ge[, idx, drop = FALSE])
+  }
+  supercell.GE             <- sapply(goups.idx, fun)
+
+  if(!(TRUE %in% is.na(as.numeric(colnames(supercell.GE))))){
+    supercell.GE <- supercell.GE[,order(as.numeric(colnames(supercell.GE)))]
+  }
+
+  if(do.median.norm){
+    supercell.GE <- (supercell.GE+0.01)/apply(supercell.GE+0.01, 1, median)
+  }
+  return(supercell.GE)
+}
+
+
+###### rest of the functions were used to identify the fastest way to average gene expression within super-cells
+
+supercell_GE_loop  <- function(ge, groups, do.median.norm = FALSE){
   u.groups        <- unique(groups)
   u.groups        <- u.groups[!is.na(u.groups)]
   N.groups        <- length(u.groups)
@@ -40,3 +61,37 @@ supercell_GE  <- function(ge, groups, do.median.norm = FALSE){
   }
   return(supercell.GE)
 }
+
+
+
+supercell_GE_sapply  <- function(ge, groups, do.median.norm = FALSE){
+  goups.idx <-  plyr:::split_indices(groups)
+
+  fun <- function(idx){
+      Matrix::rowMeans(ge[, idx, drop = FALSE])
+  }
+  supercell.GE             <- sapply(goups.idx, fun)
+
+  if(do.median.norm){
+    supercell.GE <- (supercell.GE+0.01)/apply(supercell.GE+0.01, 1, median)
+  }
+  return(supercell.GE)
+}
+
+
+
+supercell_GE_aggr  <- function(ge, groups, do.median.norm = FALSE){
+  u.groups        <- unique(groups)
+  u.groups        <- u.groups[!is.na(u.groups)]
+  N.groups        <- length(u.groups)
+  N.genes         <- nrow(ge)
+
+  supercell.GE             <- aggregate(ge, list(groups), mean)
+
+  if(do.median.norm){
+    supercell.GE <- (supercell.GE+0.01)/apply(supercell.GE+0.01, 1, median)
+  }
+  return(supercell.GE)
+}
+
+
