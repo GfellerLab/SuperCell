@@ -17,7 +17,8 @@ SCimplify(
   use.nn2 = TRUE,
   seed = 12345,
   igraph.clustering = c("walktrap", "louvain"),
-  return.singlecell.NW = TRUE
+  return.singlecell.NW = TRUE,
+  return.hierarchical.structure = TRUE
 )
 }
 \arguments{
@@ -44,6 +45,8 @@ SCimplify(
 \item{igraph.clustering}{clustering method to identify super-cells (available methods "walktrap" (default) and "louvain" (not recommended, gamma is ignored)).}
 
 \item{return.singlecell.NW}{whether return single-cell network (which consists of approx.N if \code{"do.approx"} or all cells otherwise)}
+
+\item{return.hierarchical.structure}{whether return hierarchical structure of super-cell}
 }
 \value{
 a list with components

@@ -51,6 +51,7 @@ supercell_plot <- function(SC.nw, group = NULL, color.use = NULL, lay.method = c
 
   v.colors <- color.use[group]
   v.frame.colors <- ifelse(do.frames, "black", v.colors)
+
   p <- plot(SC.nw, vertex.label = NA, vertex.color = v.colors, vertex.frame.color = v.colors,
             layout = lay, main = main, vertex.size = vsize)
 

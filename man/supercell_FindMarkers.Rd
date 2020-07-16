@@ -6,7 +6,7 @@
 \usage{
 supercell_FindMarkers(
   ge,
-  supercell_size,
+  supercell_size = NULL,
   clusters,
   ident.1,
   ident.2 = NULL,

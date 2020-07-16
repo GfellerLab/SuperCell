@@ -14,5 +14,7 @@ Imports:
         WeightedCluster,
 	corpcor,
 	weights,
-	Hmisc
+	Hmisc,
+	Matrix,
+	plyr
 RoxygenNote: 7.1.0

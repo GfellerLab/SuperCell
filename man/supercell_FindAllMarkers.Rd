@@ -6,7 +6,7 @@
 \usage{
 supercell_FindAllMarkers(
   ge,
-  supercell_size,
+  supercell_size = NULL,
   clusters,
   genes.use = NULL,
   logfc.threshold = 0.25,
