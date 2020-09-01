@@ -4,12 +4,14 @@
 #'
 #'
 #' @param X gene expression matrix with rows to be genes and cols to be cells
-#' @param genes.use a list of genes used to compute PCA
+#' @param genes.use a vector of genes used to compute PCA
+#' @param genes.exclude a vector of genes to be excluded when computing PCA
 #' @param n.var.genes if \code{"genes.use"} is not provided, \code{"n.var.genes"} genes with the largest variation are used
 #' @param k.knn parameter to compute single-cell kNN network
 #' @param gamma graining level of data (proportion of number of single cells in the initial dataset to the number of super-cells in the final dataset)
 #' @param do.scale whether to scale gene expression matrix to compure PCA
 #' @param n.pc number of principal components to use for construction of single-cell kNN network
+#' @param fast.pca use irlba::irlba as a faster version of prcomp (one used in Seurat package)
 #' @param do.approx compute approximate kNN in case of a large dataset (>20000)
 #' @param approx.N number of cells to subsample for an approximate approach
 #' @param seed seed to use to subsample cells for an approximate approach
@@ -22,6 +24,7 @@
 #'   \item graph.supercells - igraph object of a simplified network (number of nodes corresponds to number of super-cells)
 #'   \item membership - assigmnent of each single cell to a particular super-cell
 #'   \item graph.singlecells - igraph object (kNN network) of single-cell data
+#'   \item supercell_size - size of super-cells
 #' }
 #' @export
 #'
@@ -31,11 +34,13 @@
 
 SCimplify <- function(X,
                       genes.use = NULL,
+                      genes.exclude = NULL,
                       n.var.genes = min(1000, nrow(X)),
                       k.knn = 5,
                       gamma = 10,
                       do.scale = TRUE,
                       n.pc = 10,
+                      fast.pca = FALSE,
                       do.approx = FALSE,
                       approx.N = 20000,
                       use.nn2 = TRUE,
@@ -44,16 +49,36 @@ SCimplify <- function(X,
                       return.singlecell.NW = TRUE,
                       return.hierarchical.structure = TRUE){
 
+  keep.genes    <- setdiff(rownames(X), genes.exclude)
+  X             <- X[keep.genes,]
+  N.c <- ncol(X)
+
   if(is.null(genes.use)){
     n.var.genes <- min(n.var.genes, nrow(X))
     gene.var    <- apply(X, 1, var)
     genes.use   <- names(sort(gene.var, decreasing = TRUE))[1:n.var.genes]
   }
 
+  if(length(intersect(genes.use, genes.exclude)) > 0){
+    stop("Sets of genes.use and genes.exclude have non-empty intersection")
+  }
+
+  genes.use <- genes.use[genes.use %in% rownames(X)]
+  X <- X[genes.use,]
+
+  if(do.approx & approx.N >= N.c){
+    do.approx <- FALSE
+    warning("N.approx is larger or equal to the number of single cells, thus, an exact simplification will be performed")
+  }
+
+  if(do.approx & ((N.c/gamma) > (approx.N/3))){
+    warning("N.approx is not much larger than desired number of super-cells, so an approximate simplification may take londer than an exact one!")
+  }
+
   if(do.approx){
     set.seed(seed)
-    approx.N            <- min(approx.N, ncol(X))
-    presample           <- sample(1:ncol(X), size = approx.N, replace = FALSE)
+    approx.N            <- min(approx.N, N.c)
+    presample           <- sample(1:N.c, size = approx.N, replace = FALSE)
     presampled.cell.ids <- colnames(X)[sort(presample)]
     rest.cell.ids       <- setdiff(colnames(X), presampled.cell.ids)
   } else {
@@ -63,15 +88,23 @@ SCimplify <- function(X,
 
   X.for.pca            <- t(X[genes.use, presampled.cell.ids])
   if(do.scale){ X.for.pca            <- scale(X.for.pca) }
+  X.for.pca[is.na(X.for.pca)] <- 0
 
-  if(is.null(n.pc[1]) | min(n.pc)<1){stop("Please, provide a range or a number of components to use: n.pc")}
+  if(is.null(n.pc[1]) | min(n.pc) < 1){stop("Please, provide a range or a number of components to use: n.pc")}
   if(length(n.pc)==1) n.pc <- 1:n.pc
-  PCA.presampled        <- prcomp(X.for.pca, rank. = max(n.pc), scale. = F, center = F)
+
+  if(!fast.pca){
+    PCA.presampled          <- prcomp(X.for.pca, rank. = max(n.pc), scale. = F, center = F)
+  } else {
+    PCA.presampled          <- irlba::irlba(X.for.pca, nv = max(n.pc, 25))
+    PCA.presampled$x        <- PCA.presampled$u %*% diag(PCA.presampled$d)
+    PCA.presampled$rotation <- PCA.presampled$v
+  }
 
   sc.nw <- build_knn_graph(X = PCA.presampled$x[,n.pc], k = k.knn, from = "coordinates", use.nn2 = use.nn2, dist_method = "euclidean")
 
   #simplify
-  N.c <- ncol(X)
+
   k   <- round(N.c/gamma)
 
   if(igraph.clustering[1] == "walktrap"){
@@ -95,16 +128,37 @@ SCimplify <- function(X,
   if(do.approx){
 
     PCA.averaged.SC      <- t(supercell_GE(t(PCA.presampled$x[,n.pc]), groups = membership.presampled))
-
     X.for.roration       <- t(X[genes.use, rest.cell.ids])
+
+
+
     if(do.scale){ X.for.roration <- scale(X.for.roration) }
+    X.for.roration[is.na(X.for.roration)] <- 0
 
-    PCA.ommited          <- X.for.roration %*% PCA.presampled$rotation[, n.pc]
 
-    D.omitted.subsampled <- proxy::dist(PCA.ommited, PCA.averaged.SC)
+    membership.omitted   <- c()
 
-    membership.omitted   <- apply(D.omitted.subsampled, 1, which.min)
-    names(membership.omitted) <- rest.cell.ids
+    block.size <- 10000
+    N.blocks <- length(rest.cell.ids)%/%block.size
+    if(length(rest.cell.ids)%%block.size > 0) N.blocks <- N.blocks+1
+
+
+    for(i in 1:N.blocks){ # compute knn by blocks
+      idx.begin <- (i-1)*block.size + 1
+      idx.end   <- min(i*block.size,  length(rest.cell.ids))
+
+      cur.rest.cell.ids    <- rest.cell.ids[idx.begin:idx.end]
+
+
+      PCA.ommited          <- X.for.roration[cur.rest.cell.ids,] %*% PCA.presampled$rotation[, n.pc] ###
+
+      D.omitted.subsampled <- proxy::dist(PCA.ommited, PCA.averaged.SC) ###
+
+      membership.omitted.cur   <- apply(D.omitted.subsampled, 1, which.min) ###
+      names(membership.omitted.cur) <- cur.rest.cell.ids ###
+
+      membership.omitted <- c(membership.omitted, membership.omitted.cur)
+    }
 
     membership.all       <- c(membership.presampled, membership.omitted)
     membership.all       <- membership.all[colnames(X)]
@@ -121,9 +175,15 @@ SCimplify <- function(X,
   igraph::V(SC.NW)$sizesqrt      <- sqrt(igraph::V(SC.NW)$size)
 
   res <- list(graph.supercells = SC.NW,
+              gamma = gamma,
+              N.SC = length(membership),
               membership = membership,
               supercell_size = supercell_size,
-              genes.use = genes.use)
+              genes.use = genes.use,
+              simplification.algo = igraph.clustering[1],
+              do.approx = do.approx,
+              n.pc = n.pc,
+              k.knn = k.knn)
 
   if(return.singlecell.NW){res$graph.singlecell <- sc.nw$graph.knn}
 
