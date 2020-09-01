@@ -12,9 +12,9 @@
 #'
 
 supercell_purity <- function(clusters, supercell_membership){
-  cl.gr            <- table(clusters, groups)
+  cl.gr            <- table(clusters, supercell_membership)
   cluster.size     <- as.numeric(table(clusters))
-  group.size       <- as.numeric(table(groups))
+  group.size       <- as.numeric(table(supercell_membership))
 
   Ng               <- length(group.size)
   group.max.cl     <- rep(0, Ng)
