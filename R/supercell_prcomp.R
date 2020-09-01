@@ -11,8 +11,14 @@
 #'
 
 
-
-supercell_prcomp <- function(X, genes.use = NULL, supercell_size = NULL, k = 20, do.scale = TRUE, do.center = TRUE, seed = 12345){
+supercell_prcomp <- function(X,
+                             genes.use = NULL,
+                             supercell_size = NULL,
+                             k = 20,
+                             do.scale = TRUE,
+                             do.center = TRUE,
+                             fast.pca = FALSE,
+                             seed = 12345) {
   if(is.null(supercell_size)){
     supercell_size = rep(1, nrow(X))
   }
@@ -40,9 +46,18 @@ supercell_prcomp <- function(X, genes.use = NULL, supercell_size = NULL, k = 20,
 
   X.for.PCA <- (1/sum(supercell_size)) * t(X.cent) %*% W %*% X.cent
 
-  #print(X.for.PCA)
+
   set.seed(seed)
-  pca       <- prcomp(x = X.for.PCA, center = FALSE, scale. = FALSE, rank. = k)
+  if(!fast.pca){
+    pca                   <- prcomp(x = X.for.PCA, center = FALSE, scale. = FALSE, rank. = k)
+  } else {
+    pca                   <- irlba::irlba(X.for.PCA, nv = k) # is equvivalent to prcomp when there is no centering and scaling (then prcomp is the same as svd)
+   # pca$x                 <- pca$u %*% diag(pca$d)
+    pca$rotation          <- pca$v
+    pca$v                 <- NULL
+  }
+
+
 
   # n.sdev    <- length(pca$sdev)
   # scale     <- sqrt(1/(sum(supercell_size) - 1))
@@ -54,4 +69,45 @@ supercell_prcomp <- function(X, genes.use = NULL, supercell_size = NULL, k = 20,
   pca$x <- X.cent %*% pca$rotation
 
   return(pca)
+}
+
+
+## irlba::irlba is a good approximation of svd and svd is equvivalent to prcomp, when center = F and scale = F,
+## thus, in all my cases, irlba is an approximartion of prcomp, because I usualy do scaling in advance
+## irlba has less memory allocation and is faster
+
+test_irlba_and_prcomp <- function(){
+  if(0){
+    set.seed(12345)
+    X <- readRDS("./data/5cancer_cell_lines_10x_GE.Rds")
+
+    var.genes <- apply(X, 1, var)
+    var.genes <- order(var.genes, decreasing = T)[1:500]
+
+    Xt <- t(X[var.genes,])
+    #Xt <- scale(Xt, center = T, scale = T)
+
+
+    t.pr <- bench::mark(pr <- prcomp(Xt, rank. = 10, center = F, scale. = F))
+    d.pr <- dist(pr$x)
+    plot(x = pr$x[,1], y = pr$x[,2])
+
+    t.sv <- bench::mark("svd" = {sv <- svd(Xt, nu = 10)
+    sv$x <- sv$u %*% diag(sv$d[1:10])})
+    d.sv <- dist(sv$x)
+    plot(x = sv$x[,1], y = sv$x[,2])
+
+    summary(abs(d.sv - d.pr))
+
+    t.ir.pr <- bench::mark(ir.pr <- irlba::prcomp_irlba(Xt, n = 10))
+    t.ir.svd <- bench::mark(ir.svd <- irlba::irlba(Xt, nv = 10))
+
+    ir <- irlba::irlba(Xt, nv = 10)
+    ir$x <- ir$u %*% diag(ir$d)
+    d.ir <- dist(ir$x)
+
+    plot(x = ir$x[,1], y = ir$x[,2])
+
+    summary(abs(d.ir - d.pr))
+  }
 }
