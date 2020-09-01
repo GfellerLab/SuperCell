@@ -27,7 +27,9 @@ supercell_plot <- function(SC.nw, group = NULL, color.use = NULL, lay.method = c
   if(is.null(color.use)) color.use <- scales::hue_pal()(N.groups)
   if(length(color.use) != N.groups) stop(paste("Vector color.use has to be the same length as number of groups:", N.groups))
 
-  names(color.use) <- sort(unique(group))
+  if(is.null(names(color.use))){
+    names(color.use) <- sort(unique(group))
+  }
 
 
   if(is.null(lay)){ # compute new layout
@@ -52,7 +54,7 @@ supercell_plot <- function(SC.nw, group = NULL, color.use = NULL, lay.method = c
   v.colors <- color.use[group]
   v.frame.colors <- ifelse(do.frames, "black", v.colors)
 
-  p <- plot(SC.nw, vertex.label = NA, vertex.color = v.colors, vertex.frame.color = v.colors,
+  plot(SC.nw, vertex.label = NA, vertex.color = v.colors, vertex.frame.color = v.colors,
             layout = lay, main = main, vertex.size = vsize)
 
 }
