@@ -16,5 +16,7 @@ Imports:
 	weights,
 	Hmisc,
 	Matrix,
-	plyr
+	matrixStats,
+	plyr,
+	irlba
 RoxygenNote: 7.1.0

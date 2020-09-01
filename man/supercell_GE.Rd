@@ -4,12 +4,14 @@
 \alias{supercell_GE}
 \title{Simplification of scRNA-seq dataset}
 \usage{
-supercell_GE(ge, groups, do.median.norm = FALSE)
+supercell_GE(ge, groups, weights = NULL, do.median.norm = FALSE)
 }
 \arguments{
 \item{ge}{gene expression matrix (or any coordinate matrix) with genes as rows and cells as cols}
 
 \item{groups}{vector of membership (assignment of single-cell to super-cells)}
+
+\item{weights}{vector of a cell weight (NULL by default), used for computing average gene expression withing cluster of super-cells}
 
 \item{do.median.norm}{whether to normalize}
 }

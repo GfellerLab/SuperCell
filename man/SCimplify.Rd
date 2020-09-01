@@ -7,11 +7,13 @@
 SCimplify(
   X,
   genes.use = NULL,
+  genes.exclude = NULL,
   n.var.genes = min(1000, nrow(X)),
   k.knn = 5,
   gamma = 10,
   do.scale = TRUE,
   n.pc = 10,
+  fast.pca = FALSE,
   do.approx = FALSE,
   approx.N = 20000,
   use.nn2 = TRUE,
@@ -24,7 +26,9 @@ SCimplify(
 \arguments{
 \item{X}{gene expression matrix with rows to be genes and cols to be cells}
 
-\item{genes.use}{a list of genes used to compute PCA}
+\item{genes.use}{a vector of genes used to compute PCA}
+
+\item{genes.exclude}{a vector of genes to be excluded when computing PCA}
 
 \item{n.var.genes}{if \code{"genes.use"} is not provided, \code{"n.var.genes"} genes with the largest variation are used}
 
@@ -35,6 +39,8 @@ SCimplify(
 \item{do.scale}{whether to scale gene expression matrix to compure PCA}
 
 \item{n.pc}{number of principal components to use for construction of single-cell kNN network}
+
+\item{fast.pca}{use irlba::irlba as a faster version of prcomp (one used in Seurat package)}
 
 \item{do.approx}{compute approximate kNN in case of a large dataset (>20000)}
 
@@ -54,6 +60,7 @@ a list with components
   \item graph.supercells - igraph object of a simplified network (number of nodes corresponds to number of super-cells)
   \item membership - assigmnent of each single cell to a particular super-cell
   \item graph.singlecells - igraph object (kNN network) of single-cell data
+  \item supercell_size - size of super-cells
 }
 }
 \description{
