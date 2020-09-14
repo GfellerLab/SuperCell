@@ -71,6 +71,11 @@ SCimplify <- function(X,
     warning("N.approx is larger or equal to the number of single cells, thus, an exact simplification will be performed")
   }
 
+  if(do.approx & (approx.N < round(N.c/gamma))){
+    approx.N <- round(N.c/gamma)
+    warning(paste("N.approx is set to N.SC", approx.N))
+  }
+
   if(do.approx & ((N.c/gamma) > (approx.N/3))){
     warning("N.approx is not much larger than desired number of super-cells, so an approximate simplification may take londer than an exact one!")
   }
@@ -142,22 +147,23 @@ SCimplify <- function(X,
     N.blocks <- length(rest.cell.ids)%/%block.size
     if(length(rest.cell.ids)%%block.size > 0) N.blocks <- N.blocks+1
 
+    if(N.blocks>0){
+      for(i in 1:N.blocks){ # compute knn by blocks
+        idx.begin <- (i-1)*block.size + 1
+        idx.end   <- min(i*block.size,  length(rest.cell.ids))
 
-    for(i in 1:N.blocks){ # compute knn by blocks
-      idx.begin <- (i-1)*block.size + 1
-      idx.end   <- min(i*block.size,  length(rest.cell.ids))
-
-      cur.rest.cell.ids    <- rest.cell.ids[idx.begin:idx.end]
+        cur.rest.cell.ids    <- rest.cell.ids[idx.begin:idx.end]
 
 
-      PCA.ommited          <- X.for.roration[cur.rest.cell.ids,] %*% PCA.presampled$rotation[, n.pc] ###
+        PCA.ommited          <- X.for.roration[cur.rest.cell.ids,] %*% PCA.presampled$rotation[, n.pc] ###
 
-      D.omitted.subsampled <- proxy::dist(PCA.ommited, PCA.averaged.SC) ###
+        D.omitted.subsampled <- proxy::dist(PCA.ommited, PCA.averaged.SC) ###
 
-      membership.omitted.cur   <- apply(D.omitted.subsampled, 1, which.min) ###
-      names(membership.omitted.cur) <- cur.rest.cell.ids ###
+        membership.omitted.cur   <- apply(D.omitted.subsampled, 1, which.min) ###
+        names(membership.omitted.cur) <- cur.rest.cell.ids ###
 
-      membership.omitted <- c(membership.omitted, membership.omitted.cur)
+        membership.omitted <- c(membership.omitted, membership.omitted.cur)
+      }
     }
 
     membership.all       <- c(membership.presampled, membership.omitted)
