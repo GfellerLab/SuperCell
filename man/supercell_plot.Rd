@@ -12,7 +12,13 @@ supercell_plot(
   lay = NULL,
   seed = 12345,
   main = NA,
-  do.frames = TRUE
+  do.frames = TRUE,
+  do.extra.log.rescale = FALSE,
+  log.base = 2,
+  do.extra.sqtr.rescale = FALSE,
+  frame.color = "black",
+  weights = NULL,
+  min.cell.size = 0
 )
 }
 \arguments{

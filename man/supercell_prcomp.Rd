@@ -7,10 +7,12 @@
 supercell_prcomp(
   X,
   genes.use = NULL,
+  genes.exclude = NULL,
   supercell_size = NULL,
   k = 20,
   do.scale = TRUE,
   do.center = TRUE,
+  double.centering = TRUE,
   fast.pca = FALSE,
   seed = 12345
 )

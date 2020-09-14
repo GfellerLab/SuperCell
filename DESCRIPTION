@@ -18,5 +18,6 @@ Imports:
 	Matrix,
 	matrixStats,
 	plyr,
-	irlba
+	irlba,
+	grDevices
 RoxygenNote: 7.1.0
