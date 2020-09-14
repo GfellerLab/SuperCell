@@ -13,10 +13,12 @@
 
 supercell_prcomp <- function(X,
                              genes.use = NULL,
+                             genes.exclude = NULL,
                              supercell_size = NULL,
                              k = 20,
                              do.scale = TRUE,
                              do.center = TRUE,
+                             double.centering = TRUE,
                              fast.pca = FALSE,
                              seed = 12345) {
   if(is.null(supercell_size)){
@@ -24,6 +26,7 @@ supercell_prcomp <- function(X,
   }
 
   if(is.null(genes.use)) genes.use <- colnames(X)
+  if(!is.null(genes.exclude)) genes.use <- setdiff(genes.use, genes.exclude)
 
   X <- X[, genes.use]
 
@@ -31,28 +34,32 @@ supercell_prcomp <- function(X,
     X <- corpcor::wt.scale(X, w = supercell_size, center = do.center, scale = do.scale)
   }
 
+  if(double.centering){
   n.i  <- nrow(X)
   n.j  <- ncol(X)
   m    <- rep(0, n.j)
   for(i in 1:n.i){
     m <- m + supercell_size[i]*X[i,]
   }
-  m         <- m/sum(supercell_size)
+  m         <- m/sum(supercell_size) # averaged scaled gene expression
+  print(max(abs(m)))
   M         <- matrix(m, byrow = T, nrow = n.i, ncol = n.j) # matrix where rows are m's
 
   X.cent    <- X - M
+  } else {
+    X.cent <- X
+  }
 
   W         <- diag(supercell_size)
 
   X.for.PCA <- (1/sum(supercell_size)) * t(X.cent) %*% W %*% X.cent
-
 
   set.seed(seed)
   if(!fast.pca){
     pca                   <- prcomp(x = X.for.PCA, center = FALSE, scale. = FALSE, rank. = k)
   } else {
     pca                   <- irlba::irlba(X.for.PCA, nv = k) # is equvivalent to prcomp when there is no centering and scaling (then prcomp is the same as svd)
-   # pca$x                 <- pca$u %*% diag(pca$d)
+ #   pca$x                 <- pca$u %*% diag(pca$d)
     pca$rotation          <- pca$v
     pca$v                 <- NULL
   }
@@ -67,7 +74,6 @@ supercell_prcomp <- function(X,
   # }
 
   pca$x <- X.cent %*% pca$rotation
-
   return(pca)
 }
 
@@ -109,5 +115,8 @@ test_irlba_and_prcomp <- function(){
     plot(x = ir$x[,1], y = ir$x[,2])
 
     summary(abs(d.ir - d.pr))
+
+    pca <- supercell_prcomp(t(X[1:100,]), supercell_size = sample(1:10, ncol(X), replace = T), double.centering = F)
+    pca.dc <- supercell_prcomp(t(X[1:1000,]), supercell_size = sample(1:10, ncol(X), replace = T))
   }
 }
