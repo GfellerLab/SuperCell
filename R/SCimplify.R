@@ -143,7 +143,7 @@ SCimplify <- function(X,
 
     membership.omitted   <- c()
 
-    block.size <- 10000
+    block.size <- 100000
     N.blocks <- length(rest.cell.ids)%/%block.size
     if(length(rest.cell.ids)%%block.size > 0) N.blocks <- N.blocks+1
 
