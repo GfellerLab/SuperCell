@@ -3,6 +3,7 @@
 #'
 #' @param ge gene expression matrix for super-cells (rows - genes, cols - super-cells)
 #' @param supercell_size a vector with supercell size (ordered the same way as in \code{ge})
+#' @param clusters a vector with clustering information (ordered the same way as in \code{ge})
 #' @param ident.1 name(s) of cluster for which markers are computed
 #' @param ident.2 name(s) of clusters for comparison. If \code{NULL} (defauld), then all the other clusters used
 #' @param genes.use set of genes to test. Defeult -- all genes in \code{ge}
@@ -61,7 +62,7 @@ supercell_FindMarkers <- function(ge, supercell_size = NULL, clusters, ident.1, 
 
   # compute percentage of cells expressing a gene and filter out poorly expressed genes
   #print("Compute percentage of genes expressed in super cells (detection rate)")
- 
+
   pct.1 <- apply(ge[genes.use, cell.idx.ident.1], 1, function(x){sum(cell.weigth.1[x>0])/sum(cell.weigth.1)})
   pct.2 <- apply(ge[genes.use, cell.idx.ident.2], 1, function(x){sum(cell.weigth.2[x>0])/sum(cell.weigth.2)})
   max.pct.1.2 <- apply(cbind(pct.1, pct.2), 1, max)
@@ -145,6 +146,7 @@ supercell_FindMarkers <- function(ge, supercell_size = NULL, clusters, ident.1, 
 #'
 #' @param ge gene expression matrix for super-cells (rows - genes, cols - super-cells)
 #' @param supercell_size a vector with supercell size (ordered the same way as in \code{ge})
+#' @param clusters a vector with clustering information (ordered the same way as in \code{ge})
 #' @param genes.use set of genes to test. Defeult -- all genes in \code{ge}
 #' @param logfc.threshold log fold change threshold for genes to be considered in the further analysis
 #' @param min.pct remove genes with lower percentage of detection from the set of genes which will be tested
