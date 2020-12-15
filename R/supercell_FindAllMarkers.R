@@ -61,6 +61,7 @@ supercell_FindMarkers <- function(ge, supercell_size = NULL, clusters, ident.1, 
 
   # compute percentage of cells expressing a gene and filter out poorly expressed genes
   #print("Compute percentage of genes expressed in super cells (detection rate)")
+ 
   pct.1 <- apply(ge[genes.use, cell.idx.ident.1], 1, function(x){sum(cell.weigth.1[x>0])/sum(cell.weigth.1)})
   pct.2 <- apply(ge[genes.use, cell.idx.ident.2], 1, function(x){sum(cell.weigth.2[x>0])/sum(cell.weigth.2)})
   max.pct.1.2 <- apply(cbind(pct.1, pct.2), 1, max)
