@@ -19,8 +19,8 @@ knitr::opts_chunk$set(
 # Installation
 
 ```{r}
-#devtools::install_github("mariiabilous/SCimple")
-library(SCimple)
+#devtools::install_github("mariiabilous/SuperCell")
+library(SuperCell)
 
 ```
 

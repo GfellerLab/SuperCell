@@ -1,4 +1,4 @@
-Package: SCimple
+Package: SuperCell
 Type: Package
 Title: Simplification of scRNA-seq data by merging together similar cells
 Version: 0.1.0
@@ -20,4 +20,4 @@ Imports:
 	plyr,
 	irlba,
 	grDevices
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1

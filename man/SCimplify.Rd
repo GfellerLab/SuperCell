@@ -20,7 +20,8 @@ SCimplify(
   seed = 12345,
   igraph.clustering = c("walktrap", "louvain"),
   return.singlecell.NW = TRUE,
-  return.hierarchical.structure = TRUE
+  return.hierarchical.structure = TRUE,
+  block.size = 10000
 )
 }
 \arguments{

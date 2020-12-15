@@ -9,7 +9,7 @@ supercell_plot_GE(
   ge,
   color.use = c("gray", "blue"),
   n.color.gradient = 10,
-  lay.method = c("nicely", "fr", "components"),
+  lay.method = c("nicely", "fr", "components", "drl", "graphopt", "dh"),
   lay = NULL,
   seed = 12345,
   main = NA,

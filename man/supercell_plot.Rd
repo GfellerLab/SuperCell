@@ -8,7 +8,7 @@ supercell_plot(
   SC.nw,
   group = NULL,
   color.use = NULL,
-  lay.method = c("nicely", "fr", "components"),
+  lay.method = c("nicely", "fr", "components", "drl", "graphopt"),
   lay = NULL,
   seed = 12345,
   main = NA,

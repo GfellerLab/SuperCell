@@ -6,7 +6,7 @@
 #' @param gamma new grainig level (provide either \code{gamma} or \code{N.SC})
 #' @param N.SC new number of super-cells (provide either \code{gamma} or \code{N.SC})
 #'
-#' @return the same object as \code{\link{SCimplify}
+#' @return the same object as \code{\link{SCimplify}}
 #' @export
 
 
