@@ -47,7 +47,8 @@ SCimplify <- function(X,
                       seed = 12345,
                       igraph.clustering = c("walktrap", "louvain"),
                       return.singlecell.NW = TRUE,
-                      return.hierarchical.structure = TRUE){
+                      return.hierarchical.structure = TRUE,
+                      block.size = 10000){
 
   keep.genes    <- setdiff(rownames(X), genes.exclude)
   X             <- X[keep.genes,]
@@ -91,7 +92,7 @@ SCimplify <- function(X,
     rest.cell.ids       <- c()
   }
 
-  X.for.pca            <- t(X[genes.use, presampled.cell.ids])
+  X.for.pca            <- Matrix::t(X[genes.use, presampled.cell.ids])
   if(do.scale){ X.for.pca            <- scale(X.for.pca) }
   X.for.pca[is.na(X.for.pca)] <- 0
 
@@ -132,8 +133,8 @@ SCimplify <- function(X,
 
   if(do.approx){
 
-    PCA.averaged.SC      <- t(supercell_GE(t(PCA.presampled$x[,n.pc]), groups = membership.presampled))
-    X.for.roration       <- t(X[genes.use, rest.cell.ids])
+      PCA.averaged.SC      <- Matrix::t(supercell_GE(t(PCA.presampled$x[,n.pc]), groups = membership.presampled))
+      X.for.roration       <- Matrix::t(X[genes.use, rest.cell.ids])
 
 
 
@@ -141,11 +142,27 @@ SCimplify <- function(X,
     X.for.roration[is.na(X.for.roration)] <- 0
 
 
-    membership.omitted   <- c()
 
-    block.size <- 100000
+    # fnt <- function(cell.i.id){
+    #   cur.pca <- X.for.roration[cell.i.id,] %*% PCA.presampled$rotation[, n.pc]
+    #   cur.d   <- proxy::dist(cur.pca, PCA.averaged.SC)
+    #   cur.membership <- which.min(cur.d)
+    #   return(cur.membership)
+    # }
+    #
+    # membership.omitted <- sapply(rest.cell.ids, FUN = fnt)
+    # if(is.null(names(membership.omitted)[1])){
+    #   print("unnamed membership.omitted")
+    #   names(membership.omitted) <- rest.cell.ids
+    # }
+
+
+    membership.omitted   <- c()
+    if(is.null(block.size) | is.na(block.size)) block.size <- 10000
+
     N.blocks <- length(rest.cell.ids)%/%block.size
     if(length(rest.cell.ids)%%block.size > 0) N.blocks <- N.blocks+1
+
 
     if(N.blocks>0){
       for(i in 1:N.blocks){ # compute knn by blocks
