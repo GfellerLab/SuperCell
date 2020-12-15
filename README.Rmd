@@ -28,7 +28,7 @@ library(SuperCell)
 ## Load data of 5 cancer cell lines sequenced with 10x from [Tian et al., 2019](https://doi.org/10.1038/s41592-019-0425-8)
 
 ```{r}
-GE <- readRDS("./data/5cancer_cell_lines_10x_GE.Rds") # load gene expression matrix
+GE <- readRDS("./data/5cancer_cell_lines_10x_GE.Rds") # load gene expression matrix 
 dim(GE) # genes as rows and cells as columns
 cell.meta <- readRDS("./data/5cancer_cell_lines_10x_cell_line_assignment.Rds") # load cell assignment to a cancer cell line
 ```
