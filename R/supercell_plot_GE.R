@@ -18,7 +18,7 @@ supercell_plot_GE <- function(SC.nw,
                               ge,
                               color.use = c("gray", "blue"),
                               n.color.gradient = 10,
-                              lay.method = c("nicely", "fr", "components"),
+                              lay.method = c("nicely", "fr", "components", "drl", "graphopt", "dh"),
                               lay = NULL,
                               seed = 12345,
                               main = NA,
@@ -81,7 +81,7 @@ supercell_plot_GE <- function(SC.nw,
                    min.cell.size = min.cell.size)
 
 
-  p
+  p$p
   plotfunctions::gradientLegend(valRange = c(min(brks), max(brks)), color = color.gradient, side = legend.side)
 
   p.res <- grDevices::recordPlot()
