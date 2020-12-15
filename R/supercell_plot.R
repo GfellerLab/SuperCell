@@ -17,7 +17,7 @@
 supercell_plot <- function(SC.nw,
                            group = NULL,
                            color.use = NULL,
-                           lay.method = c("nicely", "fr", "components"),
+                           lay.method = c("nicely", "fr", "components", "drl", "graphopt"),
                            lay = NULL,
                            seed = 12345,
                            main = NA,
@@ -33,12 +33,14 @@ supercell_plot <- function(SC.nw,
 
   N.SC <- igraph::vcount(SC.nw)
   if(is.null(igraph::V(SC.nw)$size)) igraph::V(SC.nw)$size <- 1
-  vsize <- sqrt(igraph::V(SC.nw)$size)
+  vsize <- igraph::V(SC.nw)$size
 
   cells.to.remove <- which(vsize < min.cell.size)
   cells.to.use    <- setdiff(1:N.SC, cells.to.remove)
+  print("Cells to remove baed on min size:")
   print(cells.to.remove)
 
+  vsize <- sqrt(vsize)
   if(do.extra.log.rescale)
     vsize <- log(vsize+1, base = log.base)
   if(do.extra.sqtr.rescale)
@@ -76,7 +78,7 @@ supercell_plot <- function(SC.nw,
     lay.method <- lay.method[1]
     if(is.na(lay.method) | is.nan(lay.method) | is.null(lay.method)) lay.method = "nicely"
 
-    lay.method <- match(lay.method, c("nicely", "fr", "components"))
+    lay.method <- match(lay.method,  c("nicely", "fr", "components", "drl", "graphopt", "dh"))
 
     if(is.na(lay.method)) stop(paste("Unknown layout!"))
 
@@ -87,6 +89,10 @@ supercell_plot <- function(SC.nw,
       lay <- igraph::layout_with_fr(SC.nw, weights = weights)
     else if (lay.method == 3)
       lay <- igraph::layout_components(SC.nw)
+    else if (lay.method == 4)
+      lay <- igraph::layout_with_drl(SC.nw, weights = weights)
+    else if (lay.method == 5)
+      lay <- igraph::layout_with_graphopt(SC.nw)
     else stop(paste("Unknown lay.method", lay.method))
   }
 
@@ -99,6 +105,19 @@ supercell_plot <- function(SC.nw,
        layout = lay, main = main, vertex.size = vsize[cells.to.use])
 
   p <- grDevices::recordPlot()
-  return(p)
+
+
+
+  res <- list(p = p,
+              edgelist = igraph::get.edgelist(SC.nw),
+              lay = lay,
+              group = group[cells.to.use],
+              cells.to.use = cells.to.use,
+              vsize.used = vsize[cells.to.use],
+              vsize.actual = igraph::V(SC.nw)$size,
+              v.colors = v.colors)
+  return(res)
 
 }
+
+
