@@ -23,6 +23,8 @@ supercell_FindMarkers(
 
 \item{supercell_size}{a vector with supercell size (ordered the same way as in \code{ge})}
 
+\item{clusters}{a vector with clustering information (ordered the same way as in \code{ge})}
+
 \item{ident.1}{name(s) of cluster for which markers are computed}
 
 \item{ident.2}{name(s) of clusters for comparison. If \code{NULL} (defauld), then all the other clusters used}

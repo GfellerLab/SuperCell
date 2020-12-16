@@ -43,8 +43,8 @@ build_knn_graph <- function(X, k = 5, from = c("dist", "coordinates"), use.nn2 =
         stop(paste("Unknown distance method:", dist_method, "Available dist methods are", paste(av.dist, collapse = ", ") ))
       }
       if(dist_method_ == 1){
-        print("cor")
-        print(cor_method)
+        #print("cor")
+        #print(cor_method)
         av.cor_methods <- c("pearson", "kendall", "spearman")
         cor_method_    <- pmatch(cor_method, av.cor_methods)
         if(is.na(cor_method_)){
@@ -114,7 +114,7 @@ build_knn_graph_nn2 <- function(X, k = min(5, ncol(X))){
 
 knn_graph_from_dist <- function(D, k = 5, return_neighbors_order = T){
 
-  print("Start knn_graph_from_dist")
+  ##print("Start knn_graph_from_dist")
   if(!is.matrix(D) & class(D) != "dist"){
     stop("D (X) mast be a matrix or dist!")
   }

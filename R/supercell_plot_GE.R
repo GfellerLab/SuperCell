@@ -62,7 +62,7 @@ supercell_plot_GE <- function(SC.nw,
   names(color.gradient) <- as.character(1:length(color.gradient))
 
   brks           <- seq(floor(min(c(ge, 0))), ceiling(max(ge)), length.out = n.color.gradient+1)
-  print(brks)
+  #print(brks)
   group          <- as.character(cut(ge, breaks=brks,  include.lowest=TRUE, labels = FALSE))
 
   p <- supercell_plot(SC.nw = SC.nw,

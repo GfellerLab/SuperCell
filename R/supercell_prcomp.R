@@ -18,7 +18,7 @@ supercell_prcomp <- function(X,
                              k = 20,
                              do.scale = TRUE,
                              do.center = TRUE,
-                             double.centering = TRUE,
+                             double.centering = FALSE,
                              fast.pca = FALSE,
                              seed = 12345) {
   if(is.null(supercell_size)){
@@ -42,7 +42,7 @@ supercell_prcomp <- function(X,
     m <- m + supercell_size[i]*X[i,]
   }
   m         <- m/sum(supercell_size) # averaged scaled gene expression
-  print(max(abs(m)))
+  #print(max(abs(m)))
   M         <- matrix(m, byrow = T, nrow = n.i, ncol = n.j) # matrix where rows are m's
 
   X.cent    <- X - M

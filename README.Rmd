@@ -1,13 +1,11 @@
 ---
-title: "Example of Supercell pipeline"
+title: "Example of super-cell pipeline"
 csl: elsevier-harvard.csl
 output:
-  github_document:
-  bookdown::pdf_document2:
-    number_sections: yes
-abstract: |
-  This is the abstract.
+  md_document:
+    variant: markdown_github
 ---
+
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
@@ -19,7 +17,7 @@ knitr::opts_chunk$set(
 # Installation
 
 ```{r}
-#devtools::install_github("mariiabilous/SuperCell")
+#devtools::install_github("GfellerLab/SuperCell")
 library(SuperCell)
 
 ```
@@ -37,8 +35,8 @@ cell.meta <- readRDS("./data/5cancer_cell_lines_10x_cell_line_assignment.Rds") #
 gamma <- 20
 SC    <- SCimplify(GE, k.knn = 5, gamma = gamma, n.var.genes = 1000, use.nn2 = FALSE)
 set.seed(12345)
-supercell_plot(SC$graph.supercells, main = paste("Super-cell network, gamma =", gamma), seed = 1)
-supercell_plot(SC$graph.singlecell, group = cell.meta, do.frames = T, main = paste("Single-cell network, N =", dim(GE)[2]), lay.method = "components")
+p.SC <- supercell_plot(SC$graph.supercells, main = paste("Super-cell network, gamma =", gamma), seed = 1)
+p.sc <- supercell_plot(SC$graph.singlecell, group = cell.meta, do.frames = F, main = paste("Single-cell network, N =", dim(GE)[2]), lay.method = "components")
 ```
 
 ## Compute gene expression for simplified data
@@ -52,7 +50,7 @@ dim(SC.GE)
 SC2cellline  <- supercell_assign(cell.meta, SC$membership)
 SC$cell_line <- SC2cellline
 
-supercell_plot(SC$graph.supercells, group = SC$cell_line, seed = 1, main = "Super-cell colored by cell line assignment")
+p <- supercell_plot(SC$graph.supercells, group = SC$cell_line, seed = 1, main = "Super-cell colored by cell line assignment")
 ```
 
 Cluster super-cell data
@@ -67,7 +65,7 @@ SC$clustering  <- SC.clusters$clustering
 ```{r}
 map.cluster.to.cell.line    <- supercell_assign(supercell_membership = SC$clustering, clusters  = SC$cell_line)
 SC$clustering_reordered     <- map.cluster.to.cell.line[SC$clustering]
-supercell_plot(SC$graph.supercells, group = SC$clustering_reordered, seed = 1, main = "Super-cell colored by cell line cluster")
+p <- supercell_plot(SC$graph.supercells, group = SC$clustering_reordered, seed = 1, main = "Super-cell colored by cell line cluster")
 ```
 
 

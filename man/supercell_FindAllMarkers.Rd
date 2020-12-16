@@ -21,6 +21,8 @@ supercell_FindAllMarkers(
 
 \item{supercell_size}{a vector with supercell size (ordered the same way as in \code{ge})}
 
+\item{clusters}{a vector with clustering information (ordered the same way as in \code{ge})}
+
 \item{genes.use}{set of genes to test. Defeult -- all genes in \code{ge}}
 
 \item{logfc.threshold}{log fold change threshold for genes to be considered in the further analysis}

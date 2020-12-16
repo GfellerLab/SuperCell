@@ -37,8 +37,8 @@ supercell_plot <- function(SC.nw,
 
   cells.to.remove <- which(vsize < min.cell.size)
   cells.to.use    <- setdiff(1:N.SC, cells.to.remove)
-  print("Cells to remove baed on min size:")
-  print(cells.to.remove)
+  #print("Cells to remove baed on min size:")
+  #print(cells.to.remove)
 
   vsize <- sqrt(vsize)
   if(do.extra.log.rescale)
@@ -60,15 +60,15 @@ supercell_plot <- function(SC.nw,
 
   if(!is.null(weights) & length(cells.to.remove)>0){
     weights <- weights[-sort(unique(unlist(igraph::incident_edges(SC.nw, cells.to.remove))))]
-    print("length(weights)")
-    print(length(weights))
+    #print("length(weights)")
+    #print(length(weights))
 
   }
 
   if(length(cells.to.remove)>0){
     SC.nw <- igraph::delete_vertices(SC.nw, cells.to.remove)
-    print("igraph::ecount(SC.nw)")
-    print(igraph::ecount(SC.nw))
+    #print("igraph::ecount(SC.nw)")
+    #print(igraph::ecount(SC.nw))
   }
 
 

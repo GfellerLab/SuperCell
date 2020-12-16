@@ -13,7 +13,7 @@ supercell_GE(ge, groups, weights = NULL, do.median.norm = FALSE)
 
 \item{weights}{vector of a cell weight (NULL by default), used for computing average gene expression withing cluster of super-cells}
 
-\item{do.median.norm}{whether to normalize}
+\item{do.median.norm}{whether to normalize by median value (FALSE by default)}
 }
 \value{
 a matrix of simplified (averaged withing groups) data with ncol equal to number of groups and nrows as in the initial dataset
