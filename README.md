@@ -58,10 +58,25 @@ dim(SC.GE)
 SC2cellline  <- supercell_assign(cell.meta, SC$membership)
 SC$cell_line <- SC2cellline
 
+
 p <- supercell_plot(SC$graph.supercells, group = SC$cell_line, seed = 1, main = "Super-cell colored by cell line assignment")
 ```
 
 ![](figures/unnamed-chunk-5-1.png)
+
+``` r
+lay <- p$lay
+
+
+## rotate network to be consistent with single-cell one
+alpha <- -pi/2
+M.rotation  <- matrix(c(cos(alpha), sin(alpha),
+                        -sin(alpha), cos(alpha)), byrow = T, ncol = 2)
+lay.rotated <- lay %*% M.rotation
+p <- supercell_plot(SC$graph.supercells, group = SC$cell_line, seed = 1, main = "Super-cell colored by cell line assignment", lay = lay.rotated)
+```
+
+![](figures/unnamed-chunk-5-2.png)
 
 Cluster super-cell data
 -----------------------
@@ -80,7 +95,7 @@ Map clusters of super-cells to celll lines
 ``` r
 map.cluster.to.cell.line    <- supercell_assign(supercell_membership = SC$clustering, clusters  = SC$cell_line)
 SC$clustering_reordered     <- map.cluster.to.cell.line[SC$clustering]
-p <- supercell_plot(SC$graph.supercells, group = SC$clustering_reordered, seed = 1, main = "Super-cell colored by cluster")
+p <- supercell_plot(SC$graph.supercells, group = SC$clustering_reordered, seed = 1, main = "Super-cell colored by cluster", lay = lay.rotated)
 ```
 
 ![](figures/unnamed-chunk-7-1.png)
