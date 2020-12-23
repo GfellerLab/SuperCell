@@ -23,20 +23,22 @@ library(SuperCell)
 ```
 
 # Analysis
-## Load data of 5 cancer cell lines sequenced with 10x from [Tian et al., 2019](https://doi.org/10.1038/s41592-019-0425-8)
+## Load scRNA-seq data of 5 cancer cell lines from [Tian et al., 2019](https://doi.org/10.1038/s41592-019-0425-8).
+Data available at authors' [GitHub](https://github.com/LuyiTian/sc_mixology/blob/master/data/sincell_with_class_5cl.Rdata)
 
 ```{r}
-GE <- readRDS("./data/5cancer_cell_lines_10x_GE.Rds") # load gene expression matrix 
+GE <- readRDS("./data/5cancer_cell_lines_10x_GE.Rds") # load gene expression matrix (logcounts)
 dim(GE) # genes as rows and cells as columns
 cell.meta <- readRDS("./data/5cancer_cell_lines_10x_cell_line_assignment.Rds") # load cell assignment to a cancer cell line
 ```
-## Simplify single-cell data reducing numer of super-cell $gamma = 20$ times comparing to the number of single cells 
+## Simplify single-cell data at the graining level $gamma = 20$
+(i.e., `20` times less super-cells than single cells)
 ```{r Simplification, warning=FALSE, paged.print=FALSE}
-gamma <- 20
-SC    <- SCimplify(GE, k.knn = 5, gamma = gamma, n.var.genes = 1000, use.nn2 = FALSE)
+gamma <- 20 # graining level
+SC    <- SCimplify(GE, k.knn = 5, gamma = gamma, n.var.genes = 1000)
 set.seed(12345)
-p.SC <- supercell_plot(SC$graph.supercells, main = paste("Super-cell network, gamma =", gamma), seed = 1)
-p.sc <- supercell_plot(SC$graph.singlecell, group = cell.meta, do.frames = F, main = paste("Single-cell network, N =", dim(GE)[2]), lay.method = "components")
+p.SC <- supercell_plot(SC$graph.supercells, color.use = "gray", main = paste("Super-cell network, gamma =", gamma), seed = 1) # plot super-cell network
+p.sc <- supercell_plot(SC$graph.singlecell, group = cell.meta, do.frames = F, main = paste("Single-cell network, N =", dim(GE)[2]), lay.method = "components") # plot single-cell network
 ```
 
 ## Compute gene expression for simplified data
@@ -53,19 +55,20 @@ SC$cell_line <- SC2cellline
 p <- supercell_plot(SC$graph.supercells, group = SC$cell_line, seed = 1, main = "Super-cell colored by cell line assignment")
 ```
 
-Cluster super-cell data
+## Cluster super-cell data
 ```{r}
-SC.PCA         <- supercell_prcomp(t(SC.GE), genes.use = SC$genes.use, supercell_size = SC$supercell_size, k = 20)
-D              <- dist(SC.PCA$x)
+SC.PCA         <- supercell_prcomp(t(SC.GE), genes.use = SC$genes.use, supercell_size = SC$supercell_size, k = 20) #dimensionality reduction 
+D              <- dist(SC.PCA$x) # compute distance 
 
-SC.clusters    <- supercell_cluster(D = D, k = 5, supercell_size = SC$supercell_size)
+SC.clusters    <- supercell_cluster(D = D, k = 5, supercell_size = SC$supercell_size) # cluster super-cells
 SC$clustering  <- SC.clusters$clustering
 ```
 
+## Map clusters of super-cells to celll lines
 ```{r}
 map.cluster.to.cell.line    <- supercell_assign(supercell_membership = SC$clustering, clusters  = SC$cell_line)
 SC$clustering_reordered     <- map.cluster.to.cell.line[SC$clustering]
-p <- supercell_plot(SC$graph.supercells, group = SC$clustering_reordered, seed = 1, main = "Super-cell colored by cell line cluster")
+p <- supercell_plot(SC$graph.supercells, group = SC$clustering_reordered, seed = 1, main = "Super-cell colored by cluster")
 ```
 
 
