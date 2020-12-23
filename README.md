@@ -13,7 +13,8 @@ Load scRNA-seq data of 5 cancer cell lines from [Tian et al., 2019](https://doi.
 ---------------------------------------------------------------------------------------------------------------
 
 Data available at authors’
-[GitHub](https://github.com/LuyiTian/sc_mixology/blob/master/data/sincell_with_class_5cl.Rdata)
+[GitHub](https://github.com/LuyiTian/sc_mixology/blob/master/data/)
+under file name \\textit{sincell\_with\_class\_5cl.Rdata}
 
 ``` r
 GE <- readRDS("./data/5cancer_cell_lines_10x_GE.Rds") # load gene expression matrix (logcounts)

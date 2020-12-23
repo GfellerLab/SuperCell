@@ -24,7 +24,7 @@ library(SuperCell)
 
 # Analysis
 ## Load scRNA-seq data of 5 cancer cell lines from [Tian et al., 2019](https://doi.org/10.1038/s41592-019-0425-8).
-Data available at authors' [GitHub](https://github.com/LuyiTian/sc_mixology/blob/master/data/sincell_with_class_5cl.Rdata)
+Data available at authors' [GitHub](https://github.com/LuyiTian/sc_mixology/blob/master/data/) under file name \textit{sincell_with_class_5cl.Rdata}
 
 ```{r}
 GE <- readRDS("./data/5cancer_cell_lines_10x_GE.Rds") # load gene expression matrix (logcounts)
