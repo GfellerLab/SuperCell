@@ -15,21 +15,40 @@ knitr::opts_chunk$set(
 ```
 
 # Installation
+SuperCell requires [igraph](https://cran.r-project.org/web/packages/igraph/index.html), [RANN](https://cran.r-project.org/web/packages/RANN/index.html), [WeightedCluster](https://cran.r-project.org/web/packages/WeightedCluster/index.html), [corpcor](https://cran.r-project.org/web/packages/corpcor/index.html), [weights](https://cran.r-project.org/web/packages/weights/index.html), [Hmisc](https://cran.r-project.org/web/packages/Hmisc/index.html), [Matrix](https://cran.r-project.org/web/packages/Matrix/index.html), [matrixStats](https://cran.rstudio.com/web/packages/matrixStats/index.html), [plyr](https://cran.r-project.org/web/packages/plyr/index.html), [irlba](https://cran.r-project.org/web/packages/irlba/index.html) 
 
+```{r install imported packages}
+# install.packages("igraph")
+# install.packages("RANN")
+# install.packages("WeightedCluster")
+# install.packages("corpcor")
+# install.packages("weights")
+# install.packages("Hmisc")
+# install.packages("Matrix")
+# install.packages("matrixStats")
+# install.packages("plyr")
+# install.packages("irlba")
+```
+
+
+Installing SuperCell package from gitHub
 ```{r}
-#devtools::install_github("GfellerLab/SuperCell")
+# if (!requireNamespace("remotes")) install.packages("remotes")
+# remotes::install_github("GfellerLab/SuperCell")
+
 library(SuperCell)
 
 ```
 
 # Analysis
 ## Load scRNA-seq data of 5 cancer cell lines from [Tian et al., 2019](https://doi.org/10.1038/s41592-019-0425-8).
-Data available at authors' [GitHub](https://github.com/LuyiTian/sc_mixology/blob/master/data/) under file name *sincell_with_class_5cl.Rdata*
+Data available at authors' [GitHub](https://github.com/LuyiTian/sc_mixology/blob/master/data/) under file name *sincell_with_class_5cl.Rdata*. 
 
 ```{r}
-GE <- readRDS("./data/5cancer_cell_lines_10x_GE.Rds") # load gene expression matrix (logcounts)
+data(cell_lines) # list with GE - gene expression matrix (logcounts), meta - cell meta data
+GE <- cell_lines$GE
 dim(GE) # genes as rows and cells as columns
-cell.meta <- readRDS("./data/5cancer_cell_lines_10x_cell_line_assignment.Rds") # load cell assignment to a cancer cell line
+cell.meta <- cell_lines$meta
 ```
 ## Simplify single-cell data at the graining level $gamma = 20$
 (i.e., `20` times less super-cells than single cells)
