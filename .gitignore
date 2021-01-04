@@ -1,6 +1,8 @@
 .Rproj.user
 .Rhistory
 .Ruserdata
+.RData
+.Rbuildignore
 .DS_Store
 *.pdf
 *.html
