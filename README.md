@@ -233,42 +233,6 @@ library(Seurat)
 ## Warning: package 'Seurat' was built under R version 3.6.2
 
 m.seurat <- supercell_2_Seurat(SC.GE = SC.GE, SC = SC, fields = c("cell_line", "clustering", "clustering_reordered"))
-## PC_ 1 
-## Positive:  VMP1, KRCC1, CTSD, RNF145, SSR4, SLC25A6, XAGE1B, ABCC3, GOLM1, NPDC1 
-##     MT-TW, SVIP, EPS8, IER3, ASPH, ITGA3, OCIAD2, CYB5A, NAMPTP1, SPINT2 
-##     SMIM14, NDUFAF2, NAMPT, P4HB, DCBLD2, NDUFS4, PYCARD, IGFBP3, UGDH, PDIA4 
-## Negative:  GAGE12H, GAGE12D, GAGE12C, GAGE12E, GAGE1, GAGE12J, GAGE12G, GAGE13, GAGE2E, GAGE2A 
-##     CTAG2, TIMM8B, AC244153.1, GAGE10, MAGEA4, CPA4, MAGEA6, DNM1L, CT45A3, GSTM3 
-##     KRT17, LAPTM4B, CT45A7, MYL9, ATP5F1EP2, CASC15, LAMTOR5, MRPL42, MED21, SSH2 
-## PC_ 2 
-## Positive:  TM4SF1, TFPI2, PON2, ALDH1A1, UQCRFS1, B4GALT4, KRT81, TESC, INSL4, RPS4Y1 
-##     TM4SF20, PSMD8, AKR1B10, CYP24A1, TMED3, PCBD1, TM4SF4, S100A4, CCND3, PDLIM5 
-##     CPLX2, RAB10, CYSTM1, NT5C, ETFB, CLU, TKT, GPX2, BAX, CFD 
-## Negative:  RAMP1, MT2A, RHOBTB3, AL669983.1, TSTD1, RPL12P6, SUMO3, KDELR2, HDGF, AC018738.1 
-##     MT1P1, MAP3K13, MT2P1, B2M, CASP4, PRDX2, IFI27, C6orf48, MDK, AL122020.1 
-##     GUK1, ISG15, CTHRC1, RNASEH2C, TBL1XR1, ERO1A, RPS10, IFI16, APLP2, C15orf48 
-## PC_ 3 
-## Positive:  DKC1, CCT6A, PGK1, RBM8B, ANXA3, EIF3D, RBM8A, HNRNPM, TUBB4B, HSP90AA2P 
-##     EIF2S1, XRCC6, CCT5, PPA1, LDHA, MAGOH, ENO1, COPS5, HSP90AA1, POLR2G 
-##     PSMC2, CCT8, PSME2P2, PSMB3, ATP5F1B, SRI, ILF2, PSME2, AIMP1, GLRX3 
-## Negative:  PTP4A2, AES, FTL, B4GALT1, MALAT1, ZNF428, NEAT1, LITAF, ERLEC1, SAT1 
-##     PFN2, FTH1P10, NMB, BID, FTLP3, FTH1P8, HP1BP3, IFITM2, TOR1AIP2, CTTN 
-##     FTH1P7, MAP1B, KRT10, IGFBP4, FTH1P5, FTH1P11, AC092069.1, MORF4L1P1, RPS27L, DUSP23 
-## PC_ 4 
-## Positive:  ANXA5, PSMB1, UBXN4, PSMA1, PSMD14, TUBB, CALU, NUDT5, SERPINE2, AP2M1 
-##     EIF4A2, TRAPPC4, UQCRC2, TUBA4A, HLA-A, PSMD2, TMED10, NUCB2, HSPA8, EMP2 
-##     TMEM59, NNMT, HSPA9, TALDO1, EIF3CL, PLAUR, CUTA, LMAN1, PDIA3, CD59 
-## Negative:  EIF5A, SCD, CAV2, PPP1CB, H2AFJ, TMEM256, TJP1, BRI3, MRPL33, EMC6 
-##     ITGAE, NAA38, PEG10, SUMF2, IAH1, SNHG8, CTDNEP1, FIS1, CYTOR, ACP1 
-##     LAMTOR4, TNNT1, TMEM134, HSPB1, PHKG1, ARHGAP29, AHNAK, C20orf27, ISOC2, C12orf75 
-## PC_ 5 
-## Positive:  AC107075.1, PNRC1, HIST2H2AA3, EIF3E, TUBA1A, AKAP9, PPIB, PGLS, HERPUD1, LAPTM4A 
-##     ZNHIT1, TMEM59, NEAT1, ITM2B, GRN, ATP5F1A, CST3, REEP5, ARF4, GOLGB1 
-##     PDIA3, AC044787.1, ACADVL, CHMP2A, RPS4XP11, EIF3M, HSPA5, RPL5P34, TMEM205, SERPINB1 
-## Negative:  PCLAF, HNRNPAB, CKS1B, TMPO, MKI67, H2AFZ, ZWINT, CENPK, DTYMK, DEK 
-##     TOP2A, HIST1H4C, TK1, BIRC5, ATAD2, CENPF, NUSAP1, CENPW, RPL39L, HELLS 
-##     UBE2T, TPX2, H2AFX, CLSPN, HMGB2, MYBL2, PHF19, CENPN, ASPM, SMC4
-## Computing nearest neighbor graph
 ```
 
 Note: since super-cells have different size (consist of different number
@@ -276,13 +240,11 @@ of cells), we apply sample-weighted algorithms at most af the steps of
 the downstream analyses. Thus, when coercing super-cell to Seurat, we
 replaced PCA, saling and kNN graph of Seurat object with those obtained
 applying sample-weighted version of PCA, scaling or super-cell graph,
-respectively. If you then again apply *R**u**n**P**C**A*,
-*S**c**a**l**e**D**a**t**a*, or *F**i**n**d**N**e**i**g**h**b**o**r**s*,
-the result will be rewritten, but you will be able to access them with
-$Embeddings(m.seurat, reduction = "pca_weigted")$,
-*m*.*s**e**u**r**a**t*@*a**s**s**a**y**s*<RNA@misc>\[\[“scale.data.weighted”\]\]$,
-or *m*.*s**e**u**r**a**t*@*g**r**a**p**h**s*RNA_super_cells$,
-respectively.
+respectively. If you then again apply `RunPCA`, `ScaleData`, or
+`FindNeighbors`, the result will be rewritten, but you will be able to
+access them with `Embeddings(m.seurat, reduction = "pca_weigted")`,
+`m.seurat@assays$RNA@misc[["scale.data.weighted"]]`, or
+`m.seurat@graphs$RNA_super_cells`, respectively.
 
 ``` r
 PCAPlot(m.seurat)
@@ -292,17 +254,6 @@ PCAPlot(m.seurat)
 
 ``` r
 ### cluster super-cell network (unweighted clustering)
-m.seurat <- FindClusters(m.seurat, graph.name = "RNA_super_cells")
-## Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
-## 
-## Number of nodes: 196
-## Number of edges: 703
-## 
-## Running Louvain algorithm...
-## Maximum modularity in 10 random starts: 0.8322
-## Number of communities: 7
-## Elapsed time: 0 seconds
-
 m.seurat <- FindClusters(m.seurat, graph.name = "RNA_nn") # now RNA_nn is super-cell network
 ## Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
 ## 
@@ -314,9 +265,7 @@ m.seurat <- FindClusters(m.seurat, graph.name = "RNA_nn") # now RNA_nn is super-
 ## Number of communities: 7
 ## Elapsed time: 0 seconds
 
-m.seurat <- FindNeighbors(m.seurat)  # RNA_nn has been replaced with kNN graph of super-cell (unweigted)
-## Computing nearest neighbor graph
-## Computing SNN
+m.seurat <- FindNeighbors(m.seurat, verbose = FALSE)  # RNA_nn has been replaced with kNN graph of super-cell (unweigted)
 m.seurat <- FindClusters(m.seurat, graph.name = "RNA_nn") 
 ## Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
 ## 

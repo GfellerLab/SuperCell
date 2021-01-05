@@ -175,17 +175,15 @@ library(Seurat)
 
 m.seurat <- supercell_2_Seurat(SC.GE = SC.GE, SC = SC, fields = c("cell_line", "clustering", "clustering_reordered"))
 ```
-Note: since super-cells have different size (consist of different number of cells), we apply sample-weighted algorithms at most af the steps of the downstream analyses. Thus, when coercing super-cell to Seurat, we replaced PCA, saling and kNN graph of Seurat object with those obtained applying sample-weighted version of PCA, scaling or super-cell graph, respectively. If you then again apply $RunPCA$, $ScaleData$, or $FindNeighbors$, the result will be rewritten, but you will be able to access them with $Embeddings(m.seurat, reduction = "pca_weigted")$, $m.seurat@assays$RNA@misc[["scale.data.weighted"]]$, or $m.seurat@graphs$RNA_super_cells$, respectively.
+Note: since super-cells have different size (consist of different number of cells), we apply sample-weighted algorithms at most af the steps of the downstream analyses. Thus, when coercing super-cell to Seurat, we replaced PCA, saling and kNN graph of Seurat object with those obtained applying sample-weighted version of PCA, scaling or super-cell graph, respectively. If you then again apply `RunPCA`, `ScaleData`, or `FindNeighbors`, the result will be rewritten, but you will be able to access them with `Embeddings(m.seurat, reduction = "pca_weigted")`, `m.seurat@assays$RNA@misc[["scale.data.weighted"]]`, or `m.seurat@graphs$RNA_super_cells`, respectively.
 
 ```{r}
 PCAPlot(m.seurat)
 
 ### cluster super-cell network (unweighted clustering)
-m.seurat <- FindClusters(m.seurat, graph.name = "RNA_super_cells")
-
 m.seurat <- FindClusters(m.seurat, graph.name = "RNA_nn") # now RNA_nn is super-cell network
 
-m.seurat <- FindNeighbors(m.seurat)  # RNA_nn has been replaced with kNN graph of super-cell (unweigted)
+m.seurat <- FindNeighbors(m.seurat, verbose = FALSE)  # RNA_nn has been replaced with kNN graph of super-cell (unweigted)
 m.seurat <- FindClusters(m.seurat, graph.name = "RNA_nn") 
 ```
 
