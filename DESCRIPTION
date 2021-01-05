@@ -21,3 +21,8 @@ Imports:
 	irlba,
 	grDevices
 RoxygenNote: 7.1.1
+Suggests:
+	SingleCellExperiment,
+	Seurat,
+	Velocyto,
+	MAGIC
