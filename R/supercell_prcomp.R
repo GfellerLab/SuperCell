@@ -57,11 +57,16 @@ supercell_prcomp <- function(X,
   set.seed(seed)
   if(!fast.pca){
     pca                   <- prcomp(x = X.for.PCA, center = FALSE, scale. = FALSE, rank. = k)
+    pca$center            <- do.center
+    pca$scale             <- do.scale
   } else {
     pca                   <- irlba::irlba(X.for.PCA, nv = k) # is equvivalent to prcomp when there is no centering and scaling (then prcomp is the same as svd)
  #   pca$x                 <- pca$u %*% diag(pca$d)
     pca$rotation          <- pca$v
     pca$v                 <- NULL
+    pca$center            <- do.center
+    pca$scale             <- do.scale
+    pca$sdev              <- sqrt(pca$d)
   }
 
 
