@@ -10,6 +10,7 @@ supercell_plot(
   color.use = NULL,
   lay.method = c("nicely", "fr", "components", "drl", "graphopt"),
   lay = NULL,
+  alpha = 0,
   seed = 12345,
   main = NA,
   do.frames = TRUE,
@@ -18,7 +19,8 @@ supercell_plot(
   do.extra.sqtr.rescale = FALSE,
   frame.color = "black",
   weights = NULL,
-  min.cell.size = 0
+  min.cell.size = 0,
+  return.meta = FALSE
 )
 }
 \arguments{
@@ -33,11 +35,27 @@ for \link[igraph]{layout_licely} and "fr" for \link[igraph]{layout_with_fr}, "co
 
 \item{lay}{a particular layout of a graph to plot (in is not \code{NULL}, \code{lay.method} is ignored and new layout is not computed)}
 
+\item{alpha}{a rotation of the layout (either orivided or computed)}
+
 \item{seed}{a random seed used to compute graph layout}
 
 \item{main}{a title of a plot}
 
 \item{do.frames}{whether to keep vertex.frames in the plot}
+
+\item{do.extra.log.rescale}{whether to log-scale node size}
+
+\item{log.base}{base with thich to log-scale node size}
+
+\item{do.extra.sqtr.rescale}{whether to sqrt-scale node size}
+
+\item{frame.color}{color of node frames, black by default}
+
+\item{weights}{edge weights used for some layout algorithms}
+
+\item{min.cell.size}{do not plot cells with smaller size}
+
+\item{return.meta}{whether to return all the meta data}
 }
 \value{
 plot of a super-cell network

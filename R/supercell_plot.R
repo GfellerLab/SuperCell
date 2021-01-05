@@ -6,9 +6,17 @@
 #' @param lay.method method to compute layout of the network (for the moment there several available: "nicely"
 #' for \link[igraph]{layout_licely} and "fr" for \link[igraph]{layout_with_fr}, "components" for \link[igraph]{layout_components})
 #' @param lay a particular layout of a graph to plot (in is not \code{NULL}, \code{lay.method} is ignored and new layout is not computed)
+#' @param alpha a rotation of the layout (either orivided or computed)
 #' @param seed a random seed used to compute graph layout
 #' @param main a title of a plot
 #' @param do.frames whether to keep vertex.frames in the plot
+#' @param do.extra.log.rescale whether to log-scale node size
+#' @param log.base base with thich to log-scale node size
+#' @param do.extra.sqtr.rescale  whether to sqrt-scale node size
+#' @param frame.color color of node frames, black by default
+#' @param weights edge weights used for some layout algorithms
+#' @param min.cell.size do not plot cells with smaller size
+#' @param return.meta whether to return all the meta data
 #'
 #' @return plot of a super-cell network
 #' @export
@@ -19,6 +27,7 @@ supercell_plot <- function(SC.nw,
                            color.use = NULL,
                            lay.method = c("nicely", "fr", "components", "drl", "graphopt"),
                            lay = NULL,
+                           alpha = 0,
                            seed = 12345,
                            main = NA,
                            do.frames = TRUE,
@@ -27,7 +36,8 @@ supercell_plot <- function(SC.nw,
                            do.extra.sqtr.rescale = FALSE,
                            frame.color = "black",
                            weights = NULL,
-                           min.cell.size = 0){
+                           min.cell.size = 0,
+                           return.meta = FALSE){
 
 
 
@@ -73,7 +83,6 @@ supercell_plot <- function(SC.nw,
 
 
 
-
   if(is.null(lay)){ # compute new layout
     lay.method <- lay.method[1]
     if(is.na(lay.method) | is.nan(lay.method) | is.null(lay.method)) lay.method = "nicely"
@@ -96,28 +105,40 @@ supercell_plot <- function(SC.nw,
     else stop(paste("Unknown lay.method", lay.method))
   }
 
+  # do rotation
+  if(is.numeric(alpha)){
+    if((alpha %% (2*pi)) != 0){
+      M.rotation  <- matrix(c(cos(alpha), sin(alpha),
+                              -sin(alpha), cos(alpha)), byrow = T, ncol = 2)
+      lay.rotated <- lay %*% M.rotation
+    } else {
+      lay.rotated <- lay
+    }
+  } else {
+    stop(paste("Alpha has to be numeric! \n"))
+  }
 
   v.colors <- color.use[group]
   ifelse(do.frames, v.frame.colors <- rep(frame.color, length(v.colors)), v.frame.colors <- v.colors)
 
   plot(SC.nw, vertex.label = NA, vertex.color = v.colors[cells.to.use],
        vertex.frame.color = v.frame.colors[cells.to.use],
-       layout = lay, main = main, vertex.size = vsize[cells.to.use])
+       layout = lay.rotated, main = main, vertex.size = vsize[cells.to.use])
 
-  p <- grDevices::recordPlot()
-
-
-
-  res <- list(p = p,
-              edgelist = igraph::get.edgelist(SC.nw),
-              lay = lay,
-              group = group[cells.to.use],
-              cells.to.use = cells.to.use,
-              vsize.used = vsize[cells.to.use],
-              vsize.actual = igraph::V(SC.nw)$size,
-              v.colors = v.colors)
-  return(res)
-
+  if(return.meta){
+    p <- grDevices::recordPlot()
+    res <- list(p = p,
+                edgelist = igraph::get.edgelist(SC.nw),
+                lay = lay,
+                lay.rotated = lay.rotated,
+                alpha = alpha,
+                group = group[cells.to.use],
+                cells.to.use = cells.to.use,
+                vsize.used = vsize[cells.to.use],
+                vsize.actual = igraph::V(SC.nw)$size,
+                v.colors = v.colors)
+    return(res)
+  }
 }
 
 
