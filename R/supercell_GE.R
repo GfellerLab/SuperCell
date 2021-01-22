@@ -17,26 +17,49 @@ supercell_GE  <- function(ge, groups, weights = NULL, do.median.norm = FALSE){
     stop("Length of the vector groups has to be equal to the number of cols in matrix ge")
   }
 
-  ge        <- as.matrix(ge)
-  goups.idx <-  plyr:::split_indices(groups)
-
-  if(is.null(weights)){
-    fun <- function(idx){
-      Matrix::rowMeans(ge[, idx, drop = FALSE])
-    }
+  if(ncol(ge) > 200000){
+    block.size <- 5000
+    N.blocks <- nrow(ge)%/%block.size
+    if(nrow(ge)%%block.size > 0) N.blocks <- N.blocks+1
   } else {
-    if(length(weights) != length(groups))
-      stop("weights must be the same length as groups or NULL in case of unweighted averaging")
-    fun <- function(idx){
-      matrixStats::rowWeightedMeans(ge[, idx, drop = FALSE], w = weights[idx])
-    }
+    block.size <- nrow(ge)
+    N.blocks <- 1
   }
 
-  supercell.GE             <- sapply(goups.idx, fun)
-  # if(!(TRUE %in% is.na(as.numeric(colnames(supercell.GE))))){
-  #   supercell.GE <- supercell.GE[,order(as.numeric(colnames(supercell.GE)))]
-  # }
+  print("N.blocks:")
+  print(N.blocks)
 
+  goups.idx    <- plyr:::split_indices(groups)
+  supercell.GE <- c()
+
+  if(N.blocks>0){
+    for(i in 1:N.blocks){
+      print(i)
+
+      idx.begin <- (i-1)*block.size + 1
+      idx.end   <- min(i*block.size,  nrow(ge))
+
+      ge.i      <- as.matrix(ge[idx.begin:idx.end,])
+
+      if(is.null(weights)){
+        fun <- function(idx){
+          Matrix::rowMeans(ge.i[, idx, drop = FALSE])
+        }
+      } else {
+        if(length(weights) != length(groups))
+          stop("weights must be the same length as groups or NULL in case of unweighted averaging")
+        fun <- function(idx){
+          matrixStats::rowWeightedMeans(ge.i[, idx, drop = FALSE], w = weights[idx])
+        }
+      }
+
+      supercell.GE             <- rbind(supercell.GE, sapply(goups.idx, fun))
+    }
+    # if(!(TRUE %in% is.na(as.numeric(colnames(supercell.GE))))){
+    #   supercell.GE <- supercell.GE[,order(as.numeric(colnames(supercell.GE)))]
+    # }
+
+  }
   if(do.median.norm){
     supercell.GE <- (supercell.GE+0.01)/apply(supercell.GE+0.01, 1, median)
   }
