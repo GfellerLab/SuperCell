@@ -11,7 +11,7 @@ supercell_plot_GE(
   n.color.gradient = 10,
   lay.method = c("nicely", "fr", "components", "drl", "graphopt", "dh"),
   lay = NULL,
-  alpha = alpha,
+  alpha = 0,
   seed = 12345,
   main = NA,
   do.frames = TRUE,
