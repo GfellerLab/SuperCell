@@ -20,7 +20,7 @@ supercell_plot_GE <- function(SC.nw,
                               n.color.gradient = 10,
                               lay.method = c("nicely", "fr", "components", "drl", "graphopt", "dh"),
                               lay = NULL,
-                              alpha = alpha,
+                              alpha = 0,
                               seed = 12345,
                               main = NA,
                               do.frames = TRUE,
@@ -80,7 +80,8 @@ supercell_plot_GE <- function(SC.nw,
                    do.extra.sqtr.rescale = do.extra.sqtr.rescale,
                    frame.color = frame.color,
                    weights = weights,
-                   min.cell.size = min.cell.size)
+                   min.cell.size = min.cell.size,
+                   return.meta = TRUE)
 
 
   p$p
