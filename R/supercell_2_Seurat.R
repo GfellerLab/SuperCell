@@ -116,7 +116,8 @@ supercell_2_Seurat <- function(SC.GE, SC, fields = c(),
   my_pca <- supercell_prcomp(X = t(SC.GE), genes.use = var.genes,
                              fast.pca = TRUE,
                              supercell_size = meta$supercell_size,
-                             k = 50, do.scale = do.scale, do.center = do.center,
+                             k = dim(m.seurat@reductions$pca@cell.embeddings)[2],
+                             do.scale = do.scale, do.center = do.center,
                              double.centering = FALSE)
 
   dimnames(my_pca$x) <- dimnames(m.seurat@reductions$pca_seurat)
