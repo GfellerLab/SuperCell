@@ -19,7 +19,9 @@ Imports:
 	matrixStats,
 	plyr,
 	irlba,
-	grDevices
+	grDevices,
+	patchwork,
+	ggplot2
 RoxygenNote: 7.1.1
 Suggests:
 	SingleCellExperiment,
