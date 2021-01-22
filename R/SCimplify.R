@@ -56,7 +56,14 @@ SCimplify <- function(X,
 
   if(is.null(genes.use)){
     n.var.genes <- min(n.var.genes, nrow(X))
-    gene.var    <- apply(X, 1, var)
+    if(N.c > 50000){
+      set.seed(seed)
+      idx         <- sample(N.c, 50000)
+      gene.var    <- apply(X[,idx], 1, var)
+    } else {
+      gene.var    <- apply(X, 1, var)
+    }
+
     genes.use   <- names(sort(gene.var, decreasing = TRUE))[1:n.var.genes]
   }
 
