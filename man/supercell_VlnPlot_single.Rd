@@ -38,5 +38,5 @@ supercell_VlnPlot_single(
 \item{idents}{idents (classes) to plot (default all)}
 }
 \description{
-Used for
+Used for supercell_VlnPlot
 }

@@ -51,7 +51,7 @@ cell.meta <- cell_lines$meta
 ```
 ## Simplify single-cell data at the graining level $gamma = 20$
 (i.e., `20` times less super-cells than single cells) by first building a kNN ($k=5$) network
-using top $n.var.genes=1000$ most variable genes for dimentionality reduction.
+using top $n.var.genes=1000$ most variable genes for dimentionality reduction. Function `SCimplify` computes the partition into super-cells, this information is available with the field `membership`.
 
 ```{r Simplification, warning=FALSE, paged.print=FALSE}
 gamma <- 20 # graining level
@@ -76,15 +76,15 @@ supercell_plot(SC$graph.singlecell, # network
 ```
 
 ## Compute gene expression for simplified data
-Function `SCimplify` computes the partition into super-cells, this information is available with the field `membership`. To get a gene expression of super-cells, we need to average gene expressions within each super-cell with function `supercell_GE` 
+ To get a gene expression of super-cells, we need to average gene expressions within each super-cell with function `supercell_GE` 
 ```{r}
 SC.GE <- supercell_GE(GE, SC$membership)
 dim(SC.GE) 
 ```
 
-#Map each super-cell to a particular cell line
-We now assing super-cell to a particular cell line based on the assignment of single cells it contains, for this, we use function `supercell_assign`. 
-By default, this function assign each super-cell to a cluster with the largest Jaccard coefficient to avoid biases towards very rare or very abundant clusters. Alternatively, assigmnent can be performed using relative or absolute abundance with `method = "relative"` or `method = "absolute"`, respectively. 
+## Map each super-cell to a particular cell line
+We now assign super-cell to a particular cell line based on the cell line data, for this, we use function `supercell_assign`. 
+By default, this function assign each super-cell to a cluster with the largest Jaccard coefficient to avoid biases towards very rare or very abundant clusters. Alternatively, assigmnent can be performed using relative (may cause biase towards very small populations) or absolute (may cause biase towards large populations) abundance with `method = "relative"` or `method = "absolute"`, respectively. 
 ```{r}
 SC2cellline  <- supercell_assign(clusters = cell.meta, # single-cell assigment to clusters
                                  supercell_membership = SC$membership, # single-cell assignment to super-cells

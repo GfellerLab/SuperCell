@@ -99,7 +99,7 @@ supercell_VlnPlot <- function(ge,
 
 #' Plot  Violin plot for 1 feature
 #'
-#' Used for
+#' Used for supercell_VlnPlot
 #'
 #' @param ge1 a gene expression vector (same length as number of super-cells)
 #' @param supercell_size a vector with supercell size (ordered the same way as in \code{ge})

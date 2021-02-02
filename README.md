@@ -1,4 +1,5 @@
-# Installation
+Installation
+============
 
 SuperCell requires
 [igraph](https://cran.r-project.org/web/packages/igraph/index.html),
@@ -34,13 +35,15 @@ Installing SuperCell package from gitHub
 library(SuperCell)
 ```
 
-# Analysis
+Analysis
+========
 
-## Load scRNA-seq data of 5 cancer cell lines from [Tian et al., 2019](https://doi.org/10.1038/s41592-019-0425-8).
+Load scRNA-seq data of 5 cancer cell lines from [Tian et al., 2019](https://doi.org/10.1038/s41592-019-0425-8).
+---------------------------------------------------------------------------------------------------------------
 
 Data available at authors’
 [GitHub](https://github.com/LuyiTian/sc_mixology/blob/master/data/)
-under file name *sincell_with_class_5cl.Rdata*.
+under file name *sincell\_with\_class\_5cl.Rdata*.
 
 ``` r
 data(cell_lines) # list with GE - gene expression matrix (logcounts), meta - cell meta data
@@ -50,11 +53,14 @@ dim(GE) # genes as rows and cells as columns
 cell.meta <- cell_lines$meta
 ```
 
-## Simplify single-cell data at the graining level *g**a**m**m**a* = 20
+Simplify single-cell data at the graining level *g**a**m**m**a* = 20
+--------------------------------------------------------------------
 
 (i.e., `20` times less super-cells than single cells) by first building
 a kNN (*k* = 5) network using top *n*.*v**a**r*.*g**e**n**e**s* = 1000
-most variable genes for dimentionality reduction.
+most variable genes for dimentionality reduction. Function `SCimplify`
+computes the partition into super-cells, this information is available
+with the field `membership`.
 
 ``` r
 gamma <- 20 # graining level
@@ -74,6 +80,7 @@ supercell_plot(SC$graph.supercells, # network
 ![](figures/Simplification-1.png)
 
 ``` r
+
 # plot single-cell network
 supercell_plot(SC$graph.singlecell, # network
                group = cell.meta, # colored by cell line assignment
@@ -84,27 +91,32 @@ supercell_plot(SC$graph.singlecell, # network
 
 ![](figures/Simplification-2.png)
 
-## Compute gene expression for simplified data
+Compute gene expression for simplified data
+-------------------------------------------
 
-Function `SCimplify` computes the partition into super-cells, this
-information is available with the field `membership`. To get a gene
-expression of super-cells, we need to average gene expressions within
-each super-cell with function `supercell_GE`
+To get a gene expression of super-cells, we need to average gene
+expressions within each super-cell with function `supercell_GE`
 
 ``` r
 SC.GE <- supercell_GE(GE, SC$membership)
+## [1] "N.blocks:"
+## [1] 1
+## [1] 1
 dim(SC.GE) 
 ## [1] 11786   196
 ```
 
-\#Map each super-cell to a particular cell line We now assing super-cell
-to a particular cell line based on the assignment of single cells it
-contains, for this, we use function `supercell_assign`. By default, this
-function assign each super-cell to a cluster with the largest Jaccard
-coefficient to avoid biases towards very rare or very abundant clusters.
-Alternatively, assigmnent can be performed using relative or absolute
-abundance with `method = "relative"` or `method = "absolute"`,
-respectively.
+Map each super-cell to a particular cell line
+---------------------------------------------
+
+We now assign super-cell to a particular cell line based on the cell
+line data, for this, we use function `supercell_assign`. By default,
+this function assign each super-cell to a cluster with the largest
+Jaccard coefficient to avoid biases towards very rare or very abundant
+clusters. Alternatively, assigmnent can be performed using relative (may
+cause biase towards very small populations) or absolute (may cause biase
+towards large populations) abundance with `method = "relative"` or
+`method = "absolute"`, respectively.
 
 ``` r
 SC2cellline  <- supercell_assign(clusters = cell.meta, # single-cell assigment to clusters
@@ -138,6 +150,7 @@ supercell_plot(SC$graph.supercells,
 ![](figures/unnamed-chunk-6-1.png)
 
 ``` r
+
 ## alternatively, any layout can be provided as 2xN numerical matrix, where N is number of nodes (cells)
 
 ## Let's plot super-cell network using the layout of the single-cell network:
@@ -146,6 +159,9 @@ my.lay.sc <- igraph::layout_components(SC$graph.singlecell)
 
 ## 2) compute super-cell network layout averaging coordinates withing super-cells
 my.lay.SC <- t(supercell_GE(ge = t(my.lay.sc), groups = SC$membership))
+## [1] "N.blocks:"
+## [1] 1
+## [1] 1
 
 ## 3) provide layout with the parameter $lay$
 supercell_plot(SC$graph.supercells, 
@@ -156,7 +172,8 @@ supercell_plot(SC$graph.supercells,
 
 ![](figures/unnamed-chunk-6-2.png)
 
-## Cluster super-cell data
+Cluster super-cell data
+-----------------------
 
 ``` r
 #dimensionality reduction 
@@ -172,7 +189,8 @@ SC.clusters    <- supercell_cluster(D = D, k = 5, supercell_size = SC$supercell_
 SC$clustering  <- SC.clusters$clustering
 ```
 
-## Map clusters of super-cells to cell lines
+Map clusters of super-cells to cell lines
+-----------------------------------------
 
 ``` r
 ## mapping super-cell cluster to cell line 
@@ -189,7 +207,8 @@ supercell_plot(SC$graph.supercells,
 
 ![](figures/unnamed-chunk-8-1.png)
 
-## Differential expression analysis of clustered super-cell data
+Differential expression analysis of clustered super-cell data
+-------------------------------------------------------------
 
 ``` r
 markers.all.positive <- supercell_FindAllMarkers(ge = SC.GE, # super-cell gene expression matrix
@@ -253,6 +272,7 @@ PCAPlot(m.seurat)
 ![](figures/unnamed-chunk-10-1.png)
 
 ``` r
+
 ### cluster super-cell network (unweighted clustering)
 m.seurat <- FindClusters(m.seurat, graph.name = "RNA_nn") # now RNA_nn is super-cell network
 ## Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
