@@ -19,7 +19,7 @@ supercell_prcomp <- function(X,
                              do.scale = TRUE,
                              do.center = TRUE,
                              double.centering = FALSE,
-                             fast.pca = FALSE,
+                             fast.pca = TRUE,
                              seed = 12345) {
   if(is.null(supercell_size)){
     supercell_size = rep(1, nrow(X))

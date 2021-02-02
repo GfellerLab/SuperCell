@@ -58,7 +58,7 @@ Simplify single-cell data at the graining level *g**a**m**m**a* = 20
 
 (i.e., `20` times less super-cells than single cells) by first building
 a kNN (*k* = 5) network using top *n*.*v**a**r*.*g**e**n**e**s* = 1000
-most variable genes for dimentionality reduction. Function `SCimplify`
+most variable genes for dimentionality reduction. Function `SCimplify()`
 computes the partition into super-cells, this information is available
 with the field `membership`.
 
@@ -95,7 +95,7 @@ Compute gene expression for simplified data
 -------------------------------------------
 
 To get a gene expression of super-cells, we need to average gene
-expressions within each super-cell with function `supercell_GE`
+expressions within each super-cell with function `supercell_GE()`
 
 ``` r
 SC.GE <- supercell_GE(GE, SC$membership)
@@ -110,7 +110,7 @@ Map each super-cell to a particular cell line
 ---------------------------------------------
 
 We now assign super-cell to a particular cell line based on the cell
-line data, for this, we use function `supercell_assign`. By default,
+line data, for this, we use function `supercell_assign()`. By default,
 this function assign each super-cell to a cluster with the largest
 Jaccard coefficient to avoid biases towards very rare or very abundant
 clusters. Alternatively, assigmnent can be performed using relative (may
@@ -244,7 +244,7 @@ markers.all.positive$H1975[1:20,]
 
 In case you want to perform other analyses available with Seurat
 package, we can coerce super-cells to Seurat object with function
-`supercell_2_Seurat`
+`supercell_2_Seurat()`
 
 ``` r
 #install.packages("Seurat")
