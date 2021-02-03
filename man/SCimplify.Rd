@@ -13,7 +13,7 @@ SCimplify(
   gamma = 10,
   do.scale = TRUE,
   n.pc = 10,
-  fast.pca = FALSE,
+  fast.pca = TRUE,
   do.approx = FALSE,
   approx.N = 20000,
   use.nn2 = TRUE,

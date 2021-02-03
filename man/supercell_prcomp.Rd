@@ -13,7 +13,7 @@ supercell_prcomp(
   do.scale = TRUE,
   do.center = TRUE,
   double.centering = FALSE,
-  fast.pca = FALSE,
+  fast.pca = TRUE,
   seed = 12345
 )
 }
