@@ -6,7 +6,7 @@
 #' @param supercell_size a vector with supercell size (ordered the same way as in \code{ge})
 #' @param clusters a vector with clustering information (ordered the same way as in \code{ge})
 #' @param features name of geneы of for which gene expression is plotted
-#' @param idents idents (classes) to plot (default all)
+#' @param idents idents (clusters) to plot (default all)
 #' @param color.use colors for idents
 #' @param pt.size point size (0 by default)
 #' @param pch shape of jitter dots
@@ -55,13 +55,10 @@ supercell_VlnPlot <- function(ge,
   }
 
   if(!is.null(color.use)){
-    if(length(color.use) != length(unique(clusters))){
-      warning(paste0("Length of color.use (", length(color.use), ") is not the same as number of clusters(",
-                     length(unique(clusters)),"), color.use will not be used"))
-    }
-    if(is.null(names(color.use))) names(color.use) <- as.character(sort(unique(clusters)))
-    if(intersect(names(color.use), unique(clusters)) != length(unique(clusters))){
-      stop(paste0("color.use's names are different from cluster names"))
+    if(length(color.use) < length(idents)){
+      warning(paste0("Length of color.use (", length(color.use), ") is smaller than number of idents (",
+                     length(idents),"), color.use will not be used"))
+      color.use <- NULL
     }
   }
 
@@ -70,7 +67,7 @@ supercell_VlnPlot <- function(ge,
   ids.keep.idents <- which(clusters %in% idents)
   features.set <- features[features %in% rownames(ge)]
 
-  if(same.y.lims && is.null(x = y.max)){
+  if(same.y.lims & is.null(x = y.max)){
     y.max <- max(ge[features.set, ids.keep.idents])
   }
 
@@ -104,8 +101,6 @@ supercell_VlnPlot <- function(ge,
 #' @param ge1 a gene expression vector (same length as number of super-cells)
 #' @param supercell_size a vector with supercell size (ordered the same way as in \code{ge})
 #' @param clusters a vector with clustering information (ordered the same way as in \code{ge})
-#' @param feature name of gene of for which gene expression is plotted
-#' @param idents idents (classes) to plot (default all)
 #' @param color.use colors for idents
 #' @param pt.size point size (0 by default)
 #' @param pch shape of jitter dots

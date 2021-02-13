@@ -29,7 +29,7 @@ supercell_VlnPlot(
 
 \item{features}{name of geneы of for which gene expression is plotted}
 
-\item{idents}{idents (classes) to plot (default all)}
+\item{idents}{idents (clusters) to plot (default all)}
 
 \item{color.use}{colors for idents}
 

@@ -23,8 +23,6 @@ supercell_VlnPlot_single(
 
 \item{clusters}{a vector with clustering information (ordered the same way as in \code{ge})}
 
-\item{feature}{name of gene of for which gene expression is plotted}
-
 \item{color.use}{colors for idents}
 
 \item{pt.size}{point size (0 by default)}
@@ -34,8 +32,6 @@ supercell_VlnPlot_single(
 \item{y.max}{max of y axis}
 
 \item{adjust}{param of geom_violin}
-
-\item{idents}{idents (classes) to plot (default all)}
 }
 \description{
 Used for supercell_VlnPlot
