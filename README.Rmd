@@ -32,7 +32,7 @@ SuperCell requires [igraph](https://cran.r-project.org/web/packages/igraph/index
 
 
 Installing SuperCell package from gitHub
-```{r}
+```{r library}
 # if (!requireNamespace("remotes")) install.packages("remotes")
 # remotes::install_github("GfellerLab/SuperCell")
 
@@ -43,7 +43,7 @@ library(SuperCell)
 ## Load scRNA-seq data of 5 cancer cell lines from [Tian et al., 2019](https://doi.org/10.1038/s41592-019-0425-8).
 Data available at authors' [GitHub](https://github.com/LuyiTian/sc_mixology/blob/master/data/) under file name *sincell_with_class_5cl.Rdata*. 
 
-```{r}
+```{r load data}
 data(cell_lines) # list with GE - gene expression matrix (logcounts), meta - cell meta data
 GE <- cell_lines$GE
 dim(GE) # genes as rows and cells as columns
@@ -77,7 +77,7 @@ supercell_plot(SC$graph.singlecell, # network
 
 ## Compute gene expression for simplified data
  To get a gene expression of super-cells, we need to average gene expressions within each super-cell with function `supercell_GE()` 
-```{r}
+```{r average gene expression}
 SC.GE <- supercell_GE(GE, SC$membership)
 dim(SC.GE) 
 ```
@@ -85,7 +85,8 @@ dim(SC.GE)
 ## Map each super-cell to a particular cell line
 We now assign super-cell to a particular cell line based on the cell line data, for this, we use function `supercell_assign()`. 
 By default, this function assign each super-cell to a cluster with the largest Jaccard coefficient to avoid biases towards very rare or very abundant clusters. Alternatively, assigmnent can be performed using relative (may cause biase towards very small populations) or absolute (may cause biase towards large populations) abundance with `method = "relative"` or `method = "absolute"`, respectively. 
-```{r}
+```{r assign supercells  to cell line infromation}
+
 SC2cellline  <- supercell_assign(clusters = cell.meta, # single-cell assigment to clusters
                                  supercell_membership = SC$membership, # single-cell assignment to super-cells
                                  method = "jaccard")
@@ -102,7 +103,7 @@ supercell_plot(SC$graph.supercells,
 ```
 
 Some options to plot super-cell networks
-```{r plotting oprtions}
+```{r plotting options}
 ## rotate network to be more consistent with the single-cell one
 supercell_plot(SC$graph.supercells, 
                group = SC$cell_line, 
@@ -117,7 +118,7 @@ supercell_plot(SC$graph.supercells,
 my.lay.sc <- igraph::layout_components(SC$graph.singlecell) 
 
 ## 2) compute super-cell network layout averaging coordinates withing super-cells
-my.lay.SC <- t(supercell_GE(ge = t(my.lay.sc), groups = SC$membership))
+my.lay.SC <- Matrix::t(supercell_GE(ge = t(my.lay.sc), groups = SC$membership))
 
 ## 3) provide layout with the parameter $lay$
 supercell_plot(SC$graph.supercells, 
@@ -129,7 +130,7 @@ supercell_plot(SC$graph.supercells,
 ## Cluster super-cell data
 ```{r clustering}
 #dimensionality reduction 
-SC.PCA         <- supercell_prcomp(t(SC.GE), # super-cell gene exptression matrix
+SC.PCA         <- supercell_prcomp(Matrix::t(SC.GE), # super-cell gene exptression matrix
                                    genes.use = SC$genes.use, # genes used for the coarse-graining, but any set can be provided
                                    supercell_size = SC$supercell_size, # sample-weighted pca
                                    k = 20) 
@@ -142,7 +143,7 @@ SC$clustering  <- SC.clusters$clustering
 ```
 
 ## Map clusters of super-cells to cell lines
-```{r}
+```{r assign supercell clustering results to cell line information}
 ## mapping super-cell cluster to cell line 
 map.cluster.to.cell.line    <- supercell_assign(supercell_membership = SC$clustering, clusters  = SC$cell_line)
 ## clustering as cell line
@@ -164,6 +165,23 @@ markers.all.positive <- supercell_FindAllMarkers(ge = SC.GE, # super-cell gene e
                                                  logfc.threshold = 1, # mininum log fold-change
                                                  only.pos = T) # keep only upregulated genes
 markers.all.positive$H1975[1:20,]
+```
+
+## Some additional plotting options
+```{r Violin plots}
+genes.to.plot <- c("DHRS2", "MT1P1", "TFF1", "G6PD", "CCL2", "C1S")
+
+supercell_VlnPlot(ge = SC.GE, supercell_size = SC$supercell_size, 
+                  clusters = SC$clustering_reordered,
+                  features = genes.to.plot,
+                  idents = c("H1975", "H2228", "A549"), 
+                  ncol = 3)
+
+supercell_GeneGenePlot(ge = SC.GE, 
+                       gene_x = genes.to.plot[1:3],
+                       gene_y = genes.to.plot[4:6],
+                       supercell_size = SC$supercell_size, 
+                       clusters = SC$clustering_reordered,)
 ```
 
 

@@ -99,9 +99,6 @@ expressions within each super-cell with function `supercell_GE()`
 
 ``` r
 SC.GE <- supercell_GE(GE, SC$membership)
-## [1] "N.blocks:"
-## [1] 1
-## [1] 1
 dim(SC.GE) 
 ## [1] 11786   196
 ```
@@ -119,6 +116,7 @@ towards large populations) abundance with `method = "relative"` or
 `method = "absolute"`, respectively.
 
 ``` r
+
 SC2cellline  <- supercell_assign(clusters = cell.meta, # single-cell assigment to clusters
                                  supercell_membership = SC$membership, # single-cell assignment to super-cells
                                  method = "jaccard")
@@ -134,7 +132,7 @@ supercell_plot(SC$graph.supercells,
                main = "Super-cell colored by cell line assignment")
 ```
 
-![](figures/unnamed-chunk-5-1.png)
+![](figures/assign%20supercells%20to%20cell%20line%20infromation-1.png)
 
 Some options to plot super-cell networks
 
@@ -147,7 +145,7 @@ supercell_plot(SC$graph.supercells,
                main  = "Super-cell colored by cell line assignment (rotated)")
 ```
 
-![](figures/plotting%20oprtions-1.png)
+![](figures/plotting%20options-1.png)
 
 ``` r
 
@@ -158,10 +156,7 @@ supercell_plot(SC$graph.supercells,
 my.lay.sc <- igraph::layout_components(SC$graph.singlecell) 
 
 ## 2) compute super-cell network layout averaging coordinates withing super-cells
-my.lay.SC <- t(supercell_GE(ge = t(my.lay.sc), groups = SC$membership))
-## [1] "N.blocks:"
-## [1] 1
-## [1] 1
+my.lay.SC <- Matrix::t(supercell_GE(ge = t(my.lay.sc), groups = SC$membership))
 
 ## 3) provide layout with the parameter $lay$
 supercell_plot(SC$graph.supercells, 
@@ -170,14 +165,14 @@ supercell_plot(SC$graph.supercells,
                main  = "Super-cell colored by cell line assignment (averaged coordinates)")
 ```
 
-![](figures/plotting%20oprtions-2.png)
+![](figures/plotting%20options-2.png)
 
 Cluster super-cell data
 -----------------------
 
 ``` r
 #dimensionality reduction 
-SC.PCA         <- supercell_prcomp(t(SC.GE), # super-cell gene exptression matrix
+SC.PCA         <- supercell_prcomp(Matrix::t(SC.GE), # super-cell gene exptression matrix
                                    genes.use = SC$genes.use, # genes used for the coarse-graining, but any set can be provided
                                    supercell_size = SC$supercell_size, # sample-weighted pca
                                    k = 20) 
@@ -205,7 +200,7 @@ supercell_plot(SC$graph.supercells,
                main = "Super-cell colored by cluster")
 ```
 
-![](figures/unnamed-chunk-6-1.png)
+![](figures/assign%20supercell%20clustering%20results%20to%20cell%20line%20information-1.png)
 
 Differential expression analysis of clustered super-cell data
 -------------------------------------------------------------
@@ -239,6 +234,47 @@ markers.all.positive$H1975[1:20,]
 ## CAV1          0           0 1.0000000 1.0000000 1.388689 4.1486580 2.37528254
 ## MGP           0           0 0.9427918 0.2071244 1.365311 0.6735631 0.01058892
 ```
+
+Some additional plotting options
+--------------------------------
+
+``` r
+genes.to.plot <- c("DHRS2", "MT1P1", "TFF1", "G6PD", "CCL2", "C1S")
+
+supercell_VlnPlot(ge = SC.GE, supercell_size = SC$supercell_size, 
+                  clusters = SC$clustering_reordered,
+                  features = genes.to.plot,
+                  idents = c("H1975", "H2228", "A549"), 
+                  ncol = 3)
+```
+
+![](figures/Violin%20plots-1.png)
+
+``` r
+
+supercell_GeneGenePlot(ge = SC.GE, 
+                       gene_x = genes.to.plot[1:3],
+                       gene_y = genes.to.plot[4:6],
+                       supercell_size = SC$supercell_size, 
+                       clusters = SC$clustering_reordered,)
+## $p
+```
+
+![](figures/Violin%20plots-2.png)
+
+    ## 
+    ## $w.cor
+    ## $w.cor$TFF1_C1S
+    ##   correlation    std.err   t.value     p.value
+    ## Y  -0.2127742 0.07015179 -3.033054 0.002752138
+    ## 
+    ## $w.cor$DHRS2_G6PD
+    ##   correlation    std.err   t.value     p.value
+    ## Y  -0.2069167 0.07024205 -2.945767 0.003615875
+    ## 
+    ## $w.cor$MT1P1_CCL2
+    ##   correlation    std.err  t.value    p.value
+    ## Y   0.1232393 0.07124851 1.729711 0.08527247
 
 ### P.S.: Super-cell to [Seurat](https://cran.r-project.org/web/packages/Seurat/index.html) object
 
