@@ -109,7 +109,9 @@ supercell_VlnPlot <- function(ge,
 #'
 #' @importFrom ggplot2 ggplot aes_string geom_point scale_size scale_radius geom_violin scale_color_manual
 #' theme element_blank labs scale_color_identity scale_color_distiller geom_jitter aes
-#' scale_color_gradient guides guide_legend guide_colorbar scale_y_continuous
+#' scale_color_gradient guides guide_legend guide_colorbar scale_y_continuous scale_x_continuous element_text
+#' geom_text margin
+#'
 
 supercell_VlnPlot_single <- function(ge1,
                                supercell_size = NULL,

@@ -169,7 +169,8 @@ supercell_GeneGenePlot <- function(ge,
 #'
 #' @importFrom ggplot2 ggplot aes_string geom_point scale_size scale_radius geom_violin scale_color_manual
 #' theme element_blank labs scale_color_identity scale_color_distiller geom_jitter aes
-#' scale_color_gradient guides guide_legend guide_colorbar scale_y_continuous
+#' scale_color_gradient guides guide_legend guide_colorbar scale_y_continuous scale_x_continuous element_text
+#' geom_text margin theme_classic
 
 supercell_GeneGenePlot_single <- function(ge_x,
                                           ge_y,
@@ -215,7 +216,7 @@ supercell_GeneGenePlot_single <- function(ge_x,
     theme_classic() + theme(asp = 1) + #, legend.position = "none"
     labs(x = gene_x_name,
          y = gene_y_name,
-         title = paste0("\nw_cor = ", signif(w.cor[1], 2), ", pval = ", signif(w.cor[4])))
+         title = paste0("w_cor = ", signif(w.cor[1], 2), ", \npval = ", signif(w.cor[4])))
 
 
   if(!is.null(color.use)){
