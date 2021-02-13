@@ -112,7 +112,7 @@ supercell_plot <- function(SC.nw,
                               -sin(alpha), cos(alpha)), byrow = T, ncol = 2)
       lay.rotated <- lay %*% M.rotation
     } else {
-      lay.rotated <- lay
+      lay.rotated <- as.matrix(lay)
     }
   } else {
     stop(paste("Alpha has to be numeric! \n"))
