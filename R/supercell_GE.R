@@ -11,7 +11,57 @@
 #' @return a matrix of simplified (averaged withing groups) data with ncol equal to number of groups and nrows as in the initial dataset
 #' @export
 
-supercell_GE  <- function(ge, groups, weights = NULL, do.median.norm = FALSE){
+supercell_GE <- function(ge, groups, weights = NULL, do.median.norm = FALSE){
+  if(ncol(ge) != length(groups)){
+    stop("Length of the vector groups has to be equal to the number of cols in matrix ge")
+  }
+  N.SC <- max(groups)
+  supercell_size <- as.vector(table(groups))
+  j <- rep(1:N.SC, supercell_size) # column indices of matrix M.AV that, whene GE.SC <- ge %M.AV%
+
+  goups.idx  <- plyr:::split_indices(groups)
+  i <- unlist(goups.idx) # row indices of matrix M.AV that, whene GE.SC <- ge %M.AV%
+
+  if(is.null(weights)){
+    M.AV <- Matrix::sparseMatrix(i = i, j = j)
+    GE.SC <- ge %*% M.AV
+    GE.SC <- sweep(GE.SC, 2, supercell_size, "/")
+  } else {
+
+    if(length(weights) != length(groups)){
+      stop("weights must be the same length as groups or NULL in case of unweighted averaging")
+    }
+    M.AV <- Matrix::sparseMatrix(i = i, j = j, x = weights[i])
+    GE.SC <- ge %*% M.AV
+
+    weighted_supercell_size <- unlist(lapply(goups.idx, FUN = function(x){sum(weights[x])}))
+    GE.SC <- sweep(GE.SC, 2, weighted_supercell_size, "/")
+  }
+
+  if(do.median.norm){
+    GE.SC <- (GE.SC+0.01)/apply(GE.SC+0.01, 1, median)
+  }
+
+  return(GE.SC)
+}
+
+
+
+
+#' Simplification of scRNA-seq dataset (old version, not used since 12.02.2021)
+#'
+#' This function converts gene-expression matrix of single-cell data into a gene expression
+#' matrix of super-cells
+#'
+#' @param ge gene expression matrix (or any coordinate matrix) with genes as rows and cells as cols
+#' @param groups vector of membership (assignment of single-cell to super-cells)
+#' @param weights vector of a cell weight (NULL by default), used for computing average gene expression withing cluster of super-cells
+#' @param do.median.norm whether to normalize by median value (FALSE by default)
+#'
+#' @return a matrix of simplified (averaged withing groups) data with ncol equal to number of groups and nrows as in the initial dataset
+
+
+supercell_GE_idx  <- function(ge, groups, weights = NULL, do.median.norm = FALSE){
 
   if(ncol(ge) != length(groups)){
     stop("Length of the vector groups has to be equal to the number of cols in matrix ge")
