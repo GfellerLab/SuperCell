@@ -1,13 +1,13 @@
-#' Run RNAvelocity for super-cells (slightly modified from \likn[velocyto.R]{gene.relative.velocity.estimates})
+#' Run RNAvelocity for super-cells (slightly modified from \link[velocyto.R]{gene.relative.velocity.estimates})
 #' Not yet adjusted for super-cell size (not sample-weighted)
 #'
 #' @param emat spliced (exonic) count matrix
 #' @param nmat unspliced (nascent) count matrix
-#' @param membership supercell membership ('membership' field of \likn{SCimplify})
+#' @param membership supercell membership ('membership' field of \link{SCimplify})
 #' @param supercell_size a vector with supercell size (if emat and nmat provided at super-cell level)
-#' @param ... other parameters from \likn[velocyto.R]{gene.relative.velocity.estimates}
+#' @param ... other parameters from \link[velocyto.R]{gene.relative.velocity.estimates}
 #'
-#' @return reslts of \likn[velocyto.R]{gene.relative.velocity.estimates} plus
+#' @return reslts of \link[velocyto.R]{gene.relative.velocity.estimates} plus
 #' @export
 
 
