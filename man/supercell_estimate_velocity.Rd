@@ -2,7 +2,7 @@
 % Please edit documentation in R/supercell_estimate_velocity.R
 \name{supercell_estimate_velocity}
 \alias{supercell_estimate_velocity}
-\title{Run RNAvelocity for super-cells (slightly modified from \likn[velocyto.R]{gene.relative.velocity.estimates})
+\title{Run RNAvelocity for super-cells (slightly modified from \link[velocyto.R]{gene.relative.velocity.estimates})
 Not yet adjusted for super-cell size (not sample-weighted)}
 \usage{
 supercell_estimate_velocity(
@@ -21,16 +21,16 @@ supercell_estimate_velocity(
 
 \item{nmat}{unspliced (nascent) count matrix}
 
-\item{membership}{supercell membership ('membership' field of \likn{SCimplify})}
+\item{membership}{supercell membership ('membership' field of \link{SCimplify})}
 
 \item{supercell_size}{a vector with supercell size (if emat and nmat provided at super-cell level)}
 
-\item{...}{other parameters from \likn[velocyto.R]{gene.relative.velocity.estimates}}
+\item{...}{other parameters from \link[velocyto.R]{gene.relative.velocity.estimates}}
 }
 \value{
-reslts of \likn[velocyto.R]{gene.relative.velocity.estimates} plus
+reslts of \link[velocyto.R]{gene.relative.velocity.estimates} plus
 }
 \description{
-Run RNAvelocity for super-cells (slightly modified from \likn[velocyto.R]{gene.relative.velocity.estimates})
+Run RNAvelocity for super-cells (slightly modified from \link[velocyto.R]{gene.relative.velocity.estimates})
 Not yet adjusted for super-cell size (not sample-weighted)
 }
