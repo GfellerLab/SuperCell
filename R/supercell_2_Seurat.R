@@ -97,7 +97,7 @@ supercell_2_Seurat <- function(SC.GE, SC, fields = c(),
   }
 
   ## Sample-weighted scaling
-  m.seurat@assays$RNA@scale.data <- t(as.matrix(corpcor::wt.scale(t(as.matrix(m.seurat@assays$RNA@data)),
+  m.seurat@assays$RNA@scale.data <- t(as.matrix(corpcor::wt.scale(Matrix::t((m.seurat@assays$RNA@data)),
                                                                 w = meta$size,
                                                                 center = do.center,
                                                                 scale = do.scale)))
@@ -113,7 +113,7 @@ supercell_2_Seurat <- function(SC.GE, SC, fields = c(),
   m.seurat <- RunPCA(m.seurat, verbose = F)
   m.seurat@reductions$pca_seurat <- m.seurat@reductions$pca
 
-  my_pca <- supercell_prcomp(X = t(SC.GE), genes.use = var.genes,
+  my_pca <- supercell_prcomp(X = Matrix::t(SC.GE), genes.use = var.genes,
                              fast.pca = TRUE,
                              supercell_size = meta$supercell_size,
                              k = dim(m.seurat@reductions$pca@cell.embeddings)[2],
