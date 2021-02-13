@@ -147,7 +147,7 @@ supercell_plot(SC$graph.supercells,
                main  = "Super-cell colored by cell line assignment (rotated)")
 ```
 
-![](figures/unnamed-chunk-6-1.png)
+![](figures/plotting%20oprtions-1.png)
 
 ``` r
 
@@ -170,7 +170,7 @@ supercell_plot(SC$graph.supercells,
                main  = "Super-cell colored by cell line assignment (averaged coordinates)")
 ```
 
-![](figures/unnamed-chunk-6-2.png)
+![](figures/plotting%20oprtions-2.png)
 
 Cluster super-cell data
 -----------------------
@@ -205,7 +205,7 @@ supercell_plot(SC$graph.supercells,
                main = "Super-cell colored by cluster")
 ```
 
-![](figures/unnamed-chunk-8-1.png)
+![](figures/unnamed-chunk-6-1.png)
 
 Differential expression analysis of clustered super-cell data
 -------------------------------------------------------------
@@ -269,7 +269,7 @@ access them with `Embeddings(m.seurat, reduction = "pca_weigted")`,
 PCAPlot(m.seurat)
 ```
 
-![](figures/unnamed-chunk-10-1.png)
+![](figures/PCAplot-1.png)
 
 ``` r
 

@@ -102,7 +102,7 @@ supercell_plot(SC$graph.supercells,
 ```
 
 Some options to plot super-cell networks
-```{r}
+```{r plotting oprtions}
 ## rotate network to be more consistent with the single-cell one
 supercell_plot(SC$graph.supercells, 
                group = SC$cell_line, 
@@ -127,7 +127,7 @@ supercell_plot(SC$graph.supercells,
 ```
 
 ## Cluster super-cell data
-```{r}
+```{r clustering}
 #dimensionality reduction 
 SC.PCA         <- supercell_prcomp(t(SC.GE), # super-cell gene exptression matrix
                                    genes.use = SC$genes.use, # genes used for the coarse-graining, but any set can be provided
@@ -157,7 +157,7 @@ supercell_plot(SC$graph.supercells,
 
 
 ## Differential expression analysis of clustered super-cell data 
-```{r}
+```{r differential expression analysis}
 markers.all.positive <- supercell_FindAllMarkers(ge = SC.GE, # super-cell gene expression matrix
                                                  supercell_size = SC$supercell_size, # size of super-cell for sample-weighted method
                                                  clusters = SC$clustering_reordered, # clustering
@@ -177,7 +177,7 @@ m.seurat <- supercell_2_Seurat(SC.GE = SC.GE, SC = SC, fields = c("cell_line", "
 ```
 Note: since super-cells have different size (consist of different number of cells), we apply sample-weighted algorithms at most af the steps of the downstream analyses. Thus, when coercing super-cell to Seurat, we replaced PCA, saling and kNN graph of Seurat object with those obtained applying sample-weighted version of PCA, scaling or super-cell graph, respectively. If you then again apply `RunPCA`, `ScaleData`, or `FindNeighbors`, the result will be rewritten, but you will be able to access them with `Embeddings(m.seurat, reduction = "pca_weigted")`, `m.seurat@assays$RNA@misc[["scale.data.weighted"]]`, or `m.seurat@graphs$RNA_super_cells`, respectively.
 
-```{r}
+```{r PCAplot}
 PCAPlot(m.seurat)
 
 ### cluster super-cell network (unweighted clustering)
