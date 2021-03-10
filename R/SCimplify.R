@@ -140,7 +140,7 @@ SCimplify <- function(X,
 
   if(do.approx){
 
-      PCA.averaged.SC      <- Matrix::t(supercell_GE(t(PCA.presampled$x[,n.pc]), groups = membership.presampled))
+      PCA.averaged.SC      <- as.matrix(Matrix::t(supercell_GE(t(PCA.presampled$x[,n.pc]), groups = membership.presampled)))
       X.for.roration       <- Matrix::t(X[genes.use, rest.cell.ids])
 
 
