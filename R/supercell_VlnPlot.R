@@ -152,7 +152,7 @@ supercell_VlnPlot_single <- function(ge1,
   }
 
   if(!is.null(color.use)){
-    g <- g + scale_color_manual(values = color.use)
+    g <- g + scale_fill_manual(values = color.use)
   }
   g <- g + theme(legend.position = "none",
                  plot.title = element_text(hjust = 0.5),
