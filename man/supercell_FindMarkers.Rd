@@ -12,6 +12,7 @@ supercell_FindMarkers(
   ident.2 = NULL,
   genes.use = NULL,
   logfc.threshold = 0.25,
+  min.expr = 0,
   min.pct = 0.1,
   seed = 12345,
   only.pos = FALSE,
@@ -32,6 +33,8 @@ supercell_FindMarkers(
 \item{genes.use}{set of genes to test. Defeult -- all genes in \code{ge}}
 
 \item{logfc.threshold}{log fold change threshold for genes to be considered in the further analysis}
+
+\item{min.expr}{minimal expression (default 0)}
 
 \item{min.pct}{remove genes with lower percentage of detection from the set of genes which will be tested}
 

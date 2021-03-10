@@ -8,6 +8,7 @@
 #' @param ident.2 name(s) of clusters for comparison. If \code{NULL} (defauld), then all the other clusters used
 #' @param genes.use set of genes to test. Defeult -- all genes in \code{ge}
 #' @param logfc.threshold log fold change threshold for genes to be considered in the further analysis
+#' @param min.expr minimal expression (default 0)
 #' @param min.pct remove genes with lower percentage of detection from the set of genes which will be tested
 #' @param seed random seed to use
 #' @param only.pos whether to compute only positive (upregulated) markers
@@ -21,7 +22,8 @@
 
 
 supercell_FindMarkers <- function(ge, supercell_size = NULL, clusters, ident.1, ident.2 = NULL, genes.use = NULL,
-                                  logfc.threshold = 0.25, min.pct = 0.1, seed = 12345, only.pos = FALSE, return.extra.info = FALSE){
+                                  logfc.threshold = 0.25, min.expr = 0., min.pct = 0.1, seed = 12345,
+                                  only.pos = FALSE, return.extra.info = FALSE){
 
   total.number.of.genes <- nrow(ge)
 
@@ -63,8 +65,8 @@ supercell_FindMarkers <- function(ge, supercell_size = NULL, clusters, ident.1, 
   # compute percentage of cells expressing a gene and filter out poorly expressed genes
   #print("Compute percentage of genes expressed in super cells (detection rate)")
 
-  pct.1 <- apply(ge[genes.use, cell.idx.ident.1], 1, function(x){sum(cell.weigth.1[x>0])/sum(cell.weigth.1)})
-  pct.2 <- apply(ge[genes.use, cell.idx.ident.2], 1, function(x){sum(cell.weigth.2[x>0])/sum(cell.weigth.2)})
+  pct.1 <- apply(ge[genes.use, cell.idx.ident.1], 1, function(x){sum(cell.weigth.1[x>min.expr])/sum(cell.weigth.1)})
+  pct.2 <- apply(ge[genes.use, cell.idx.ident.2], 1, function(x){sum(cell.weigth.2[x>min.expr])/sum(cell.weigth.2)})
   max.pct.1.2 <- apply(cbind(pct.1, pct.2), 1, max)
 
   #print(min.pct.1.2)
@@ -149,6 +151,7 @@ supercell_FindMarkers <- function(ge, supercell_size = NULL, clusters, ident.1, 
 #' @param clusters a vector with clustering information (ordered the same way as in \code{ge})
 #' @param genes.use set of genes to test. Defeult -- all genes in \code{ge}
 #' @param logfc.threshold log fold change threshold for genes to be considered in the further analysis
+#' @param min.expr minimal expression (default 0)
 #' @param min.pct remove genes with lower percentage of detection from the set of genes which will be tested
 #' @param seed random seed to use
 #' @param only.pos whether to compute only positive (upregulated) markers
@@ -160,7 +163,7 @@ supercell_FindMarkers <- function(ge, supercell_size = NULL, clusters, ident.1, 
 #'
 
 supercell_FindAllMarkers <- function(ge, supercell_size = NULL, clusters, genes.use = NULL, logfc.threshold = 0.25,
-                                     min.pct = 0.1, seed = 12345, only.pos = FALSE, return.extra.info = FALSE){
+                                     min.expr = 0., min.pct = 0.1, seed = 12345, only.pos = FALSE, return.extra.info = FALSE){
   res <- list()
   unique.ident <- sort(unique(clusters))
   for(ident.1 in unique.ident){
@@ -171,6 +174,7 @@ supercell_FindAllMarkers <- function(ge, supercell_size = NULL, clusters, genes.
                                             ident.2 = NULL,
                                             genes.use = genes.use,
                                             logfc.threshold = logfc.threshold,
+                                            min.expr = min.expr,
                                             min.pct = min.pct,
                                             seed = seed,
                                             only.pos = only.pos,
