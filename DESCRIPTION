@@ -28,3 +28,5 @@ Suggests:
 	Seurat,
 	Velocyto.R,
 	MAGIC
+Depends: 
+    R (>= 2.10)

@@ -12,7 +12,6 @@ supercell_estimate_velocity(
   membership = NULL,
   supercell_size = NULL,
   do.run.avegaring = (ncol(emat) == length(membership)),
-  kCells = 1,
   ...
 )
 }
