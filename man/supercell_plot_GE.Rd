@@ -34,8 +34,6 @@ supercell_plot_GE(
 
 \item{n.color.gradient}{number of bins of the gradient, default is 10}
 
-\item{do.extra.log.rescale}{= FALSE,}
-
 \item{legend.side}{a side parameter of \link[plotfunctions]{gradientLegend} fucntion (default is 4)}
 
 \item{gene.name}{name of gene of for which gene expression is plotted}

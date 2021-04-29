@@ -4,21 +4,43 @@
 #' @param group an assigment of super cell to any group (for ploting in different colors)
 #' @param color.use colros to use for groups, if \code{NULL}, an automatic palette of colors will be applied
 #' @param lay.method method to compute layout of the network (for the moment there several available: "nicely"
-#' for \link[igraph]{layout_licely} and "fr" for \link[igraph]{layout_with_fr}, "components" for \link[igraph]{layout_components})
+#' for \link[igraph]{layout_licely} and "fr" for \link[igraph]{layout_with_fr}, "components" for \link[igraph]{layout_components},
+#' "drl" for \link[igraph]{layout_with_drl}, "graphopt" for \link[igraph]{layout_with_graphopt}). If your dataset has clear clusters, use "components"
 #' @param lay a particular layout of a graph to plot (in is not \code{NULL}, \code{lay.method} is ignored and new layout is not computed)
 #' @param alpha a rotation of the layout (either orivided or computed)
 #' @param seed a random seed used to compute graph layout
 #' @param main a title of a plot
 #' @param do.frames whether to keep vertex.frames in the plot
-#' @param do.extra.log.rescale whether to log-scale node size
+#' @param do.extra.log.rescale whether to log-scale node size (to balance plot if some super-cells are large and covers smaller super-cells)
 #' @param log.base base with thich to log-scale node size
-#' @param do.extra.sqtr.rescale  whether to sqrt-scale node size
+#' @param do.extra.sqtr.rescale  whether to sqrt-scale node size (to balance plot if some super-cells are large and covers smaller super-cells)
 #' @param frame.color color of node frames, black by default
 #' @param weights edge weights used for some layout algorithms
 #' @param min.cell.size do not plot cells with smaller size
 #' @param return.meta whether to return all the meta data
 #'
 #' @return plot of a super-cell network
+#'
+#' @examples
+#' \dontrun{
+#' data(cell_lines) # list with GE - gene expression matrix (logcounts), meta - cell meta data
+#' GE <- cell_lines$GE
+#' cell.meta <- cell_lines$meta
+#'
+#' SC <- SCimplify(GE,  # gene expression matrix
+#'                 gamma = 20) # graining level
+#'
+#' # Assign super-cell to a cell line
+#' SC2cellline  <- supercell_assign(clusters = cell.meta, # single-cell assigment to cell lines
+#'                                  supercell_membership = SC$membership) # single-cell assignment to super-cells
+#'
+#' # Plot super-cell network colored by cell line
+#' supercell_plot(SC$graph.supercells, # network
+#'                group = SC2cellline, # group assignment
+#'                main = "Super-cell colored by cell line assignment",
+#'                lay.method = 'nicely')
+#' }
+#'
 #' @export
 
 
@@ -47,8 +69,6 @@ supercell_plot <- function(SC.nw,
 
   cells.to.remove <- which(vsize < min.cell.size)
   cells.to.use    <- setdiff(1:N.SC, cells.to.remove)
-  #print("Cells to remove baed on min size:")
-  #print(cells.to.remove)
 
   vsize <- sqrt(vsize)
   if(do.extra.log.rescale)
@@ -62,7 +82,7 @@ supercell_plot <- function(SC.nw,
   N.groups <- length(unique(group))
 
   if(is.null(color.use)) color.use <- scales::hue_pal()(N.groups)
-  if(length(color.use) != N.groups) stop(paste("Vector color.use has to be the same length as number of groups:", N.groups))
+  if(length(color.use) != N.groups) stop(paste("Vector color.use has to be the same length as number of groups:", N.groups, "\n"))
 
   if(is.null(names(color.use))){
     names(color.use) <- sort(unique(group))
@@ -70,15 +90,10 @@ supercell_plot <- function(SC.nw,
 
   if(!is.null(weights) & length(cells.to.remove)>0){
     weights <- weights[-sort(unique(unlist(igraph::incident_edges(SC.nw, cells.to.remove))))]
-    #print("length(weights)")
-    #print(length(weights))
-
   }
 
   if(length(cells.to.remove)>0){
     SC.nw <- igraph::delete_vertices(SC.nw, cells.to.remove)
-    #print("igraph::ecount(SC.nw)")
-    #print(igraph::ecount(SC.nw))
   }
 
 
@@ -89,7 +104,11 @@ supercell_plot <- function(SC.nw,
 
     lay.method <- match(lay.method,  c("nicely", "fr", "components", "drl", "graphopt", "dh"))
 
-    if(is.na(lay.method)) stop(paste("Unknown layout!"))
+    if(is.na(lay.method)) stop(paste("Unknown layout!\n"))
+
+    if(lay.method == "components" & igraph::vcount(SC.nw) > 5000){
+      warning("Number of super-cells is too large for the 'components' layout, lay.method was changed to 'nicely'!\n")
+    }
 
     set.seed(seed)
     if(lay.method == 1)
@@ -102,7 +121,7 @@ supercell_plot <- function(SC.nw,
       lay <- igraph::layout_with_drl(SC.nw, weights = weights)
     else if (lay.method == 5)
       lay <- igraph::layout_with_graphopt(SC.nw)
-    else stop(paste("Unknown lay.method", lay.method))
+    else stop(paste("Unknown lay.method", lay.method, "\n"))
   }
 
   # do rotation

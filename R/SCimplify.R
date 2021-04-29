@@ -3,16 +3,16 @@
 #' This function detects super-cells from single-cell gene expression matrix
 #'
 #'
-#' @param X gene expression matrix with rows to be genes and cols to be cells
+#' @param X log-normalized gene expression matrix with rows to be genes and cols to be cells
 #' @param genes.use a vector of genes used to compute PCA
 #' @param genes.exclude a vector of genes to be excluded when computing PCA
 #' @param n.var.genes if \code{"genes.use"} is not provided, \code{"n.var.genes"} genes with the largest variation are used
-#' @param k.knn parameter to compute single-cell kNN network
 #' @param gamma graining level of data (proportion of number of single cells in the initial dataset to the number of super-cells in the final dataset)
-#' @param do.scale whether to scale gene expression matrix to compure PCA
+#' @param k.knn parameter to compute single-cell kNN network
+#' @param do.scale whether to scale gene expression matrix when computing PCA
 #' @param n.pc number of principal components to use for construction of single-cell kNN network
 #' @param fast.pca use irlba::irlba as a faster version of prcomp (one used in Seurat package)
-#' @param do.approx compute approximate kNN in case of a large dataset (>20000)
+#' @param do.approx compute approximate kNN in case of a large dataset (>50'000)
 #' @param approx.N number of cells to subsample for an approximate approach
 #' @param seed seed to use to subsample cells for an approximate approach
 #' @param igraph.clustering clustering method to identify super-cells (available methods "walktrap" (default) and "louvain" (not recommended, gamma is ignored)).
@@ -26,6 +26,20 @@
 #'   \item graph.singlecells - igraph object (kNN network) of single-cell data
 #'   \item supercell_size - size of super-cells
 #' }
+#'
+#' @examples
+#' \dontrun{
+#' data(cell_lines) # list with GE - gene expression matrix (logcounts), meta - cell meta data
+#' GE <- cell_lines$GE
+#'
+#' SC <- SCimplify(GE,  # log-normalized gene expression matrix
+#'                 gamma = 20, # graining level
+#'                 n.var.genes = 1000, # number of top varible genes to use for the dimensionality reduction, the list of genes can be provided instead (with 'genes.use')
+#'                 k.knn = 5, # k for kNN algorithm
+#'                 n.pc = 10, # number of proncipal components to use
+#'                 do.approx) # whether to run an approxiate coarse-graining (for large daatasets with N_cells > 50'000)
+#'
+#' }
 #' @export
 #'
 #'
@@ -36,8 +50,8 @@ SCimplify <- function(X,
                       genes.use = NULL,
                       genes.exclude = NULL,
                       n.var.genes = min(1000, nrow(X)),
-                      k.knn = 5,
                       gamma = 10,
+                      k.knn = 5,
                       do.scale = TRUE,
                       n.pc = 10,
                       fast.pca = TRUE,
@@ -50,9 +64,25 @@ SCimplify <- function(X,
                       return.hierarchical.structure = TRUE,
                       block.size = 10000){
 
+  N.c <- ncol(X)
+
+  if(is.null(rownames(X))){
+     if(!(is.null(genes.use) | is.null(genes.exclude))){
+        stop("rownames(X) is Null \nGene expression matrix X is expected to have genes as rownames")
+     } else {
+       warning("colnames(X) is Null, \nGene expression matrix X is expected to have genes as rownames! \ngenes will be created automatically in a form 'gene_i' ")
+       rownames(X) <- paste("gene", 1:nrow(X), sep = "_")
+     }
+}
+
+  if(is.null(colnames(X))){
+    warning("colnames(X) is Null, \nGene expression matrix X is expected to have cellIDs as colnames! \nCellIDs will be created automatically in a form 'cell_i' ")
+    colnames(X) <- paste("cell", 1:N.c, sep = "_")
+  }
+
   keep.genes    <- setdiff(rownames(X), genes.exclude)
   X             <- X[keep.genes,]
-  N.c <- ncol(X)
+
 
   if(is.null(genes.use)){
     n.var.genes <- min(n.var.genes, nrow(X))
@@ -106,6 +136,11 @@ SCimplify <- function(X,
   if(is.null(n.pc[1]) | min(n.pc) < 1){stop("Please, provide a range or a number of components to use: n.pc")}
   if(length(n.pc)==1) n.pc <- 1:n.pc
 
+  if(fast.pca & (N.c < 1000)){
+    warning("Normal pca is computed because number of cell is low for irlba::irlba()")
+    fast.pca <- FALSE
+  }
+
   if(!fast.pca){
     PCA.presampled          <- prcomp(X.for.pca, rank. = max(n.pc), scale. = F, center = F)
   } else {
@@ -140,28 +175,13 @@ SCimplify <- function(X,
 
   if(do.approx){
 
-      PCA.averaged.SC      <- as.matrix(Matrix::t(supercell_GE(t(PCA.presampled$x[,n.pc]), groups = membership.presampled)))
-      X.for.roration       <- Matrix::t(X[genes.use, rest.cell.ids])
+    PCA.averaged.SC      <- as.matrix(Matrix::t(supercell_GE(t(PCA.presampled$x[,n.pc]), groups = membership.presampled)))
+    X.for.roration       <- Matrix::t(X[genes.use, rest.cell.ids])
 
 
 
     if(do.scale){ X.for.roration <- scale(X.for.roration) }
     X.for.roration[is.na(X.for.roration)] <- 0
-
-
-
-    # fnt <- function(cell.i.id){
-    #   cur.pca <- X.for.roration[cell.i.id,] %*% PCA.presampled$rotation[, n.pc]
-    #   cur.d   <- proxy::dist(cur.pca, PCA.averaged.SC)
-    #   cur.membership <- which.min(cur.d)
-    #   return(cur.membership)
-    # }
-    #
-    # membership.omitted <- sapply(rest.cell.ids, FUN = fnt)
-    # if(is.null(names(membership.omitted)[1])){
-    #   print("unnamed membership.omitted")
-    #   names(membership.omitted) <- rest.cell.ids
-    # }
 
 
     membership.omitted   <- c()
@@ -178,15 +198,14 @@ SCimplify <- function(X,
 
         cur.rest.cell.ids    <- rest.cell.ids[idx.begin:idx.end]
 
-
         PCA.ommited          <- X.for.roration[cur.rest.cell.ids,] %*% PCA.presampled$rotation[, n.pc] ###
 
         D.omitted.subsampled <- proxy::dist(PCA.ommited, PCA.averaged.SC) ###
 
-        membership.omitted.cur   <- apply(D.omitted.subsampled, 1, which.min) ###
+        membership.omitted.cur        <- apply(D.omitted.subsampled, 1, which.min) ###
         names(membership.omitted.cur) <- cur.rest.cell.ids ###
 
-        membership.omitted <- c(membership.omitted, membership.omitted.cur)
+        membership.omitted   <- c(membership.omitted, membership.omitted.cur)
       }
     }
 

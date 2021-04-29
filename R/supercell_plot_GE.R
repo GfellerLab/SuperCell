@@ -4,8 +4,6 @@
 #' @param ge a gene expression vector (same length as number of super-cells)
 #' @param color.use colors of gradient
 #' @param n.color.gradient number of bins of the gradient, default is 10
-#'
-#' @param do.extra.log.rescale = FALSE,
 #' @param legend.side a side parameter of \link[plotfunctions]{gradientLegend} fucntion (default is 4)
 #' @param gene.name name of gene of for which gene expression is plotted
 #' @param ... rest of the parameters of \link{supercell_plot} function
