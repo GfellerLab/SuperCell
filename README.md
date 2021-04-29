@@ -285,7 +285,7 @@ package, we can coerce super-cells to Seurat object with function
 ``` r
 #install.packages("Seurat")
 library(Seurat)
-## Warning: package 'Seurat' was built under R version 3.6.2
+## Attaching SeuratObject
 
 m.seurat <- supercell_2_Seurat(SC.GE = SC.GE, SC = SC, fields = c("cell_line", "clustering", "clustering_reordered"))
 ```
@@ -326,10 +326,35 @@ m.seurat <- FindClusters(m.seurat, graph.name = "RNA_nn")
 ## Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
 ## 
 ## Number of nodes: 196
-## Number of edges: 2013
+## Number of edges: 2010
 ## 
 ## Running Louvain algorithm...
-## Maximum modularity in 10 random starts: 0.7904
+## Maximum modularity in 10 random starts: 0.7908
 ## Number of communities: 5
 ## Elapsed time: 0 seconds
 ```
+
+License
+=======
+
+SuperCell is developed by the group of David Gfeller at University of
+Lausanne.
+
+SuperCell can be used freely by academic groups for non-commercial
+purposes (see license). The product is provided free of charge, and,
+therefore, on an “as is” basis, without warranty of any kind.
+
+FOR-PROFIT USERS If you plan to use SuperCell or any data provided with
+the script in any for-profit application, you are required to obtain a
+separate license. To do so, please contact
+<a href="mailto:eauffarth@licr.org" class="email">eauffarth@licr.org</a>
+at the Ludwig Institute for Cancer Research Ltd.
+
+If you use SuperCell in a publication, please cite: Bilous et
+al. Super-cells untangle large and complex single-cell transcriptome
+networks, BioRxiv (2021).
+
+For scientific questions, please contact Mariia Bilous
+(<a href="mailto:mariia.bilous@unil.ch" class="email">mariia.bilous@unil.ch</a>)
+or David Gfeller
+(<a href="mailto:David.Gfeller@unil.ch" class="email">David.Gfeller@unil.ch</a>).

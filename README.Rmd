@@ -85,9 +85,10 @@ dim(SC.GE)
 ## Map each super-cell to a particular cell line
 We now assign super-cell to a particular cell line based on the cell line data, for this, we use function `supercell_assign()`. 
 By default, this function assign each super-cell to a cluster with the largest Jaccard coefficient to avoid biases towards very rare or very abundant clusters. Alternatively, assigmnent can be performed using relative (may cause biase towards very small populations) or absolute (may cause biase towards large populations) abundance with `method = "relative"` or `method = "absolute"`, respectively. 
+The quality of assigment can be evaluated with super-cell purity (function `supercell_purity()`) that returns the proportion of the most abundant cell type (in this case, cell line) in each super-cell.
 ```{r assign supercells  to cell line infromation}
 
-SC2cellline  <- supercell_assign(clusters = cell.meta, # single-cell assigment to clusters
+SC2cellline  <- supercell_assign(clusters = cell.meta, # single-cell assigment to cell lines (clusters)
                                  supercell_membership = SC$membership, # single-cell assignment to super-cells
                                  method = "jaccard")
 SC$cell_line <- SC2cellline
@@ -100,6 +101,11 @@ supercell_plot(SC$graph.supercells,
                group = SC$cell_line, 
                seed = seed, 
                main = "Super-cell colored by cell line assignment")
+
+# compute purity of super-cells in terms of cell line composition
+purity <- supercell_purity(clusters = cell.meta, 
+                           supercell_membership = SC$membership)
+hist(purity, main = "Super-cell purity \nin terms of cell line composition")
 ```
 
 Some options to plot super-cell networks
@@ -205,3 +211,18 @@ m.seurat <- FindNeighbors(m.seurat, verbose = FALSE)  # RNA_nn has been replaced
 m.seurat <- FindClusters(m.seurat, graph.name = "RNA_nn") 
 ```
 
+# License 
+ SuperCell is developed by the group of David Gfeller at University of Lausanne.
+
+ SuperCell can be used freely by academic groups for non-commercial purposes (see license).
+ The product is provided free of charge, and, therefore, on an "as is” basis, without warranty of any kind.
+
+ FOR-PROFIT USERS
+ If you plan to use SuperCell or any data provided with the script in any for-profit
+ application, you are required to obtain a separate  license.
+ To do so, please contact eauffarth@licr.org at the Ludwig Institute for Cancer Research Ltd.
+
+ If you use SuperCell in a publication, please cite:
+ Bilous et al. Super-cells untangle large and complex single-cell transcriptome networks, BioRxiv (2021).
+
+ For scientific questions, please contact Mariia Bilous (mariia.bilous@unil.ch) or David Gfeller (David.Gfeller@unil.ch).
