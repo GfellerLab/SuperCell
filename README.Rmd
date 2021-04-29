@@ -85,9 +85,8 @@ dim(SC.GE)
 ## Map each super-cell to a particular cell line
 We now assign super-cell to a particular cell line based on the cell line data, for this, we use function `supercell_assign()`. 
 By default, this function assign each super-cell to a cluster with the largest Jaccard coefficient to avoid biases towards very rare or very abundant clusters. Alternatively, assigmnent can be performed using relative (may cause biase towards very small populations) or absolute (may cause biase towards large populations) abundance with `method = "relative"` or `method = "absolute"`, respectively. 
-The quality of assigment can be evaluated with super-cell purity (function `supercell_purity()`) that returns the proportion of the most abundant cell type (in this case, cell line) in each super-cell.
-```{r assign supercells  to cell line infromation}
 
+```{r assign supercells  to cell line infromation}
 SC2cellline  <- supercell_assign(clusters = cell.meta, # single-cell assigment to cell lines (clusters)
                                  supercell_membership = SC$membership, # single-cell assignment to super-cells
                                  method = "jaccard")
@@ -101,7 +100,10 @@ supercell_plot(SC$graph.supercells,
                group = SC$cell_line, 
                seed = seed, 
                main = "Super-cell colored by cell line assignment")
+```
 
+The quality of assigment can be evaluated with super-cell purity (function `supercell_purity()`) that returns the proportion of the most abundant cell type (in this case, cell line) in each super-cell.
+```{r purity of supercell in terms of cell line composition}
 # compute purity of super-cells in terms of cell line composition
 purity <- supercell_purity(clusters = cell.meta, 
                            supercell_membership = SC$membership)
