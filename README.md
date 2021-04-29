@@ -113,11 +113,14 @@ Jaccard coefficient to avoid biases towards very rare or very abundant
 clusters. Alternatively, assigmnent can be performed using relative (may
 cause biase towards very small populations) or absolute (may cause biase
 towards large populations) abundance with `method = "relative"` or
-`method = "absolute"`, respectively.
+`method = "absolute"`, respectively. The quality of assigment can be
+evaluated with super-cell purity (function `supercell_purity()`) that
+returns the proportion of the most abundant cell type (in this case,
+cell line) in each super-cell.
 
 ``` r
 
-SC2cellline  <- supercell_assign(clusters = cell.meta, # single-cell assigment to clusters
+SC2cellline  <- supercell_assign(clusters = cell.meta, # single-cell assigment to cell lines (clusters)
                                  supercell_membership = SC$membership, # single-cell assignment to super-cells
                                  method = "jaccard")
 SC$cell_line <- SC2cellline
@@ -133,6 +136,16 @@ supercell_plot(SC$graph.supercells,
 ```
 
 ![](figures/assign%20supercells%20to%20cell%20line%20infromation-1.png)
+
+``` r
+
+# compute purity of super-cells in terms of cell line composition
+purity <- supercell_purity(clusters = cell.meta, 
+                           supercell_membership = SC$membership)
+hist(purity, main = "Super-cell purity \nin terms of cell line composition")
+```
+
+![](figures/assign%20supercells%20to%20cell%20line%20infromation-2.png)
 
 Some options to plot super-cell networks
 
