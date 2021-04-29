@@ -13,7 +13,10 @@ supercell_VlnPlot_single(
   pt.size = 0,
   pch = "o",
   y.max = NULL,
-  adjust = 1
+  y.min = NULL,
+  adjust = 1,
+  angle.text.y = 90,
+  angle.text.x = 45
 )
 }
 \arguments{
