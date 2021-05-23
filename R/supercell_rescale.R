@@ -22,20 +22,19 @@ supercell_rescale <- function(SC.object, gamma = NULL, N.SC = NULL){
     stop("rescaling is not yet available for an approximate simplification results")
   }
 
-  if(xor(is.null(gamma), is.null(N.SC))){
+  if(!xor(is.null(gamma), is.null(N.SC))){
     stop("Provide either gamma or N.SC (just 1)")
   }
 
   N.c <- length(SC.object$membership)
 
-  if(is.null(N.SC)){
-    if(N.SC > 2 & N.SC < N.c)
-      N.SC <- round(N.c/gamma)
-    else
+  if(!is.null(N.SC)){
+    N.SC <- round(N.c/gamma)
+    if(N.SC < 2 | N.SC > N.c)
       stop("N.SC is out of range")
   } else {
     if(gamma >= 1 & gamma < (N.c/2))
-      N.SC <- round(N.SC)
+      N.SC <- round(N.c/gamma)
     else
       stop("gamma is out of range")
   }
@@ -59,7 +58,7 @@ supercell_rescale <- function(SC.object, gamma = NULL, N.SC = NULL){
 # unchanged fields
               genes.use           = SC.object$genes.use,
               simplification.algo = SC.object$simplification.algo,
-              do.approx           = SC.object$do.approx,
+              do.approx           = SC.object$do.approx
               #h_membership        = SC.object$h_membership,
               #graph.singlecell    = SC.object$graph.singlecell
               )
