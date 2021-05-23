@@ -1,8 +1,13 @@
 #' compute PCA for super-cell data (sample-weighted data)
 #'
-#' @param X an averaged gene expression matrix (! where rows represent super-cells and cols represent genes)
-#' @param supercell_size a vector with supercell size (ordered the same way as in X)
+#' @param X super-cell transposed gene expression matrix (! where rows represent super-cells and cols represent genes)
+#' @param genes.use genes to use for dimensionality reduction
+#' @param genes.exclude genes to exclude from dimensionaloty reduction
+#' @param supercell_size a vector with supercell sizes (ordered the same way as in X)
 #' @param k number of components to compute
+#' @param do.scale scale data before PCA
+#' @param do.center center data before PCA
+#' @param fast.pca whether to run fast PCA (works for datasets with |super-cells| > 50)
 #' @param seed a seed to use for \code{set.seed}
 #'
 #' @return the same object as \link[stats]{prcomp} result
@@ -18,8 +23,8 @@ supercell_prcomp <- function(X,
                              k = 20,
                              do.scale = TRUE,
                              do.center = TRUE,
-                             double.centering = FALSE,
-                             fast.pca = TRUE,
+                             double.centering = FALSE, # depricated
+                             fast.pca = TRUE, #
                              seed = 12345) {
   if(is.null(supercell_size)){
     supercell_size = rep(1, nrow(X))
@@ -34,25 +39,10 @@ supercell_prcomp <- function(X,
     X <- corpcor::wt.scale(X, w = supercell_size, center = do.center, scale = do.scale)
   }
 
-  if(double.centering){
-  n.i  <- nrow(X)
-  n.j  <- ncol(X)
-  m    <- rep(0, n.j)
-  for(i in 1:n.i){
-    m <- m + supercell_size[i]*X[i,]
-  }
-  m         <- m/sum(supercell_size) # averaged scaled gene expression
-  #print(max(abs(m)))
-  M         <- matrix(m, byrow = T, nrow = n.i, ncol = n.j) # matrix where rows are m's
-
-  X.cent    <- X - M
-  } else {
-    X.cent <- X
-  }
-
   W         <- diag(supercell_size)
 
-  X.for.PCA <- (1/sum(supercell_size)) * t(X.cent) %*% W %*% X.cent
+  # X for sample-weighted PCA
+  X.for.PCA <- (1/sum(supercell_size)) * t(X) %*% W %*% X
 
   set.seed(seed)
   if(!fast.pca){
@@ -61,7 +51,6 @@ supercell_prcomp <- function(X,
     pca$scale             <- do.scale
   } else {
     pca                   <- irlba::irlba(X.for.PCA, nv = k) # is equvivalent to prcomp when there is no centering and scaling (then prcomp is the same as svd)
- #   pca$x                 <- pca$u %*% diag(pca$d)
     pca$rotation          <- pca$v
     pca$v                 <- NULL
     pca$center            <- do.center
@@ -70,15 +59,7 @@ supercell_prcomp <- function(X,
   }
 
 
-
-  # n.sdev    <- length(pca$sdev)
-  # scale     <- sqrt(1/(sum(supercell_size) - 1))
-  # for(i in 1:n.sdev){
-  #   w.mean       <- weighted.mean(pca$x[,i], supercell_size)
-  #   pca$sdev[i]  <- scale * sqrt(sum((supercell_size*pca$x[,i] - w.mean)^2))
-  # }
-
-  pca$x <- X.cent %*% pca$rotation
+  pca$x <- X %*% pca$rotation
   return(pca)
 }
 
