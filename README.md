@@ -116,10 +116,9 @@ towards large populations) abundance with `method = "relative"` or
 `method = "absolute"`, respectively.
 
 ``` r
-SC2cellline  <- supercell_assign(clusters = cell.meta, # single-cell assigment to cell lines (clusters)
+SC$cell_line <- supercell_assign(clusters = cell.meta, # single-cell assigment to cell lines (clusters)
                                  supercell_membership = SC$membership, # single-cell assignment to super-cells
                                  method = "jaccard")
-SC$cell_line <- SC2cellline
 
 
 seed <- 1 # seed for super-cell network plotting 
@@ -288,11 +287,38 @@ supercell_GeneGenePlot(ge = SC.GE,
     ##   correlation    std.err  t.value    p.value
     ## Y   0.1232393 0.07124851 1.729711 0.08527247
 
+### Super-cell graining level can be quickly chaged with `supercell_rescale()` function
+
+``` r
+SC10 <- supercell_rescale(SC, gamma = 10)
+
+SC10$cell_line <- supercell_assign(clusters = cell.meta, # single-cell assigment to cell lines (clusters)
+                                 supercell_membership = SC10$membership, # single-cell assignment to super-cells
+                                 method = "jaccard")
+
+supercell_plot(SC10$graph.supercells, 
+               group = SC10$cell_line, 
+               seed = 1,
+               main  = "Super-cell at gamma = 10 colored by cell line assignment")
+```
+
+![](figures/unnamed-chunk-2-1.png)
+
+``` r
+
+### don't forget to recompure gene expression with 
+# GE10 <- supercell_GE(GE, SC10$membership)
+### in you want to perform downstream analyses at a new graining level
+```
+
 ### P.S.: Super-cell to [Seurat](https://cran.r-project.org/web/packages/Seurat/index.html) object
 
 In case you want to perform other analyses available with Seurat
-package, we can coerce super-cells to Seurat object with function
-`supercell_2_Seurat()`
+package, we can convert super-cells to
+[Seurat](https://cran.r-project.org/web/packages/Seurat/index.html)
+object with function `supercell_2_Seurat()` or to
+[SingleCellExperiment]() object with function ‘supercell\_2\_sce()’. Let
+consider a Seurat example.
 
 ``` r
 #install.packages("Seurat")
