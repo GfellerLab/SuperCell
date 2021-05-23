@@ -204,9 +204,9 @@ supercell_plot(SC10$graph.supercells,
                seed = 1,
                main  = "Super-cell at gamma = 10 colored by cell line assignment")
 
-### don't forget to recompure gene expression with 
+### don't forget to recompute super-cell gene expression matrix for a new grainig level with 
 # GE10 <- supercell_GE(GE, SC10$membership)
-### in you want to perform downstream analyses at a new graining level
+### if you are going to perform downstream analyses at the new graining level
 ```
 
 ### P.S.: Super-cell to [Seurat](https://cran.r-project.org/web/packages/Seurat/index.html) object
