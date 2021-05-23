@@ -317,8 +317,9 @@ In case you want to perform other analyses available with Seurat
 package, we can convert super-cells to
 [Seurat](https://cran.r-project.org/web/packages/Seurat/index.html)
 object with function `supercell_2_Seurat()` or to
-[SingleCellExperiment]() object with function ‘supercell\_2\_sce()’. Let
-consider a Seurat example.
+[SingleCellExperiment](https://bioconductor.org/packages/release/bioc/html/SingleCellExperiment.html)
+object with function ‘supercell\_2\_sce()’. Let consider a Seurat
+example.
 
 ``` r
 #install.packages("Seurat")
@@ -372,15 +373,17 @@ m.seurat <- FindClusters(m.seurat, graph.name = "RNA_nn")
 ## Elapsed time: 0 seconds
 ```
 
-License
-=======
+[License](https://github.com/GfellerLab/SuperCell/blob/master/License.pdf)
+==========================================================================
 
 SuperCell is developed by the group of David Gfeller at University of
 Lausanne.
 
 SuperCell can be used freely by academic groups for non-commercial
-purposes (see license). The product is provided free of charge, and,
-therefore, on an “as is” basis, without warranty of any kind.
+purposes (see
+[license](https://github.com/GfellerLab/SuperCell/blob/master/License.pdf)).
+The product is provided free of charge, and, therefore, on an “as is”
+basis, without warranty of any kind.
 
 FOR-PROFIT USERS If you plan to use SuperCell or any data provided with
 the script in any for-profit application, you are required to obtain a
