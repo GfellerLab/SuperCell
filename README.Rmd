@@ -241,6 +241,6 @@ m.seurat <- FindClusters(m.seurat, graph.name = "RNA_nn")
  To do so, please contact eauffarth@licr.org at the Ludwig Institute for Cancer Research Ltd.
 
  If you use SuperCell in a publication, please cite:
- Bilous et al. Super-cells untangle large and complex single-cell transcriptome networks, BioRxiv (2021).
+ [Bilous et al. Super-cells untangle large and complex single-cell transcriptome networks, BioRxiv (2021).](https://www.biorxiv.org/content/10.1101/2021.06.07.447430v1)
 
  For scientific questions, please contact Mariia Bilous (mariia.bilous@unil.ch) or David Gfeller (David.Gfeller@unil.ch).

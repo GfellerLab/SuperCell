@@ -391,9 +391,10 @@ separate license. To do so, please contact
 <a href="mailto:eauffarth@licr.org" class="email">eauffarth@licr.org</a>
 at the Ludwig Institute for Cancer Research Ltd.
 
-If you use SuperCell in a publication, please cite: Bilous et
+If you use SuperCell in a publication, please cite: [Bilous et
 al. Super-cells untangle large and complex single-cell transcriptome
-networks, BioRxiv (2021).
+networks, BioRxiv
+(2021).](https://www.biorxiv.org/content/10.1101/2021.06.07.447430v1)
 
 For scientific questions, please contact Mariia Bilous
 (<a href="mailto:mariia.bilous@unil.ch" class="email">mariia.bilous@unil.ch</a>)
