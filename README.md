@@ -11,12 +11,12 @@ SuperCell requires
 [Matrix](https://cran.r-project.org/web/packages/Matrix/index.html),
 [matrixStats](https://cran.rstudio.com/web/packages/matrixStats/index.html),
 [plyr](https://cran.r-project.org/web/packages/plyr/index.html),
-[irlba](https://cran.r-project.org/web/packages/irlba/index.html)
-[grDevices](https://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/00Index.html)
-[patchwork](https://cran.r-project.org/web/packages/patchwork/index.html)
-[ggplot2](https://cloud.r-project.org/web/packages/ggplot2/index.html)
+[irlba](https://cran.r-project.org/web/packages/irlba/index.html),
+[grDevices](https://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/00Index.html),
+[patchwork](https://cran.r-project.org/web/packages/patchwork/index.html),
+[ggplot2](https://cloud.r-project.org/web/packages/ggplot2/index.html).
 SuperCell uses [velocyto.R](https://github.com/velocyto-team/velocyto.R)
-for RNA velocity
+for RNA velocity.
 
 ``` r
 # install.packages("igraph")
@@ -26,7 +26,7 @@ for RNA velocity
 # install.packages("weights")
 # install.packages("Hmisc")
 # install.packages("Matrix")
-# install.packages("matrixStats")
+# install.packages("patchwork")
 # install.packages("plyr")
 # install.packages("irlba")
 ```

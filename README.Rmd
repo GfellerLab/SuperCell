@@ -15,11 +15,11 @@ knitr::opts_chunk$set(
 ```
 
 # Installation
-SuperCell requires [igraph](https://cran.r-project.org/web/packages/igraph/index.html), [RANN](https://cran.r-project.org/web/packages/RANN/index.html), [WeightedCluster](https://cran.r-project.org/web/packages/WeightedCluster/index.html), [corpcor](https://cran.r-project.org/web/packages/corpcor/index.html), [weights](https://cran.r-project.org/web/packages/weights/index.html), [Hmisc](https://cran.r-project.org/web/packages/Hmisc/index.html), [Matrix](https://cran.r-project.org/web/packages/Matrix/index.html), [matrixStats](https://cran.rstudio.com/web/packages/matrixStats/index.html), [plyr](https://cran.r-project.org/web/packages/plyr/index.html), [irlba](https://cran.r-project.org/web/packages/irlba/index.html) 
-[grDevices](https://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/00Index.html)
-[patchwork](https://cran.r-project.org/web/packages/patchwork/index.html)
-[ggplot2](https://cloud.r-project.org/web/packages/ggplot2/index.html)
-SuperCell uses [velocyto.R](https://github.com/velocyto-team/velocyto.R) for RNA velocity
+SuperCell requires [igraph](https://cran.r-project.org/web/packages/igraph/index.html), [RANN](https://cran.r-project.org/web/packages/RANN/index.html), [WeightedCluster](https://cran.r-project.org/web/packages/WeightedCluster/index.html), [corpcor](https://cran.r-project.org/web/packages/corpcor/index.html), [weights](https://cran.r-project.org/web/packages/weights/index.html), [Hmisc](https://cran.r-project.org/web/packages/Hmisc/index.html), [Matrix](https://cran.r-project.org/web/packages/Matrix/index.html), [matrixStats](https://cran.rstudio.com/web/packages/matrixStats/index.html), [plyr](https://cran.r-project.org/web/packages/plyr/index.html), [irlba](https://cran.r-project.org/web/packages/irlba/index.html), 
+[grDevices](https://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/00Index.html),
+[patchwork](https://cran.r-project.org/web/packages/patchwork/index.html),
+[ggplot2](https://cloud.r-project.org/web/packages/ggplot2/index.html).
+SuperCell uses [velocyto.R](https://github.com/velocyto-team/velocyto.R) for RNA velocity.
 
 
 ```{r install imported packages}
@@ -30,7 +30,7 @@ SuperCell uses [velocyto.R](https://github.com/velocyto-team/velocyto.R) for RNA
 # install.packages("weights")
 # install.packages("Hmisc")
 # install.packages("Matrix")
-# install.packages("matrixStats")
+# install.packages("patchwork")
 # install.packages("plyr")
 # install.packages("irlba")
 ```
