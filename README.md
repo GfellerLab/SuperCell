@@ -12,6 +12,11 @@ SuperCell requires
 [matrixStats](https://cran.rstudio.com/web/packages/matrixStats/index.html),
 [plyr](https://cran.r-project.org/web/packages/plyr/index.html),
 [irlba](https://cran.r-project.org/web/packages/irlba/index.html)
+[grDevices](https://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/00Index.html)
+[patchwork](https://cran.r-project.org/web/packages/patchwork/index.html)
+[ggplot2](https://cloud.r-project.org/web/packages/ggplot2/index.html)
+SuperCell uses [velocyto.R](https://github.com/velocyto-team/velocyto.R)
+for RNA velocity
 
 ``` r
 # install.packages("igraph")
@@ -385,18 +390,28 @@ purposes (see
 The product is provided free of charge, and, therefore, on an “as is”
 basis, without warranty of any kind.
 
-FOR-PROFIT USERS If you plan to use SuperCell or any data provided with
-the script in any for-profit application, you are required to obtain a
-separate license. To do so, please contact
+FOR-PROFIT USERS
+
+If you plan to use SuperCell or any data provided with the script in any
+for-profit application, you are required to obtain a separate license.
+To do so, please contact
 <a href="mailto:eauffarth@licr.org" class="email">eauffarth@licr.org</a>
 at the Ludwig Institute for Cancer Research Ltd.
 
-If you use SuperCell in a publication, please cite: [Bilous et
-al. Super-cells untangle large and complex single-cell transcriptome
-networks, BioRxiv
-(2021).](https://www.biorxiv.org/content/10.1101/2021.06.07.447430v1)
+If required, FOR-PROFIT USERS are also expected to have proper licenses
+for the tools used in SuperCell, including the R packages igraph, RANN,
+WeightedCluster, corpora, weights, Hmisc, Matrix, ply, irlba, grDevices,
+patchwork, ggplot2 and velocyto.R
 
 For scientific questions, please contact Mariia Bilous
 (<a href="mailto:mariia.bilous@unil.ch" class="email">mariia.bilous@unil.ch</a>)
 or David Gfeller
 (<a href="mailto:David.Gfeller@unil.ch" class="email">David.Gfeller@unil.ch</a>).
+
+How to cite
+===========
+
+If you use SuperCell in a publication, please cite: [Bilous et
+al. Super-cells untangle large and complex single-cell transcriptome
+networks, BioRxiv
+(2021).](https://www.biorxiv.org/content/10.1101/2021.06.07.447430v1)

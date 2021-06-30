@@ -16,7 +16,6 @@ Imports:
 	weights,
 	Hmisc,
 	Matrix,
-	matrixStats,
 	plyr,
 	irlba,
 	grDevices,
