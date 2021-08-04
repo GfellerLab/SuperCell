@@ -11,8 +11,14 @@
 #' @export
 
 
-supercell_estimate_velocity <- function(emat, nmat, smat = NULL, membership = NULL, supercell_size = NULL,
-                                        do.run.avegaring = (ncol(emat) == length(membership)), ...){
+supercell_estimate_velocity <- function(emat,
+                                        nmat,
+                                        smat = NULL,
+                                        membership = NULL,
+                                        supercell_size = NULL,
+                                        do.run.avegaring = (ncol(emat) == length(membership)),
+                                        kCells = 10,
+                                        ...){
 
   N.c <- ncol(emat)
 
@@ -50,7 +56,7 @@ supercell_estimate_velocity <- function(emat, nmat, smat = NULL, membership = NU
     N.SC <- ncol(emat)
   }
 
-  rel.velocity <- velocyto.R::gene.relative.velocity.estimates(emat = emat, nmat = nmat, smat = smat, kCells = 10,
+  rel.velocity <- velocyto.R::gene.relative.velocity.estimates(emat = emat, nmat = nmat, smat = smat, kCells = kCells,
                                                                 ...)
 
   rel.velocity$is_weighted <- FALSE ## for the moment, the weighted version of rna-velocity is under development
