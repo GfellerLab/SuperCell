@@ -270,24 +270,3 @@ For scientific questions, please contact Mariia Bilous ([mariia.bilous\@unil.ch]
 # How to cite
 
 If you use SuperCell in a publication, please cite: [Bilous et al. Super-cells untangle large and complex single-cell transcriptome networks, BioRxiv (2021).](https://www.biorxiv.org/content/10.1101/2021.06.07.447430v1)
-=======
-# [License](https://github.com/GfellerLab/SuperCell/blob/master/License.pdf) 
- SuperCell is developed by the group of David Gfeller at University of Lausanne.
-
- SuperCell can be used freely by academic groups for non-commercial purposes (see [license](https://github.com/GfellerLab/SuperCell/blob/master/License.pdf)).
- The product is provided free of charge, and, therefore, on an "as is” basis, without warranty of any kind.
-
- FOR-PROFIT USERS
- 
- If you plan to use SuperCell or any data provided with the script in any for-profit
- application, you are required to obtain a separate  license.
- To do so, please contact eauffarth@licr.org at the Ludwig Institute for Cancer Research Ltd.
- 
- If required, FOR-PROFIT USERS are also expected to have proper licenses for the tools used in SuperCell, including the R packages igraph, RANN, WeightedCluster, corpora, weights, Hmisc, Matrix, ply, irlba, grDevices, patchwork, ggplot2 and velocyto.R
- 
- For scientific questions, please contact Mariia Bilous (mariia.bilous@unil.ch) or David Gfeller (David.Gfeller@unil.ch).
-
-# How to cite
- If you use SuperCell in a publication, please cite:
- [Bilous et al. Super-cells untangle large and complex single-cell transcriptome networks, BioRxiv (2021).](https://www.biorxiv.org/content/10.1101/2021.06.07.447430v1)
-
