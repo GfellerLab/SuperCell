@@ -11,7 +11,12 @@ SuperCell requires
 [Matrix](https://cran.r-project.org/web/packages/Matrix/index.html),
 [matrixStats](https://cran.rstudio.com/web/packages/matrixStats/index.html),
 [plyr](https://cran.r-project.org/web/packages/plyr/index.html),
-[irlba](https://cran.r-project.org/web/packages/irlba/index.html)
+[irlba](https://cran.r-project.org/web/packages/irlba/index.html),
+[grDevices](https://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/00Index.html),
+[patchwork](https://cran.r-project.org/web/packages/patchwork/index.html),
+[ggplot2](https://cloud.r-project.org/web/packages/ggplot2/index.html).
+SuperCell uses [velocyto.R](https://github.com/velocyto-team/velocyto.R)
+for RNA velocity.
 
 ``` r
 # install.packages("igraph")
@@ -21,7 +26,7 @@ SuperCell requires
 # install.packages("weights")
 # install.packages("Hmisc")
 # install.packages("Matrix")
-# install.packages("matrixStats")
+# install.packages("patchwork")
 # install.packages("plyr")
 # install.packages("irlba")
 ```
@@ -116,11 +121,9 @@ towards large populations) abundance with `method = "relative"` or
 `method = "absolute"`, respectively.
 
 ``` r
-
-SC2cellline  <- supercell_assign(clusters = cell.meta, # single-cell assigment to clusters
+SC$cell_line <- supercell_assign(clusters = cell.meta, # single-cell assigment to cell lines (clusters)
                                  supercell_membership = SC$membership, # single-cell assignment to super-cells
                                  method = "jaccard")
-SC$cell_line <- SC2cellline
 
 
 seed <- 1 # seed for super-cell network plotting 
@@ -133,6 +136,19 @@ supercell_plot(SC$graph.supercells,
 ```
 
 ![](figures/assign%20supercells%20to%20cell%20line%20infromation-1.png)
+
+The quality of assigment can be evaluated with super-cell purity
+(function `supercell_purity()`) that returns the proportion of the most
+abundant cell type (in this case, cell line) in each super-cell.
+
+``` r
+# compute purity of super-cells in terms of cell line composition
+purity <- supercell_purity(clusters = cell.meta, 
+                           supercell_membership = SC$membership)
+hist(purity, main = "Super-cell purity \nin terms of cell line composition")
+```
+
+![](figures/purity%20of%20supercell%20in%20terms%20of%20cell%20line%20composition-1.png)
 
 Some options to plot super-cell networks
 
@@ -276,16 +292,44 @@ supercell_GeneGenePlot(ge = SC.GE,
     ##   correlation    std.err  t.value    p.value
     ## Y   0.1232393 0.07124851 1.729711 0.08527247
 
+### Super-cell graining level can be quickly chaged with `supercell_rescale()` function
+
+``` r
+SC10 <- supercell_rescale(SC, gamma = 10)
+
+SC10$cell_line <- supercell_assign(clusters = cell.meta, # single-cell assigment to cell lines (clusters)
+                                 supercell_membership = SC10$membership, # single-cell assignment to super-cells
+                                 method = "jaccard")
+
+supercell_plot(SC10$graph.supercells, 
+               group = SC10$cell_line, 
+               seed = 1,
+               main  = "Super-cell at gamma = 10 colored by cell line assignment")
+```
+
+![](figures/unnamed-chunk-2-1.png)
+
+``` r
+
+### don't forget to recompute super-cell gene expression matrix for a new grainig level with 
+# GE10 <- supercell_GE(GE, SC10$membership)
+### if you are going to perform downstream analyses at the new graining level
+```
+
 ### P.S.: Super-cell to [Seurat](https://cran.r-project.org/web/packages/Seurat/index.html) object
 
 In case you want to perform other analyses available with Seurat
-package, we can coerce super-cells to Seurat object with function
-`supercell_2_Seurat()`
+package, we can convert super-cells to
+[Seurat](https://cran.r-project.org/web/packages/Seurat/index.html)
+object with function `supercell_2_Seurat()` or to
+[SingleCellExperiment](https://bioconductor.org/packages/release/bioc/html/SingleCellExperiment.html)
+object with function ‘supercell\_2\_sce()’. Let consider a Seurat
+example.
 
 ``` r
 #install.packages("Seurat")
 library(Seurat)
-## Warning: package 'Seurat' was built under R version 3.6.2
+## Attaching SeuratObject
 
 m.seurat <- supercell_2_Seurat(SC.GE = SC.GE, SC = SC, fields = c("cell_line", "clustering", "clustering_reordered"))
 ```
@@ -326,10 +370,48 @@ m.seurat <- FindClusters(m.seurat, graph.name = "RNA_nn")
 ## Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
 ## 
 ## Number of nodes: 196
-## Number of edges: 2013
+## Number of edges: 2010
 ## 
 ## Running Louvain algorithm...
-## Maximum modularity in 10 random starts: 0.7904
+## Maximum modularity in 10 random starts: 0.7908
 ## Number of communities: 5
 ## Elapsed time: 0 seconds
 ```
+
+[License](https://github.com/GfellerLab/SuperCell/blob/master/License.pdf)
+==========================================================================
+
+SuperCell is developed by the group of David Gfeller at University of
+Lausanne.
+
+SuperCell can be used freely by academic groups for non-commercial
+purposes (see
+[license](https://github.com/GfellerLab/SuperCell/blob/master/License.pdf)).
+The product is provided free of charge, and, therefore, on an “as is”
+basis, without warranty of any kind.
+
+FOR-PROFIT USERS
+
+If you plan to use SuperCell or any data provided with the script in any
+for-profit application, you are required to obtain a separate license.
+To do so, please contact
+<a href="mailto:eauffarth@licr.org" class="email">eauffarth@licr.org</a>
+at the Ludwig Institute for Cancer Research Ltd.
+
+If required, FOR-PROFIT USERS are also expected to have proper licenses
+for the tools used in SuperCell, including the R packages igraph, RANN,
+WeightedCluster, corpora, weights, Hmisc, Matrix, ply, irlba, grDevices,
+patchwork, ggplot2 and velocyto.R
+
+For scientific questions, please contact Mariia Bilous
+(<a href="mailto:mariia.bilous@unil.ch" class="email">mariia.bilous@unil.ch</a>)
+or David Gfeller
+(<a href="mailto:David.Gfeller@unil.ch" class="email">David.Gfeller@unil.ch</a>).
+
+How to cite
+===========
+
+If you use SuperCell in a publication, please cite: [Bilous et
+al. Super-cells untangle large and complex single-cell transcriptome
+networks, BioRxiv
+(2021).](https://www.biorxiv.org/content/10.1101/2021.06.07.447430v1)

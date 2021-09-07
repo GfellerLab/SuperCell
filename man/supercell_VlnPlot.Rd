@@ -14,10 +14,13 @@ supercell_VlnPlot(
   pt.size = 0,
   pch = "o",
   y.max = NULL,
+  y.min = NULL,
   same.y.lims = FALSE,
   adjust = 1,
   ncol = NULL,
-  combine = TRUE
+  combine = TRUE,
+  angle.text.y = 90,
+  angle.text.x = 45
 )
 }
 \arguments{

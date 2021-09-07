@@ -18,11 +18,21 @@ supercell_prcomp(
 )
 }
 \arguments{
-\item{X}{an averaged gene expression matrix (! where rows represent super-cells and cols represent genes)}
+\item{X}{super-cell transposed gene expression matrix (! where rows represent super-cells and cols represent genes)}
 
-\item{supercell_size}{a vector with supercell size (ordered the same way as in X)}
+\item{genes.use}{genes to use for dimensionality reduction}
+
+\item{genes.exclude}{genes to exclude from dimensionaloty reduction}
+
+\item{supercell_size}{a vector with supercell sizes (ordered the same way as in X)}
 
 \item{k}{number of components to compute}
+
+\item{do.scale}{scale data before PCA}
+
+\item{do.center}{center data before PCA}
+
+\item{fast.pca}{whether to run fast PCA (works for datasets with |super-cells| > 50)}
 
 \item{seed}{a seed to use for \code{set.seed}}
 }

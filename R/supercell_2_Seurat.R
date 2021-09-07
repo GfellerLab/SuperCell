@@ -129,7 +129,7 @@ supercell_2_Seurat <- function(SC.GE, SC, fields = c(),
 
   ## Super-cell netwok:
   ## 1) create graph field
-  m.seurat            <- FindNeighbors(m.seurat, compute.SNN = FALSE, verbose = FALSE)
+  m.seurat            <- FindNeighbors(m.seurat, compute.SNN = TRUE, verbose = FALSE)
 
   ## 2) add self-loops to our super-cell graph to indicate super-cell size (does not work, as Seurat removes loops...)
  # SC$graph.supercells <- igraph::add_edges(SC$graph.supercells, edges = rep(1:N.c, each = 2), weight = supercell_size)

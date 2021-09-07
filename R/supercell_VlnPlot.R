@@ -28,10 +28,13 @@ supercell_VlnPlot <- function(ge,
                               pt.size = 0,
                               pch = "o",
                               y.max = NULL,
+                              y.min = NULL,
                               same.y.lims = FALSE,
                               adjust = 1,
                               ncol = NULL,
-                              combine = TRUE){
+                              combine = TRUE,
+                              angle.text.y = 90,
+                              angle.text.x = 45){
 
   N.SC <- ncol(ge) # number of super-cells
 
@@ -70,7 +73,9 @@ supercell_VlnPlot <- function(ge,
   if(same.y.lims & is.null(x = y.max)){
     y.max <- max(ge[features.set, ids.keep.idents])
   }
-
+  if(is.null(x = y.min)){
+    y.min <- min(0,min(ge[features.set, ids.keep.idents]))
+  }
 
   p.list <- list()
   for(gene.i in features.set){
@@ -83,7 +88,10 @@ supercell_VlnPlot <- function(ge,
                                                  pt.size = pt.size,
                                                  pch = pch,
                                                  y.max = y.max,
-                                                 adjust = adjust)
+                                                 y.min = y.min,
+                                                 adjust = adjust,
+                                                 angle.text.y = angle.text.y,
+                                                 angle.text.x = angle.text.x)
   }
 
 
@@ -121,7 +129,10 @@ supercell_VlnPlot_single <- function(ge1,
                                pt.size = 0,
                                pch = "o",
                                y.max = NULL,
-                               adjust = 1){
+                               y.min = NULL,
+                               adjust = 1,
+                               angle.text.y = 90,
+                               angle.text.x = 45){
 
 
   N.SC <- length(ge1)
@@ -141,7 +152,7 @@ supercell_VlnPlot_single <- function(ge1,
 
   g <- ggplot(data = plot.df, aes(x = x, y = y, fill = factor(group))) +
     geom_violin(scale="width", trim = TRUE, adjust = adjust) +
-    scale_y_continuous(limits = c(0, y.max)) +
+    scale_y_continuous(limits = c(y.min, y.max)) +
     labs(x = "Ident", y = "Expression Level", title = feature) +
     cowplot::theme_cowplot()
 
@@ -156,7 +167,8 @@ supercell_VlnPlot_single <- function(ge1,
   }
   g <- g + theme(legend.position = "none",
                  plot.title = element_text(hjust = 0.5),
-                 axis.text.x = element_text(angle = 45, hjust = 1))
+                 axis.text.x = element_text(angle = angle.text.x, hjust = 1),
+                 axis.text.y = element_text(angle = angle.text.y, hjust = 0.5))
 
   return(g)
 }

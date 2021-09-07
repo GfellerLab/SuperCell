@@ -9,8 +9,8 @@ SCimplify(
   genes.use = NULL,
   genes.exclude = NULL,
   n.var.genes = min(1000, nrow(X)),
-  k.knn = 5,
   gamma = 10,
+  k.knn = 5,
   do.scale = TRUE,
   n.pc = 10,
   fast.pca = TRUE,
@@ -25,7 +25,7 @@ SCimplify(
 )
 }
 \arguments{
-\item{X}{gene expression matrix with rows to be genes and cols to be cells}
+\item{X}{log-normalized gene expression matrix with rows to be genes and cols to be cells}
 
 \item{genes.use}{a vector of genes used to compute PCA}
 
@@ -33,17 +33,17 @@ SCimplify(
 
 \item{n.var.genes}{if \code{"genes.use"} is not provided, \code{"n.var.genes"} genes with the largest variation are used}
 
-\item{k.knn}{parameter to compute single-cell kNN network}
-
 \item{gamma}{graining level of data (proportion of number of single cells in the initial dataset to the number of super-cells in the final dataset)}
 
-\item{do.scale}{whether to scale gene expression matrix to compure PCA}
+\item{k.knn}{parameter to compute single-cell kNN network}
+
+\item{do.scale}{whether to scale gene expression matrix when computing PCA}
 
 \item{n.pc}{number of principal components to use for construction of single-cell kNN network}
 
 \item{fast.pca}{use irlba::irlba as a faster version of prcomp (one used in Seurat package)}
 
-\item{do.approx}{compute approximate kNN in case of a large dataset (>20000)}
+\item{do.approx}{compute approximate kNN in case of a large dataset (>50'000)}
 
 \item{approx.N}{number of cells to subsample for an approximate approach}
 
@@ -66,4 +66,18 @@ a list with components
 }
 \description{
 This function detects super-cells from single-cell gene expression matrix
+}
+\examples{
+\dontrun{
+data(cell_lines) # list with GE - gene expression matrix (logcounts), meta - cell meta data
+GE <- cell_lines$GE
+
+SC <- SCimplify(GE,  # log-normalized gene expression matrix
+                gamma = 20, # graining level
+                n.var.genes = 1000, # number of top varible genes to use for the dimensionality reduction, the list of genes can be provided instead (with 'genes.use')
+                k.knn = 5, # k for kNN algorithm
+                n.pc = 10, # number of proncipal components to use
+                do.approx) # whether to run an approxiate coarse-graining (for large daatasets with N_cells > 50'000)
+
+}
 }

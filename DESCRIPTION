@@ -1,7 +1,7 @@
 Package: SuperCell
 Type: Package
 Title: Simplification of scRNA-seq data by merging together similar cells
-Version: 0.1.0
+Version: 1.0
 Author: Mariia Bilous
 Maintainer: The package maintainer <mariia.bilous@unil.ch>
 Description: Aggregates large single-cell data into super-cell dataset by merging together gene expression of very similar cells. 
@@ -16,7 +16,6 @@ Imports:
 	weights,
 	Hmisc,
 	Matrix,
-	matrixStats,
 	plyr,
 	irlba,
 	grDevices,

@@ -14,7 +14,7 @@ supercell_rescale(SC.object, gamma = NULL, N.SC = NULL)
 \item{N.SC}{new number of super-cells (provide either \code{gamma} or \code{N.SC})}
 }
 \value{
-the same object as \code{\link{SCimplify}}
+the same object as \code{\link{SCimplify}} at a new graining level
 }
 \description{
 This function recomputes super-cell structure at a different graining level (\code{gamma}) or

@@ -17,8 +17,13 @@ SCimplify_for_velocity <- function(emat,
                 if (is.null(gamma)){
                         stop("Please specify supercell membership or graining level gamma.")
                 } else {
-                        ge <- log1p(10000*sweep(emat + nmat, 2,
-                                                 FUN = "/", Matrix::colSums(emat + nmat)) + 1)
+                        #print("before: counts")
+                        mat <- as(Matrix::as.matrix(emat) + Matrix::as.matrix(nmat), 'sparseMatrix')
+
+                        #print("before: logp1")
+                        ge <- log1p(sweep(mat, 2, Matrix::colSums(mat), FUN = "/") * 1e4)
+
+                        #print("before: SCimplify")
                         SCim <- SCimplify(ge, k.knn = 5, gamma = gamma, ...)
                         membership <- SCim$membership
                 }
@@ -26,6 +31,7 @@ SCimplify_for_velocity <- function(emat,
 
         }
 
+        #print("before: Create spliced and unspliced counts")
         ## Create spliced and unspliced counts
         SC.emat <- as(supercell_GE(emat, membership), "sparseMatrix")
         SC.nmat <- as(supercell_GE(nmat, membership), "sparseMatrix")
