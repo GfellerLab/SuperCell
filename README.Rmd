@@ -38,8 +38,8 @@ SuperCell uses [velocyto.R](https://github.com/velocyto-team/velocyto.R) for RNA
 
 Installing SuperCell package from gitHub
 ```{r library}
-# if (!requireNamespace("remotes")) install.packages("remotes")
-# remotes::install_github("GfellerLab/SuperCell")
+if (!requireNamespace("remotes")) install.packages("remotes")
+remotes::install_github("GfellerLab/SuperCell")
 
 library(SuperCell)
 ```
