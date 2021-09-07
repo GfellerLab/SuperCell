@@ -11,8 +11,14 @@
 #' @export
 
 
-supercell_estimate_velocity <- function(emat, nmat, smat = NULL, membership = NULL, supercell_size = NULL,
-                                        do.run.avegaring = (ncol(emat) == length(membership)), kCells = 1, ...){
+supercell_estimate_velocity <- function(emat,
+                                        nmat,
+                                        smat = NULL,
+                                        membership = NULL,
+                                        supercell_size = NULL,
+                                        do.run.avegaring = (ncol(emat) == length(membership)),
+                                        kCells = 10,
+                                        ...){
 
   N.c <- ncol(emat)
 
@@ -35,7 +41,7 @@ supercell_estimate_velocity <- function(emat, nmat, smat = NULL, membership = NU
     }
 
     if(!is.null(supercell_size)){
-      warning("supercell_size was recomputed from membership")
+      warning("supercell_size was recomputed from membership\n")
     }
     supercell_size <- as.vector(table(membership))
 
@@ -43,15 +49,15 @@ supercell_estimate_velocity <- function(emat, nmat, smat = NULL, membership = NU
   } else { # already averaged data provided as input ?
     if(is.null(supercell_size)){
       supercell_size <- rep(1, N.c)
-      warning("supercell_size was replaced with 1")
+      warning("supercell_size was replaced with 1\n")
     } else if(length(supercell_size) != N.c) {
       stop("supercell_size has different length from the number of super-cells")
     }
     N.SC <- ncol(emat)
   }
 
-  rel.velocity <- velocyto.R::gene.relative.velocity.estimates(emat = emat, nmat = nmat, smat = smat,
-                                                               kCells = kCells, ...)
+  rel.velocity <- velocyto.R::gene.relative.velocity.estimates(emat = emat, nmat = nmat, smat = smat, kCells = kCells,
+                                                                ...)
 
   rel.velocity$is_weighted <- FALSE ## for the moment, the weighted version of rna-velocity is under development
   rel.velocity$supercell_size <- supercell_size
