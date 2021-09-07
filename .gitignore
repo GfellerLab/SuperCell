@@ -5,6 +5,6 @@
 .Rbuildignore
 .DS_Store
 *.pdf
-*.html
+#*.html
 
 !License.pdf
