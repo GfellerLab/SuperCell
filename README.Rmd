@@ -23,7 +23,6 @@ SuperCell uses [velocyto.R](https://github.com/velocyto-team/velocyto.R) for RNA
 
 
 
-
 ```{r install imported packages}
 # install.packages("igraph")
 # install.packages("RANN")
@@ -116,7 +115,6 @@ supercell_plot(SC$graph.supercells,
 ```
 
 The quality of assigment can be evaluated with super-cell purity (function `supercell_purity()`) that returns the proportion of the most abundant cell type (in this case, cell line) in each super-cell.
-
 
 
 ```{r purity of supercell in terms of cell line composition}
@@ -213,7 +211,6 @@ supercell_GeneGenePlot(ge = SC.GE,
 ```
 
 ### Super-cell graining level can be quickly chaged with `supercell_rescale()` function
-
 
 ```{r}
 SC10 <- supercell_rescale(SC, gamma = 10)
