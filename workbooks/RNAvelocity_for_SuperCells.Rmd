@@ -1,6 +1,8 @@
 ---
 title: "RNA-velocity for super-cells"
-output: html_document
+output:
+  md_document:
+    variant: markdown_github
 ---
 ## RNA velocity combining with super-cells
 
