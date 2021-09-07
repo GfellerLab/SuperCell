@@ -262,7 +262,8 @@ The product is provided free of charge, and, therefore, on an "as is" basis, wit
 
 FOR-PROFIT USERS
 
-If you plan to use SuperCell or any data provided with the script in any for-profit application, you are required to obtain a separate license. To do so, please contact [eauffarth\@licr.org](mailto:eauffarth@licr.org) at the Ludwig Institute for Cancer Research Ltd.
+If you plan to use SuperCell or any data provided with the script in any for-profit application, you are required to obtain a separate license. 
+To do so, please contact [eauffarth\@licr.org](mailto:eauffarth@licr.org) at the Ludwig Institute for Cancer Research Ltd.
 
 If required, FOR-PROFIT USERS are also expected to have proper licenses for the tools used in SuperCell, including the R packages igraph, RANN, WeightedCluster, corpora, weights, Hmisc, Matrix, ply, irlba, grDevices, patchwork, ggplot2 and velocyto.R
 
