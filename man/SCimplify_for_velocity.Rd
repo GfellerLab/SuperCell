@@ -4,18 +4,7 @@
 \alias{SCimplify_for_velocity}
 \title{Construct super-cells from spliced and un-spliced matrices}
 \usage{
-<<<<<<< HEAD
-SCimplify_for_velocity(
-  emat,
-  nmat,
-  gamma = 10,
-  n.var.genes = 1000,
-  use.nn2 = TRUE,
-  ...
-)
-=======
 SCimplify_for_velocity(emat, nmat, gamma = NULL, membership = NULL, ...)
->>>>>>> dev
 }
 \arguments{
 \item{emat}{spliced (exonic) count matrix}
