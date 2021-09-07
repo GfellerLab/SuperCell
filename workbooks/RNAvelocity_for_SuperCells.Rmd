@@ -7,8 +7,8 @@ output:
 ## RNA velocity combining with super-cells
 
 ```{r library}
-#if (!requireNamespace("remotes")) install.packages("remotes")
-#remotes::install_github("GfellerLab/SuperCell")
+if (!requireNamespace("remotes")) install.packages("remotes")
+remotes::install_github("GfellerLab/SuperCell", ref = 'dev')
 
 library(SuperCell)
 library(velocyto.R)

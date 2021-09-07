@@ -2,9 +2,33 @@ RNA velocity combining with super-cells
 ---------------------------------------
 
 ``` r
-#if (!requireNamespace("remotes")) install.packages("remotes")
-#remotes::install_github("GfellerLab/SuperCell")
+if (!requireNamespace("remotes")) install.packages("remotes")
+```
 
+    ## Loading required namespace: remotes
+
+``` r
+remotes::install_github("GfellerLab/SuperCell", ref = 'dev')
+```
+
+    ## Downloading GitHub repo GfellerLab/SuperCell@dev
+
+    ## 
+    ##      checking for file ‘/private/var/folders/g3/m1nhnz5910s9mckg3ymbz_b80000gn/T/Rtmpn9lC1Y/remotes1269e302e8c28/GfellerLab-SuperCell-6262c57/DESCRIPTION’ ...  ✓  checking for file ‘/private/var/folders/g3/m1nhnz5910s9mckg3ymbz_b80000gn/T/Rtmpn9lC1Y/remotes1269e302e8c28/GfellerLab-SuperCell-6262c57/DESCRIPTION’
+    ##   ─  preparing ‘SuperCell’:
+    ##      checking DESCRIPTION meta-information ...  ✓  checking DESCRIPTION meta-information
+    ##   ─  excluding invalid files
+    ##      Subdirectory 'R' contains invalid file names:
+    ##      ‘test_GE.Rmd’
+    ##   ─  checking for LF line-endings in source and make files and shell scripts
+    ##   ─  checking for empty or unneeded directories
+    ##        NB: this package now depends on R (>= 3.5.0)
+    ##        WARNING: Added dependency on R >= 3.5.0 because serialized objects in  serialize/load version 3 cannot be read in older versions of R.  File(s) containing such objects:  ‘SuperCell/data/5cancer_cell_lines_10x_GE.Rds’  WARNING: Added dependency on R >= 3.5.0 because serialized objects in  serialize/load version 3 cannot be read in older versions of R.  File(s) containing such objects:  ‘SuperCell/data/5cancer_cell_lines_10x_cell_line_assignment.Rds’  WARNING: Added dependency on R >= 3.5.0 because serialized objects in  serialize/load version 3 cannot be read in older versions of R.  File(s) containing such objects: ‘SuperCell/data/cell_lines.RData’
+    ##   ─  building ‘SuperCell_1.0.tar.gz’
+    ##      
+    ## 
+
+``` r
 library(SuperCell)
 library(velocyto.R)
 ```
@@ -92,24 +116,24 @@ tsne10 <- tSNE.velocity.plot(Vel,
     ## Iteration 50: error is 60.800991 (50 iterations in 0.11 seconds)
     ## Iteration 100: error is 50.997427 (50 iterations in 0.10 seconds)
     ## Iteration 150: error is 50.493617 (50 iterations in 0.10 seconds)
-    ## Iteration 200: error is 50.302629 (50 iterations in 0.11 seconds)
+    ## Iteration 200: error is 50.302629 (50 iterations in 0.10 seconds)
     ## Iteration 250: error is 50.263116 (50 iterations in 0.10 seconds)
     ## Iteration 300: error is 0.470060 (50 iterations in 0.10 seconds)
-    ## Iteration 350: error is 0.376875 (50 iterations in 0.11 seconds)
+    ## Iteration 350: error is 0.376875 (50 iterations in 0.10 seconds)
     ## Iteration 400: error is 0.350275 (50 iterations in 0.11 seconds)
     ## Iteration 450: error is 0.342156 (50 iterations in 0.11 seconds)
     ## Iteration 500: error is 0.337179 (50 iterations in 0.11 seconds)
     ## Iteration 550: error is 0.331093 (50 iterations in 0.11 seconds)
     ## Iteration 600: error is 0.325433 (50 iterations in 0.11 seconds)
-    ## Iteration 650: error is 0.323196 (50 iterations in 0.10 seconds)
-    ## Iteration 700: error is 0.320226 (50 iterations in 0.11 seconds)
+    ## Iteration 650: error is 0.323196 (50 iterations in 0.11 seconds)
+    ## Iteration 700: error is 0.320226 (50 iterations in 0.10 seconds)
     ## Iteration 750: error is 0.318516 (50 iterations in 0.11 seconds)
     ## Iteration 800: error is 0.316694 (50 iterations in 0.11 seconds)
-    ## Iteration 850: error is 0.315215 (50 iterations in 0.11 seconds)
+    ## Iteration 850: error is 0.315215 (50 iterations in 0.10 seconds)
     ## Iteration 900: error is 0.314090 (50 iterations in 0.11 seconds)
     ## Iteration 950: error is 0.313261 (50 iterations in 0.11 seconds)
-    ## Iteration 1000: error is 0.312096 (50 iterations in 0.11 seconds)
-    ## Fitting performed in 2.13 seconds.
+    ## Iteration 1000: error is 0.312096 (50 iterations in 0.10 seconds)
+    ## Fitting performed in 2.10 seconds.
     ## delta norm ... done
 
 ``` r
