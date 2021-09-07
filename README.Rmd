@@ -257,7 +257,8 @@ m.seurat <- FindClusters(m.seurat, graph.name = "RNA_nn")
 
 SuperCell is developed by the group of David Gfeller at University of Lausanne.
 
-SuperCell can be used freely by academic groups for non-commercial purposes (see [license](https://github.com/GfellerLab/SuperCell/blob/master/License.pdf)). The product is provided free of charge, and, therefore, on an "as is" basis, without warranty of any kind.
+SuperCell can be used freely by academic groups for non-commercial purposes (see [license](https://github.com/GfellerLab/SuperCell/blob/master/License.pdf)). 
+The product is provided free of charge, and, therefore, on an "as is" basis, without warranty of any kind.
 
 FOR-PROFIT USERS
 
