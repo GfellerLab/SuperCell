@@ -12,6 +12,7 @@
 #' @param main a title of a plot
 #' @param do.frames whether to keep vertex.frames in the plot
 #' @param do.extra.log.rescale whether to log-scale node size (to balance plot if some super-cells are large and covers smaller super-cells)
+#' @param do.directed whether to plot edge direction
 #' @param log.base base with thich to log-scale node size
 #' @param do.extra.sqtr.rescale  whether to sqrt-scale node size (to balance plot if some super-cells are large and covers smaller super-cells)
 #' @param frame.color color of node frames, black by default
@@ -54,6 +55,7 @@ supercell_plot <- function(SC.nw,
                            main = NA,
                            do.frames = TRUE,
                            do.extra.log.rescale = FALSE,
+                           do.directed = FALSE,
                            log.base = 2,
                            do.extra.sqtr.rescale = FALSE,
                            frame.color = "black",
@@ -140,6 +142,12 @@ supercell_plot <- function(SC.nw,
   v.colors <- color.use[group]
   ifelse(do.frames, v.frame.colors <- rep(frame.color, length(v.colors)), v.frame.colors <- v.colors)
 
+  edgelist <- igraph::get.edgelist(SC.nw)
+
+  if(!do.directed){
+    SC.nw <- igraph::as.undirected(SC.nw)
+  }
+
   plot(SC.nw, vertex.label = NA, vertex.color = v.colors[cells.to.use],
        vertex.frame.color = v.frame.colors[cells.to.use],
        layout = lay.rotated, main = main, vertex.size = vsize[cells.to.use])
@@ -147,7 +155,7 @@ supercell_plot <- function(SC.nw,
   if(return.meta){
     p <- grDevices::recordPlot()
     res <- list(p = p,
-                edgelist = igraph::get.edgelist(SC.nw),
+                edgelist = edgelist,
                 lay = lay,
                 lay.rotated = lay.rotated,
                 alpha = alpha,
