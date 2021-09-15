@@ -34,9 +34,11 @@ for RNA velocity.
 Installing SuperCell package from gitHub
 
 ``` r
-# if (!requireNamespace("remotes")) install.packages("remotes")
-# remotes::install_github("GfellerLab/SuperCell")
-
+if (!requireNamespace("remotes")) install.packages("remotes")
+## Loading required namespace: remotes
+remotes::install_github("GfellerLab/SuperCell")
+## Skipping install of 'SuperCell' from a github remote, the SHA1 (e203e5ac) has not changed since last install.
+##   Use `force = TRUE` to force installation
 library(SuperCell)
 ```
 
@@ -73,7 +75,9 @@ gamma <- 20 # graining level
 SC <- SCimplify(GE,  # gene expression matrix 
                 k.knn = 5, # number of nearest neighbors to build kNN network
                 gamma = gamma, # graining level
-                n.var.genes = 1000) # number of the top variable genes to use for dimentionality reduction 
+                n.var.genes = 1000, # number of the top variable genes to use for dimentionality reduction 
+                directed = FALSE # whether knn graph should be computed as a directed one 
+                ) 
 
 # plot super-cell network
 supercell_plot(SC$graph.supercells, # network
@@ -85,7 +89,6 @@ supercell_plot(SC$graph.supercells, # network
 ![](figures/Simplification-1.png)
 
 ``` r
-
 # plot single-cell network
 supercell_plot(SC$graph.singlecell, # network
                group = cell.meta, # colored by cell line assignment
@@ -164,7 +167,6 @@ supercell_plot(SC$graph.supercells,
 ![](figures/plotting%20options-1.png)
 
 ``` r
-
 ## alternatively, any layout can be provided as 2xN numerical matrix, where N is number of nodes (cells)
 
 ## Let's plot super-cell network using the layout of the single-cell network:
@@ -267,7 +269,6 @@ supercell_VlnPlot(ge = SC.GE, supercell_size = SC$supercell_size,
 ![](figures/Violin%20plots-1.png)
 
 ``` r
-
 supercell_GeneGenePlot(ge = SC.GE, 
                        gene_x = genes.to.plot[1:3],
                        gene_y = genes.to.plot[4:6],
@@ -310,7 +311,6 @@ supercell_plot(SC10$graph.supercells,
 ![](figures/unnamed-chunk-2-1.png)
 
 ``` r
-
 ### don't forget to recompute super-cell gene expression matrix for a new grainig level with 
 # GE10 <- supercell_GE(GE, SC10$membership)
 ### if you are going to perform downstream analyses at the new graining level
@@ -330,7 +330,6 @@ example.
 #install.packages("Seurat")
 library(Seurat)
 ## Attaching SeuratObject
-
 m.seurat <- supercell_2_Seurat(SC.GE = SC.GE, SC = SC, fields = c("cell_line", "clustering", "clustering_reordered"))
 ```
 
@@ -352,7 +351,6 @@ PCAPlot(m.seurat)
 ![](figures/PCAplot-1.png)
 
 ``` r
-
 ### cluster super-cell network (unweighted clustering)
 m.seurat <- FindClusters(m.seurat, graph.name = "RNA_nn") # now RNA_nn is super-cell network
 ## Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
@@ -364,7 +362,6 @@ m.seurat <- FindClusters(m.seurat, graph.name = "RNA_nn") # now RNA_nn is super-
 ## Maximum modularity in 10 random starts: 0.8322
 ## Number of communities: 7
 ## Elapsed time: 0 seconds
-
 m.seurat <- FindNeighbors(m.seurat, verbose = FALSE)  # RNA_nn has been replaced with kNN graph of super-cell (unweigted)
 m.seurat <- FindClusters(m.seurat, graph.name = "RNA_nn") 
 ## Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
@@ -377,6 +374,9 @@ m.seurat <- FindClusters(m.seurat, graph.name = "RNA_nn")
 ## Number of communities: 5
 ## Elapsed time: 0 seconds
 ```
+
+[RNA velocity applied to super-cells](https://github.com/GfellerLab/SuperCell/blob/master/workbooks/RNAvelocity_for_SuperCells.md)
+==================================================================================================================================
 
 [License](https://github.com/GfellerLab/SuperCell/blob/master/License.pdf)
 ==========================================================================
@@ -394,9 +394,8 @@ FOR-PROFIT USERS
 
 If you plan to use SuperCell or any data provided with the script in any
 for-profit application, you are required to obtain a separate license.
-To do so, please contact
-<a href="mailto:eauffarth@licr.org" class="email">eauffarth@licr.org</a>
-at the Ludwig Institute for Cancer Research Ltd.
+To do so, please contact <eauffarth@licr.org> at the Ludwig Institute
+for Cancer Research Ltd.
 
 If required, FOR-PROFIT USERS are also expected to have proper licenses
 for the tools used in SuperCell, including the R packages igraph, RANN,
@@ -404,9 +403,7 @@ WeightedCluster, corpora, weights, Hmisc, Matrix, ply, irlba, grDevices,
 patchwork, ggplot2 and velocyto.R
 
 For scientific questions, please contact Mariia Bilous
-(<a href="mailto:mariia.bilous@unil.ch" class="email">mariia.bilous@unil.ch</a>)
-or David Gfeller
-(<a href="mailto:David.Gfeller@unil.ch" class="email">David.Gfeller@unil.ch</a>).
+(<mariia.bilous@unil.ch>) or David Gfeller (<David.Gfeller@unil.ch>).
 
 How to cite
 ===========

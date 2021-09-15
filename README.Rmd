@@ -68,7 +68,9 @@ gamma <- 20 # graining level
 SC <- SCimplify(GE,  # gene expression matrix 
                 k.knn = 5, # number of nearest neighbors to build kNN network
                 gamma = gamma, # graining level
-                n.var.genes = 1000) # number of the top variable genes to use for dimentionality reduction 
+                n.var.genes = 1000, # number of the top variable genes to use for dimentionality reduction 
+                directed = FALSE # whether knn graph should be computed as a directed one 
+                ) 
 
 # plot super-cell network
 supercell_plot(SC$graph.supercells, # network
@@ -150,6 +152,7 @@ supercell_plot(SC$graph.supercells,
                main  = "Super-cell colored by cell line assignment (averaged coordinates)")
 ```
 
+
 ## Cluster super-cell data
 
 ```{r clustering}
@@ -180,6 +183,7 @@ supercell_plot(SC$graph.supercells,
                alpha = -pi/2,
                main = "Super-cell colored by cluster")
 ```
+
 
 ## Differential expression analysis of clustered super-cell data
 
@@ -252,6 +256,7 @@ m.seurat <- FindNeighbors(m.seurat, verbose = FALSE)  # RNA_nn has been replaced
 m.seurat <- FindClusters(m.seurat, graph.name = "RNA_nn") 
 ```
 
+# [RNA velocity applied to super-cells](https://github.com/GfellerLab/SuperCell/blob/master/workbooks/RNAvelocity_for_SuperCells.md)
 
 # [License](https://github.com/GfellerLab/SuperCell/blob/master/License.pdf)
 
