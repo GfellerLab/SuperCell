@@ -8,7 +8,7 @@ output:
 
 ```{r library}
 if (!requireNamespace("remotes")) install.packages("remotes")
-remotes::install_github("GfellerLab/SuperCell", ref = 'dev')
+remotes::install_github("GfellerLab/SuperCell")
 
 library(SuperCell)
 library(velocyto.R)
@@ -59,7 +59,7 @@ map_cluster_to_cluster_name <- c('Ngn3 low EP', 'Alpha', 'Delta',
 ```
 
 #### Plot tSNE
-```{r Plot tSNE, fig.asp=1, fig.height=4, fig.width=4}
+```{r Plot tSNE, fig.asp=1, fig.height=5, fig.width=5, fig.ext='pdf'}
 size <- sqrt(1+table(SC_pancreas$membership))/sqrt(2)/2
 set.seed(3)
 tsne10 <- tSNE.velocity.plot(Vel, 
