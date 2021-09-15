@@ -79,6 +79,7 @@ supercell_plot <- function(SC.nw,
     vsize <- sqrt(vsize)
 
   if(is.null(group)) group <- rep(1, N.SC)
+  if(!is.character(group)) group <- as.character(group)
   if(length(group) != N.SC) stop(paste("Vector groups has to be the same length as number of super-cells:", N.SC))
 
   N.groups <- length(unique(group))
