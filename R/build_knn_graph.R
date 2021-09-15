@@ -10,6 +10,7 @@
 #' @param dist_method method to compute dist (if X is a matrix of coordinates) available: c("cor", "euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski")
 #' @param cor_method if distance is computed as correlation (dist_method == "cor), which type of correlation to use (available: "pearson", "kendall", "spearman")
 #' @param p p param in \code{"dist"} function
+#' @param directed whether to build a directed graph
 #'
 #' @return a list with components
 #' \itemize{
@@ -20,7 +21,18 @@
 #' @export
 #'
 
-build_knn_graph <- function(X, k = 5, from = c("dist", "coordinates"), use.nn2 = TRUE, return_neighbors_order = F, dist_method = "euclidean", cor_method = "pearson", p = 2){
+build_knn_graph <- function(
+  X,
+  k = 5,
+  from = c("dist", "coordinates"),
+  use.nn2 = TRUE,
+  return_neighbors_order = F,
+  dist_method = "euclidean",
+  cor_method = "pearson",
+  p = 2,
+  directed = TRUE
+  )
+{
   av.methods <- c("dist", "coordinates")
   method <-  pmatch(from[1], av.methods)
   if(is.na(method)){
@@ -35,7 +47,8 @@ build_knn_graph <- function(X, k = 5, from = c("dist", "coordinates"), use.nn2 =
                     dist_method, "distnce is not acceptable.
                   To use nn2 method, please, choose eucleadian distance.
                   If you want to use", dist_method, "distance, please set parameter use.nn2 to FALSE"))}
-      return(build_knn_graph_nn2(X = X, k = k))
+      mode <- ifelse(directed, 'out', 'all')
+      return(build_knn_graph_nn2(X = X, k = k, mode = mode))
     } else {
       av.dist      <- c("cor", "euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski")
       dist_method_ <-  pmatch(dist_method, av.dist)
@@ -76,6 +89,8 @@ build_knn_graph <- function(X, k = 5, from = c("dist", "coordinates"), use.nn2 =
 #' @param X matrix of coordinates (rows are samples and cols are coordinates)
 #' @param k kNN parameter
 #' @param return_neighbors_order whether return order of neighbors
+#' @param mode mode of \link[igraph]{graph_from_adj_list} ('all' -- undirected graph, 'out' -- directed graph)
+#'
 
 #' @return a list with components
 #' \itemize{
@@ -83,13 +98,13 @@ build_knn_graph <- function(X, k = 5, from = c("dist", "coordinates"), use.nn2 =
 #' }
 #'
 
-build_knn_graph_nn2 <- function(X, k = min(5, ncol(X))){
+build_knn_graph_nn2 <- function(X, k = min(5, ncol(X)), mode = 'all'){
   nn2.res <- RANN::nn2(data = X, k = k)
   nn2.res <- nn2.res$nn.idx
 
   adj.knn       <- split(nn2.res, rep(1:nrow(nn2.res), times = ncol(nn2.res))) # get adj list
 
-  graph.knn     <- igraph::graph_from_adj_list(adj.knn,  duplicate = F, mode = "all")
+  graph.knn     <- igraph::graph_from_adj_list(adj.knn,  duplicate = F, mode = mode)
 
   graph.knn     <- igraph::simplify(graph.knn, remove.multiple = T)
   igraph::E(graph.knn)$weight <- 1
@@ -104,6 +119,7 @@ build_knn_graph_nn2 <- function(X, k = min(5, ncol(X))){
 #'
 #' @param X dist matrix or dist object (preferentially)
 #' @param k kNN parameter
+#' @param mode mode of \link[igraph]{graph_from_adj_list} ('all' -- undirected graph, 'out' -- directed graph)
 #'
 #' @return a list with components
 #' \itemize{
@@ -112,7 +128,7 @@ build_knn_graph_nn2 <- function(X, k = min(5, ncol(X))){
 #' }
 #'
 
-knn_graph_from_dist <- function(D, k = 5, return_neighbors_order = T){
+knn_graph_from_dist <- function(D, k = 5, return_neighbors_order = T, mode = 'all'){
 
   ##print("Start knn_graph_from_dist")
   if(!is.matrix(D) & class(D) != "dist"){
@@ -143,7 +159,7 @@ knn_graph_from_dist <- function(D, k = 5, return_neighbors_order = T){
   adj.knn <- split(neighbors, rep(1:nrow(neighbors), times = ncol(neighbors)))
 
 
-  graph.knn     <- igraph::graph_from_adj_list(adj.knn,  duplicate = F, mode = "all")
+  graph.knn     <- igraph::graph_from_adj_list(adj.knn,  duplicate = F, mode = mode)
   graph.knn     <- igraph::simplify(graph.knn, remove.multiple = T)
   igraph::E(graph.knn)$weight <- 1
 

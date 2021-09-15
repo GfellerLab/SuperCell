@@ -5,10 +5,12 @@
 \title{Build kNN graph from distance
 (used in \code{"build_knn_graph"})}
 \usage{
-knn_graph_from_dist(D, k = 5, return_neighbors_order = T)
+knn_graph_from_dist(D, k = 5, return_neighbors_order = T, mode = "all")
 }
 \arguments{
 \item{k}{kNN parameter}
+
+\item{mode}{mode of \link[igraph]{graph_from_adj_list} ('all' -- undirected graph, 'out' -- directed graph)}
 
 \item{X}{dist matrix or dist object (preferentially)}
 }

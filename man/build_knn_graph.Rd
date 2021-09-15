@@ -12,7 +12,8 @@ build_knn_graph(
   return_neighbors_order = F,
   dist_method = "euclidean",
   cor_method = "pearson",
-  p = 2
+  p = 2,
+  directed = TRUE
 )
 }
 \arguments{
