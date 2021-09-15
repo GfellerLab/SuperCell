@@ -32,6 +32,8 @@ build_knn_graph(
 \item{cor_method}{if distance is computed as correlation (dist_method == "cor), which type of correlation to use (available: "pearson", "kendall", "spearman")}
 
 \item{p}{p param in \code{"dist"} function}
+
+\item{directed}{whether to build a directed graph}
 }
 \value{
 a list with components
