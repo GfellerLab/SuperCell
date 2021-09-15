@@ -30,7 +30,7 @@ build_knn_graph <- function(
   dist_method = "euclidean",
   cor_method = "pearson",
   p = 2,
-  directed = TRUE
+  directed = FALSE
   )
 {
   av.methods <- c("dist", "coordinates")

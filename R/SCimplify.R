@@ -13,6 +13,7 @@
 #' @param n.pc number of principal components to use for construction of single-cell kNN network
 #' @param fast.pca use irlba::irlba as a faster version of prcomp (one used in Seurat package)
 #' @param do.approx compute approximate kNN in case of a large dataset (>50'000)
+#' @param directed whether to build a directed graph
 #' @param approx.N number of cells to subsample for an approximate approach
 #' @param seed seed to use to subsample cells for an approximate approach
 #' @param igraph.clustering clustering method to identify super-cells (available methods "walktrap" (default) and "louvain" (not recommended, gamma is ignored)).
@@ -57,6 +58,7 @@ SCimplify <- function(X,
                       fast.pca = TRUE,
                       do.approx = FALSE,
                       approx.N = 20000,
+                      directed = FALSE,
                       use.nn2 = TRUE,
                       seed = 12345,
                       igraph.clustering = c("walktrap", "louvain"),
@@ -149,7 +151,7 @@ SCimplify <- function(X,
     PCA.presampled$rotation <- PCA.presampled$v
   }
 
-  sc.nw <- build_knn_graph(X = PCA.presampled$x[,n.pc], k = k.knn, from = "coordinates", use.nn2 = use.nn2, dist_method = "euclidean")
+  sc.nw <- build_knn_graph(X = PCA.presampled$x[,n.pc], k = k.knn, from = "coordinates", use.nn2 = use.nn2, dist_method = "euclidean", directed = directed)
 
   #simplify
 

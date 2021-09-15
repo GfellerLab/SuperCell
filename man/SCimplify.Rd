@@ -16,6 +16,7 @@ SCimplify(
   fast.pca = TRUE,
   do.approx = FALSE,
   approx.N = 20000,
+  directed = FALSE,
   use.nn2 = TRUE,
   seed = 12345,
   igraph.clustering = c("walktrap", "louvain"),
@@ -46,6 +47,8 @@ SCimplify(
 \item{do.approx}{compute approximate kNN in case of a large dataset (>50'000)}
 
 \item{approx.N}{number of cells to subsample for an approximate approach}
+
+\item{directed}{whether to build a directed graph}
 
 \item{seed}{seed to use to subsample cells for an approximate approach}
 

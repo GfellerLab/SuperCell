@@ -13,7 +13,7 @@ build_knn_graph(
   dist_method = "euclidean",
   cor_method = "pearson",
   p = 2,
-  directed = TRUE
+  directed = FALSE
 )
 }
 \arguments{
