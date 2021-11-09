@@ -130,19 +130,18 @@ supercell_GeneGenePlot <- function(ge,
 
 
 
-
   if(sort.by.corr){ # sort plots by absolute value of correkation
-    p.list <- p.list[names(sort(abs(unlist(lapply(p.list, FUN = function(x){x$w.cor[1]}))), decreasing = T))]
+    p.list <- p.list[names(sort(abs(unlist(lapply(p.list, FUN = function(x){x$w.cor}))), decreasing = T, na.last = T))]
   }
 
-
   w.cor.list <- lapply(p.list, FUN = function(x){x$w.cor})
+  w.pval.list <- lapply(p.list, FUN = function(x){x$w.pval})
   p.list <-lapply(p.list, FUN = function(x){x$g})
 
   if(combine) {
     p.list <- patchwork::wrap_plots(p.list, ncol = ncol, guides = "collect")
   }
-  return(list(p = p.list, w.cor = w.cor.list))
+  return(list(p = p.list, w.cor = w.cor.list, w.pval = w.pval.list))
 }
 
 
@@ -194,8 +193,11 @@ supercell_GeneGenePlot_single <- function(ge_x,
                         size = supercell_size)
 
 
-  w.cor   <- weights::wtd.cor(plot.df$x, plot.df$y, weight = plot.df$size)
+  membership <- rep(1:N.SC, plot.df$size)
 
+  crt               <- cor.test(plot.df$x[membership], plot.df$y[membership])
+  w.cor             <- unname(crt$estimate)
+  w.pval            <- unname(crt$p.value)
 
   if(is.null(x.max)) x.max <- NA
   if(is.null(y.max)) y.max <- NA
@@ -216,13 +218,13 @@ supercell_GeneGenePlot_single <- function(ge_x,
     theme_classic() + theme(asp = 1) + #, legend.position = "none"
     labs(x = gene_x_name,
          y = gene_y_name,
-         title = paste0("w_cor = ", signif(w.cor[1], 2), ", \npval = ", signif(w.cor[4])))
+         title = paste0("w_cor = ", signif(w.cor, 2), ", \npval = ", signif(w.pval)))
 
 
   if(!is.null(color.use)){
     g <- g + scale_color_manual(values = color.use)
   }
 
-  res <- list(g = g, w.cor = w.cor)
+  res <- list(g = g, w.cor = w.cor, w.pval = w.pval)
   return(res)
 }
