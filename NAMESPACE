@@ -3,6 +3,7 @@
 export(SCimplify)
 export(SCimplify_for_velocity)
 export(build_knn_graph)
+export(sc_mixing_score)
 export(supercell_2_Seurat)
 export(supercell_2_sce)
 export(supercell_FindAllMarkers)
