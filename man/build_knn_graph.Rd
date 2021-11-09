@@ -12,7 +12,13 @@ build_knn_graph(
   return_neighbors_order = F,
   dist_method = "euclidean",
   cor_method = "pearson",
-  p = 2
+  p = 2,
+  directed = FALSE,
+  DoSNN = FALSE,
+  which.snn = c("bluster", "dbscan"),
+  pruning = NULL,
+  kmin = 0,
+  ...
 )
 }
 \arguments{
@@ -31,6 +37,8 @@ build_knn_graph(
 \item{cor_method}{if distance is computed as correlation (dist_method == "cor), which type of correlation to use (available: "pearson", "kendall", "spearman")}
 
 \item{p}{p param in \code{"dist"} function}
+
+\item{directed}{whether to build a directed graph}
 }
 \value{
 a list with components
