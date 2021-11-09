@@ -4,15 +4,25 @@
 \alias{supercell_purity}
 \title{Compute purity of super-cells}
 \usage{
-supercell_purity(clusters, supercell_membership)
+supercell_purity(
+  clusters,
+  supercell_membership,
+  method = c("max_proportion", "entropy")[1]
+)
 }
 \arguments{
 \item{clusters}{vector of clustering assignment (reference assignment)}
 
 \item{supercell_membership}{vector of assignment of single-cell data to super-cells (membership field of \code{\link{SCimplify}} function output)}
+
+\item{method}{method to compute super-cell purity.
+\code{"max_proportion"} if the purity is defined as a proportion of the most abundant cluster (cell type) within super-cell or
+\code{"entropy"} if the purity is defined as the Shanon entropy of the cell types super-cell consists of.}
 }
 \value{
-a vector of super-cell purity, which is defined as a proportion of the most abundant cluster within super-cell.
+a vector of super-cell purity, which is defined as:
+- proportion of the most abundant cluster within super-cell for \code{method = "max_proportion"} or
+- Shanon entropy for \code{method = "entropy"}.
 With 1 meaning that super-cell consists of single cells from one cluster (reference assignment)
 }
 \description{
