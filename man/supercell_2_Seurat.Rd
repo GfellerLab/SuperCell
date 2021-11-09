@@ -11,7 +11,8 @@ supercell_2_Seurat(
   var.genes = NULL,
   is.log.normalized = TRUE,
   do.center = TRUE,
-  do.scale = TRUE
+  do.scale = TRUE,
+  N.comp = NULL
 )
 }
 \arguments{

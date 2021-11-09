@@ -44,7 +44,8 @@ supercell_2_Seurat <- function(SC.GE, SC, fields = c(),
                                var.genes = NULL,
                                is.log.normalized = TRUE,
                                do.center = TRUE,
-                               do.scale = TRUE){
+                               do.scale = TRUE,
+                               N.comp = NULL){
   N.c <- ncol(SC.GE)
   if(is.null(SC$supercell_size)){
     warning(paste0("supercell_size field of SC is missing, size of all super-cells set to 1"))
@@ -81,7 +82,7 @@ supercell_2_Seurat <- function(SC.GE, SC, fields = c(),
   SC.field.length <- lapply(SC.fields, length)
   SC.fields       <- SC.fields[which(SC.field.length == N.c)]
 
-  meta     <- data.frame(size = SC$supercell_size, row.names = colnames(SC.GE), stringsAsFactors = FALSE)
+  meta     <- data.frame(size = supercell_size, row.names = colnames(SC.GE), stringsAsFactors = FALSE)
 
   if(length(SC.fields) > 0){
     meta <- cbind(meta, SC.fields)
@@ -90,35 +91,49 @@ supercell_2_Seurat <- function(SC.GE, SC, fields = c(),
 
   ## Normalize data, so Seurat does not generate warning
   m.seurat <- Seurat::NormalizeData(m.seurat)
-
+  print("Done: NormalizeData")
   ## If SC.GE is log-normalized gene expression, than field data has to be rewritten
   if(is.log.normalized){
+    print("Doing: data to normalized data")
     m.seurat@assays$RNA@data <- m.seurat@assays$RNA@counts
   }
 
   ## Sample-weighted scaling
-  m.seurat@assays$RNA@scale.data <- t(as.matrix(corpcor::wt.scale(Matrix::t((m.seurat@assays$RNA@data)),
-                                                                w = meta$size,
-                                                                center = do.center,
-                                                                scale = do.scale)))
+  if(length(unique(meta$size)) > 1){
+    print("Doing: weighted scaling")
+    m.seurat@assays$RNA@scale.data <- t(as.matrix(corpcor::wt.scale(Matrix::t((m.seurat@assays$RNA@data)),
+                                                                    w = meta$size,
+                                                                    center = do.center,
+                                                                    scale = do.scale)))
+    print("Done: weighted scaling")
 
-
+  } else {
+    print("Doing: unweighted scaling")
+    m.seurat <- Seurat::ScaleData(m.seurat)
+    print("Done: unweighted scaling")
+  }
   m.seurat@assays$RNA@misc[["scale.data.weighted"]] <- m.seurat@assays$RNA@scale.data
 
   if(is.null(var.genes)){
     var.genes <- sort(SC$genes.use)
   }
 
+
+  if(is.null(N.comp)) N.comp <- min(50, ncol(m.seurat@assays$RNA@counts)-1)
+
   VariableFeatures(m.seurat) <- var.genes
-  m.seurat <- RunPCA(m.seurat, verbose = F)
+  m.seurat <- Seurat::RunPCA(m.seurat, verbose = F, npcs = max(N.comp))
   m.seurat@reductions$pca_seurat <- m.seurat@reductions$pca
 
-  my_pca <- supercell_prcomp(X = Matrix::t(SC.GE), genes.use = var.genes,
+
+
+  my_pca <- supercell_prcomp(X = Matrix::t(SC.GE[var.genes, ]), genes.use = var.genes,
                              fast.pca = TRUE,
                              supercell_size = meta$supercell_size,
-                             k = dim(m.seurat@reductions$pca@cell.embeddings)[2],
+                             k = dim(m.seurat@reductions$pca_seurat)[2],
                              do.scale = do.scale, do.center = do.center,
                              double.centering = FALSE)
+
 
   dimnames(my_pca$x) <- dimnames(m.seurat@reductions$pca_seurat)
   m.seurat@reductions$pca@cell.embeddings  <- my_pca$x
@@ -132,17 +147,21 @@ supercell_2_Seurat <- function(SC.GE, SC, fields = c(),
   m.seurat            <- FindNeighbors(m.seurat, compute.SNN = TRUE, verbose = FALSE)
 
   ## 2) add self-loops to our super-cell graph to indicate super-cell size (does not work, as Seurat removes loops...)
- # SC$graph.supercells <- igraph::add_edges(SC$graph.supercells, edges = rep(1:N.c, each = 2), weight = supercell_size)
-  adj.mtx             <- igraph::get.adjacency(SC$graph.supercells, attr = "weight")
+  if(!is.null(SC$graph.supercells)){
+    # SC$graph.supercells <- igraph::add_edges(SC$graph.supercells, edges = rep(1:N.c, each = 2), weight = supercell_size)
+    adj.mtx             <- igraph::get.adjacency(SC$graph.supercells, attr = "weight")
 
-  ## 3) replace generated Seurat network with the super-cell network
-  m.seurat@graphs$RNA_nn@i                <- adj.mtx@i
-  m.seurat@graphs$RNA_nn@p                <- adj.mtx@p
-  m.seurat@graphs$RNA_nn@Dim              <- adj.mtx@Dim
-  m.seurat@graphs$RNA_nn@x                <- adj.mtx@x
-  m.seurat@graphs$RNA_nn@factors          <- adj.mtx@factors
+    ## 3) replace generated Seurat network with the super-cell network
+    m.seurat@graphs$RNA_nn@i                <- adj.mtx@i
+    m.seurat@graphs$RNA_nn@p                <- adj.mtx@p
+    m.seurat@graphs$RNA_nn@Dim              <- adj.mtx@Dim
+    m.seurat@graphs$RNA_nn@x                <- adj.mtx@x
+    m.seurat@graphs$RNA_nn@factors          <- adj.mtx@factors
 
-  m.seurat@graphs$RNA_super_cells         <- m.seurat@graphs$RNA_nn
+    m.seurat@graphs$RNA_super_cells         <- m.seurat@graphs$RNA_nn
+  } else {
+    warning("Super-cell graph was not found in SC object, no super-cell graph was added to Seurat object")
+  }
   return(m.seurat)
 }
 
