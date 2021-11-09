@@ -39,8 +39,8 @@ SuperCell uses [velocyto.R](https://github.com/velocyto-team/velocyto.R) for RNA
 Installing SuperCell package from gitHub
 
 ```{r library}
-if (!requireNamespace("remotes")) install.packages("remotes")
-remotes::install_github("GfellerLab/SuperCell")
+#if (!requireNamespace("remotes")) install.packages("remotes")
+#remotes::install_github("GfellerLab/SuperCell")
 
 library(SuperCell)
 ```
@@ -64,11 +64,14 @@ cell.meta <- cell_lines$meta
 
 ```{r Simplification, warning=FALSE, paged.print=FALSE}
 gamma <- 20 # graining level
+k.knn <- 5
 
 SC <- SCimplify(GE,  # gene expression matrix 
-                k.knn = 5, # number of nearest neighbors to build kNN network
+                k.knn = k.knn, # number of nearest neighbors to build kNN network
                 gamma = gamma, # graining level
-                n.var.genes = 1000) # number of the top variable genes to use for dimentionality reduction 
+                n.var.genes = 1000, # number of the top variable genes to use for dimentionality reduction 
+                directed = TRUE
+)
 
 # plot super-cell network
 supercell_plot(SC$graph.supercells, # network
@@ -120,7 +123,7 @@ The quality of assigment can be evaluated with super-cell purity (function `supe
 ```{r purity of supercell in terms of cell line composition}
 # compute purity of super-cells in terms of cell line composition
 purity <- supercell_purity(clusters = cell.meta, 
-                           supercell_membership = SC$membership)
+                           supercell_membership = SC$membership, method = 'entropy')
 hist(purity, main = "Super-cell purity \nin terms of cell line composition")
 ```
 
