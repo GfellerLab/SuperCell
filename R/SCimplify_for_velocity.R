@@ -22,7 +22,8 @@ SCimplify_for_velocity <- function(emat,
                         mat <- as(Matrix::as.matrix(emat) + Matrix::as.matrix(nmat), 'sparseMatrix')
 
                         #print("before: logp1")
-                        ge <- log1p(sweep(mat, 2, Matrix::colSums(mat), FUN = "/") * 1e4)
+                        ge <- scater::normalizeCounts(mat)
+                        #ge <- log1p(sweep(mat, 2, Matrix::colSums(mat), FUN = "/") * 1e4)
 
                         #print("before: SCimplify")
 
