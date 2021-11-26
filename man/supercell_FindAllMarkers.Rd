@@ -6,23 +6,24 @@
 \usage{
 supercell_FindAllMarkers(
   ge,
-  supercell_size = NULL,
   clusters,
+  supercell_size = NULL,
   genes.use = NULL,
   logfc.threshold = 0.25,
   min.expr = 0,
   min.pct = 0.1,
   seed = 12345,
   only.pos = FALSE,
-  return.extra.info = FALSE
+  return.extra.info = FALSE,
+  do.bootstrapping = FALSE
 )
 }
 \arguments{
 \item{ge}{gene expression matrix for super-cells (rows - genes, cols - super-cells)}
 
-\item{supercell_size}{a vector with supercell size (ordered the same way as in \code{ge})}
-
 \item{clusters}{a vector with clustering information (ordered the same way as in \code{ge})}
+
+\item{supercell_size}{a vector with supercell size (ordered the same way as in \code{ge})}
 
 \item{genes.use}{set of genes to test. Defeult -- all genes in \code{ge}}
 
@@ -37,6 +38,8 @@ supercell_FindAllMarkers(
 \item{only.pos}{whether to compute only positive (upregulated) markers}
 
 \item{return.extra.info}{whether to return extra information about test and its statistics. Default is FALSE.}
+
+\item{do.bootstrapping}{whether to perform bootstrapping when computing standard error and p-value in \link[weights]{wtd.t.test}}
 }
 \value{
 list of results of \link[SCimple]{supercell_FindMarkers}
