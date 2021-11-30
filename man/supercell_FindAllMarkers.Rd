@@ -42,7 +42,7 @@ supercell_FindAllMarkers(
 \item{do.bootstrapping}{whether to perform bootstrapping when computing standard error and p-value in \link[weights]{wtd.t.test}}
 }
 \value{
-list of results of \link[SCimple]{supercell_FindMarkers}
+list of results of \link[SuperCell]{supercell_FindMarkers}
 }
 \description{
 Differential expression analysis of supep-cell data. Most of the parameters are the same as in Seurat \link[Seurat]{FindAllMarkers} (for simplicity)

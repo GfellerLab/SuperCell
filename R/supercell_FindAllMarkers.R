@@ -185,7 +185,7 @@ supercell_FindMarkers <- function(
 #' @param return.extra.info whether to return extra information about test and its statistics. Default is FALSE.
 #' @param do.bootstrapping whether to perform bootstrapping when computing standard error and p-value in \link[weights]{wtd.t.test}
 #'
-#' @return list of results of \link[SCimple]{supercell_FindMarkers}
+#' @return list of results of \link[SuperCell]{supercell_FindMarkers}
 #'
 #' @export
 #'
