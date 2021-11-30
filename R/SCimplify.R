@@ -290,7 +290,7 @@ SCimplify <- function(X,
     ## add new nodes to SC.NW
     adj <- igraph::get.adjlist(SC.NW, mode = "all")
 
-    add.node.id <- vcount(SC.NW) + 1
+    add.node.id <- igraph::vcount(SC.NW) + 1
     membership.all.const <- membership.all
 
     for(i in sort(unique(membership.all.const))){
