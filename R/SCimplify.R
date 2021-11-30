@@ -269,65 +269,65 @@ SCimplify <- function(X,
     membership.all       <- c(membership.presampled, membership.omitted)
     #membership.all       <- membership.all[colnames(X)]
 
+
+    names_membership.all <- names(membership.all)
+    ## again split super-cells containing cells from different annotation or split conditions
+    if(!is.null(cell.annotation) | !is.null(cell.split.condition)){
+
+      split.cells <- interaction(cell.annotation[names_membership.all],
+                                 cell.split.condition[names_membership.all], drop = TRUE)
+
+
+      membership.all.intr <- interaction(membership.all, split.cells, drop = TRUE)
+
+      membership.all.intr.v <- as.vector(membership.all.intr)
+      membership.all.intr.v.u <- unique(membership.all.intr.v)
+
+      ## add new nodes to SC.NW
+      adj <- igraph::get.adjlist(SC.NW, mode = "all")
+
+      add.node.id <- igraph::vcount(SC.NW) + 1
+      membership.all.const <- membership.all
+
+      for(i in sort(unique(membership.all.const))){
+
+        cur.sc <- which(membership.all == i)
+        cur.main.node <- membership.all.intr.v[cur.sc[1]]
+        n.add.nodes <- length(unique(membership.all.intr.v[cur.sc])) - 1
+
+        additional.nodes <- setdiff(unique(membership.all.intr.v[cur.sc]), cur.main.node)
+
+        a.n <- 1
+        if(n.add.nodes > 0){
+          f.node.id <- add.node.id
+          l.node.id <- add.node.id + n.add.nodes -1
+
+          for(j in f.node.id:l.node.id){
+
+
+            membership.all[membership.all.intr.v == additional.nodes[a.n]] <- j
+            a.n <- a.n+1
+            adj[[j]] <- c(as.numeric(adj[[i]]), i, f.node.id:l.node.id) # split super-cell node by adding additional node and connecting it to the same neighbours
+            add.node.id <- add.node.id + 1
+          }
+
+          adj[[i]] <- c(as.numeric(adj[[i]]), f.node.id:l.node.id)
+        }
+      }
+
+
+      SC.NW                        <- igraph::graph_from_adj_list(adj, duplicate = F)
+      SC.NW                        <- igraph::as.undirected(SC.NW)
+
+
+    }
+    SC.NW                        <- igraph::simplify(SC.NW, remove.loops = T, edge.attr.comb="sum")
+    names(membership.all) <- names_membership.all
+    membership.all <- membership.all[colnames(X)]
+
   } else {
     membership.all       <- membership.presampled[colnames(X)]
   }
-
-
-  names_membership.all <- names(membership.all)
-  ## again split super-cells containing cells from different annotation or split conditions
-  if(!is.null(cell.annotation) | !is.null(cell.split.condition)){
-
-    split.cells <- interaction(cell.annotation[names_membership.all],
-                               cell.split.condition[names_membership.all], drop = TRUE)
-
-
-    membership.all.intr <- interaction(membership.all, split.cells, drop = TRUE)
-
-    membership.all.intr.v <- as.vector(membership.all.intr)
-    membership.all.intr.v.u <- unique(membership.all.intr.v)
-
-    ## add new nodes to SC.NW
-    adj <- igraph::get.adjlist(SC.NW, mode = "all")
-
-    add.node.id <- igraph::vcount(SC.NW) + 1
-    membership.all.const <- membership.all
-
-    for(i in sort(unique(membership.all.const))){
-
-      cur.sc <- which(membership.all == i)
-      cur.main.node <- membership.all.intr.v[cur.sc[1]]
-      n.add.nodes <- length(unique(membership.all.intr.v[cur.sc])) - 1
-
-      additional.nodes <- setdiff(unique(membership.all.intr.v[cur.sc]), cur.main.node)
-
-      a.n <- 1
-      if(n.add.nodes > 0){
-        f.node.id <- add.node.id
-        l.node.id <- add.node.id + n.add.nodes -1
-
-        for(j in f.node.id:l.node.id){
-
-
-          membership.all[membership.all.intr.v == additional.nodes[a.n]] <- j
-          a.n <- a.n+1
-          adj[[j]] <- c(as.numeric(adj[[i]]), i, f.node.id:l.node.id) # split super-cell node by adding additional node and connecting it to the same neighbours
-          add.node.id <- add.node.id + 1
-        }
-
-        adj[[i]] <- c(as.numeric(adj[[i]]), f.node.id:l.node.id)
-      }
-    }
-
-
-    SC.NW                        <- igraph::graph_from_adj_list(adj, duplicate = F)
-    SC.NW                        <- igraph::as.undirected(SC.NW)
-    SC.NW                        <- igraph::simplify(SC.NW, remove.loops = T, edge.attr.comb="sum")
-
-  }
-  names(membership.all) <- names_membership.all
-  membership.all <- membership.all[colnames(X)]
-
   membership       <- membership.all
 
   supercell_size   <- as.vector(table(membership))
