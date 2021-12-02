@@ -40,6 +40,28 @@ supercell_rescale <- function(SC.object, gamma = NULL, N.SC = NULL){
   }
 
   membership       <- igraph::cut_at(SC.object$h_membership, N.SC)
+
+  ## Split super-cells containing cells from different annotations or conditions
+  cell.annotation      <- SC.object[["sc.cell.annotation."]]
+  cell.split.condition <- SC.object[["sc.cell.split.condition."]]
+
+  if(!is.null(cell.annotation) | !is.null(cell.split.condition)){
+    if(is.null(cell.annotation)) {
+      cell.annotation <- rep("a", N.c)
+      #names(cell.annotation) <- names(cell.split.condition)
+    }
+    if(is.null(cell.split.condition)){
+      cell.split.condition <- rep("s", N.c)
+      #names(cell.split.condition) <- names(cell.annotation)
+    }
+
+    split.cells <- interaction(cell.annotation, cell.split.condition, drop = TRUE)
+
+    membership.intr <- interaction(membership, split.cells, drop = TRUE)
+    membership      <- as.numeric(membership.intr)
+  }
+
+
   supercell_size   <- as.vector(table(membership))
 
   SC.NW                          <- igraph::contract(SC.object$graph.singlecell, membership)
@@ -52,14 +74,22 @@ supercell_rescale <- function(SC.object, gamma = NULL, N.SC = NULL){
 
   res <- list(graph.supercells    = SC.NW,
               gamma               = gamma,
-              N.SC                = length(membership),
+              N.SC                = length(unique(membership)),
               membership          = membership,
               supercell_size      = supercell_size,
 # unchanged fields
               genes.use           = SC.object$genes.use,
               simplification.algo = SC.object$simplification.algo,
-              do.approx           = SC.object$do.approx
+              do.approx           = SC.object$do.approx,
+              sc.cell.annotation. = cell.annotation,
+              sc.cell.split.condition. = cell.split.condition
               #h_membership        = SC.object$h_membership,
               #graph.singlecell    = SC.object$graph.singlecell
               )
+
+  if(!is.null(cell.annotation) | !is.null(cell.split.condition)){
+    res$SC.cell.annotation.      <- supercell_assign(cell.annotation, res$membership)
+    res$SC.cell.split.condition. <- supercell_assign(cell.split.condition, res$membership)
+  }
+  return(res)
 }
