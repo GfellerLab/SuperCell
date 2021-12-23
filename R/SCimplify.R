@@ -166,6 +166,7 @@ SCimplify <- function(X,
   if(!fast.pca){
     PCA.presampled          <- prcomp(X.for.pca, rank. = max(n.pc), scale. = F, center = F)
   } else {
+    set.seed(seed)
     PCA.presampled          <- irlba::irlba(X.for.pca, nv = max(n.pc, 25))
     PCA.presampled$x        <- PCA.presampled$u %*% diag(PCA.presampled$d)
     PCA.presampled$rotation <- PCA.presampled$v
