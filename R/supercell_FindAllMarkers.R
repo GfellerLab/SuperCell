@@ -13,6 +13,7 @@
 #' @param seed random seed to use
 #' @param only.pos whether to compute only positive (upregulated) markers
 #' @param return.extra.info whether to return extra information about test and its statistics. Default is FALSE.
+#' @param do.bootstrapping whether to perform bootstrapping when computing standard error and p-value in \link[weights]{wtd.t.test}
 #'
 #' @return a matrix with a test name (t-test), statisctics, adjusted p-values, logFC, percenrage of detection in eacg ident and mean expresiion
 #'
@@ -21,9 +22,21 @@
 
 
 
-supercell_FindMarkers <- function(ge, supercell_size = NULL, clusters, ident.1, ident.2 = NULL, genes.use = NULL,
-                                  logfc.threshold = 0.25, min.expr = 0., min.pct = 0.1, seed = 12345,
-                                  only.pos = FALSE, return.extra.info = FALSE){
+supercell_FindMarkers <- function(
+  ge,
+  supercell_size = NULL,
+  clusters,
+  ident.1,
+  ident.2 = NULL,
+  genes.use = NULL,
+  logfc.threshold = 0.25,
+  min.expr = 0.,
+  min.pct = 0.1,
+  seed = 12345,
+  only.pos = FALSE,
+  return.extra.info = FALSE,
+  do.bootstrapping = FALSE
+  ){
 
   total.number.of.genes <- nrow(ge)
 
@@ -98,13 +111,27 @@ supercell_FindMarkers <- function(ge, supercell_size = NULL, clusters, ident.1, 
   }
 
 
-  #print("Filtered genes")
+  if(do.bootstrapping){
+    bootse <- TRUE
+    bootp <- TRUE
+  } else {
+    bootse <- FALSE
+    bootp <- FALSE
+  }
 
-
-
-  w.t.test <- apply(ge[genes.use,], 1, function(x){weights::wtd.t.test(x = x[cell.idx.ident.1], y = x[cell.idx.ident.2],
-                                                                       weight = cell.weigth.1, weighty  = cell.weigth.2,
-                                                                       mean1 = FALSE, samedata = FALSE)}) # mean1 == T results in less degreas of freedom (lower p value), thus, df = number of super cells, not total number of cells
+  w.t.test <- apply(
+    ge[genes.use,], 1, function(x){weights::wtd.t.test(
+      x = x[cell.idx.ident.1],
+      y = x[cell.idx.ident.2],
+      weight = cell.weigth.1,
+      weighty  = cell.weigth.2,
+      mean1 = FALSE,
+      samedata = FALSE,
+      bootse = bootse,
+      bootp = bootp
+    )
+    }
+  ) # mean1 == T results in less degreas of freedom (lower p value), thus, df = number of super cells, not total number of cells
 
 
   if(length((w.t.test))>1){
@@ -156,29 +183,44 @@ supercell_FindMarkers <- function(ge, supercell_size = NULL, clusters, ident.1, 
 #' @param seed random seed to use
 #' @param only.pos whether to compute only positive (upregulated) markers
 #' @param return.extra.info whether to return extra information about test and its statistics. Default is FALSE.
+#' @param do.bootstrapping whether to perform bootstrapping when computing standard error and p-value in \link[weights]{wtd.t.test}
 #'
-#' @return list of results of \link[SCimple]{supercell_FindMarkers}
+#' @return list of results of \link[SuperCell]{supercell_FindMarkers}
 #'
 #' @export
 #'
 
-supercell_FindAllMarkers <- function(ge, supercell_size = NULL, clusters, genes.use = NULL, logfc.threshold = 0.25,
-                                     min.expr = 0., min.pct = 0.1, seed = 12345, only.pos = FALSE, return.extra.info = FALSE){
+supercell_FindAllMarkers <- function(
+  ge,
+  clusters,
+  supercell_size = NULL,
+  genes.use = NULL,
+  logfc.threshold = 0.25,
+  min.expr = 0.,
+  min.pct = 0.1,
+  seed = 12345,
+  only.pos = FALSE,
+  return.extra.info = FALSE,
+  do.bootstrapping = FALSE
+){
   res <- list()
   unique.ident <- sort(unique(clusters))
   for(ident.1 in unique.ident){
-    res[[ident.1]] <- supercell_FindMarkers(ge = ge,
-                                            supercell_size = supercell_size,
-                                            clusters = clusters,
-                                            ident.1 = ident.1,
-                                            ident.2 = NULL,
-                                            genes.use = genes.use,
-                                            logfc.threshold = logfc.threshold,
-                                            min.expr = min.expr,
-                                            min.pct = min.pct,
-                                            seed = seed,
-                                            only.pos = only.pos,
-                                            return.extra.info = return.extra.info)
+    res[[ident.1]] <- supercell_FindMarkers(
+      ge = ge,
+      supercell_size = supercell_size,
+      clusters = clusters,
+      ident.1 = ident.1,
+      ident.2 = NULL,
+      genes.use = genes.use,
+      logfc.threshold = logfc.threshold,
+      min.expr = min.expr,
+      min.pct = min.pct,
+      seed = seed,
+      only.pos = only.pos,
+      return.extra.info = return.extra.info,
+      do.bootstrapping = do.bootstrapping
+    )
 
   }
   return(res)

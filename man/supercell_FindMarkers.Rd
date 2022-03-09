@@ -16,7 +16,8 @@ supercell_FindMarkers(
   min.pct = 0.1,
   seed = 12345,
   only.pos = FALSE,
-  return.extra.info = FALSE
+  return.extra.info = FALSE,
+  do.bootstrapping = FALSE
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ supercell_FindMarkers(
 \item{only.pos}{whether to compute only positive (upregulated) markers}
 
 \item{return.extra.info}{whether to return extra information about test and its statistics. Default is FALSE.}
+
+\item{do.bootstrapping}{whether to perform bootstrapping when computing standard error and p-value in \link[weights]{wtd.t.test}}
 }
 \value{
 a matrix with a test name (t-test), statisctics, adjusted p-values, logFC, percenrage of detection in eacg ident and mean expresiion

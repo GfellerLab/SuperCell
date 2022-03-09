@@ -63,7 +63,11 @@ supercell_plot_GE <- function(SC.nw,
 
   brks           <- seq(floor(min(c(ge, 0))), ceiling(max(ge)), length.out = n.color.gradient+1)
   #print(brks)
-  group          <- as.character(cut(ge, breaks=brks,  include.lowest=TRUE, labels = FALSE))
+  if(length(unique(brks)) == length(brks)){
+    group          <- as.character(cut(ge, breaks=brks,  include.lowest=TRUE, labels = FALSE))
+  } else {
+    group <- as.character(rep(1, length(ge)))
+  }
 
   p <- supercell_plot(SC.nw = SC.nw,
                    group = group,

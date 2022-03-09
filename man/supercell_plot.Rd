@@ -37,7 +37,7 @@ for \link[igraph]{layout_licely} and "fr" for \link[igraph]{layout_with_fr}, "co
 
 \item{lay}{a particular layout of a graph to plot (in is not \code{NULL}, \code{lay.method} is ignored and new layout is not computed)}
 
-\item{alpha}{a rotation of the layout (either orivided or computed)}
+\item{alpha}{a rotation of the layout (either provided or computed)}
 
 \item{seed}{a random seed used to compute graph layout}
 

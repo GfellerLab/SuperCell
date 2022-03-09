@@ -8,6 +8,8 @@ SCimplify(
   X,
   genes.use = NULL,
   genes.exclude = NULL,
+  cell.annotation = NULL,
+  cell.split.condition = NULL,
   n.var.genes = min(1000, nrow(X)),
   gamma = 10,
   k.knn = 5,
@@ -17,12 +19,17 @@ SCimplify(
   do.approx = FALSE,
   approx.N = 20000,
   directed = FALSE,
+  DoSNN = FALSE,
+  pruning = NULL,
+  kmin = 0,
   use.nn2 = TRUE,
   seed = 12345,
   igraph.clustering = c("walktrap", "louvain"),
   return.singlecell.NW = TRUE,
   return.hierarchical.structure = TRUE,
-  block.size = 10000
+  block.size = 10000,
+  which.snn = c("bluster", "dbscan"),
+  ...
 )
 }
 \arguments{
@@ -31,6 +38,10 @@ SCimplify(
 \item{genes.use}{a vector of genes used to compute PCA}
 
 \item{genes.exclude}{a vector of genes to be excluded when computing PCA}
+
+\item{cell.annotation}{a vector of cell type anotation, if provided, super-cells that contain single cells of different cell type annotation will be split in multiple pure super-cell (may result in slightly larger numbe of super-cells than expected with a given gamma)}
+
+\item{cell.split.condition}{a vector of cell conditions that must not be mixed in one super-cell. If provided, super-cells will be split in condition-pure super-cell (may result in significantly(!) larger number of super-cells than expected)}
 
 \item{n.var.genes}{if \code{"genes.use"} is not provided, \code{"n.var.genes"} genes with the largest variation are used}
 
@@ -65,6 +76,17 @@ a list with components
   \item membership - assigmnent of each single cell to a particular super-cell
   \item graph.singlecells - igraph object (kNN network) of single-cell data
   \item supercell_size - size of super-cells
+  \item gamma - requested graining level
+  \item N.SC - number of obtained super-cells
+  \item genes.use - used genes
+  \item do.approx - whether approximate coarse-graining was perfirmed
+  \item n.pc - number of principal components used for SC construction
+  \item k.knn - number of neighbors to build single-cell graph
+  \item sc.cell.annotation. - single-cell cell type annotation (if provided)
+  \item sc.cell.split.condition. - single-cell split condition (if provided)
+  \item SC.cell.annotation. - super-cell cell type annotation (if was provided for single cells)
+  \item SC.cell.split.condition. - super-cell split condition (if was provided for single cells)
+
 }
 }
 \description{

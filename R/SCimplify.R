@@ -6,6 +6,8 @@
 #' @param X log-normalized gene expression matrix with rows to be genes and cols to be cells
 #' @param genes.use a vector of genes used to compute PCA
 #' @param genes.exclude a vector of genes to be excluded when computing PCA
+#' @param cell.annotation a vector of cell type anotation, if provided, super-cells that contain single cells of different cell type annotation will be split in multiple pure super-cell (may result in slightly larger numbe of super-cells than expected with a given gamma)
+#' @param cell.split.condition a vector of cell conditions that must not be mixed in one super-cell. If provided, super-cells will be split in condition-pure super-cell (may result in significantly(!) larger number of super-cells than expected)
 #' @param n.var.genes if \code{"genes.use"} is not provided, \code{"n.var.genes"} genes with the largest variation are used
 #' @param gamma graining level of data (proportion of number of single cells in the initial dataset to the number of super-cells in the final dataset)
 #' @param k.knn parameter to compute single-cell kNN network
@@ -26,6 +28,17 @@
 #'   \item membership - assigmnent of each single cell to a particular super-cell
 #'   \item graph.singlecells - igraph object (kNN network) of single-cell data
 #'   \item supercell_size - size of super-cells
+#'   \item gamma - requested graining level
+#'   \item N.SC - number of obtained super-cells
+#'   \item genes.use - used genes
+#'   \item do.approx - whether approximate coarse-graining was perfirmed
+#'   \item n.pc - number of principal components used for SC construction
+#'   \item k.knn - number of neighbors to build single-cell graph
+#'   \item sc.cell.annotation. - single-cell cell type annotation (if provided)
+#'   \item sc.cell.split.condition. - single-cell split condition (if provided)
+#'   \item SC.cell.annotation. - super-cell cell type annotation (if was provided for single cells)
+#'   \item SC.cell.split.condition. - super-cell split condition (if was provided for single cells)
+#'
 #' }
 #'
 #' @examples
@@ -50,6 +63,8 @@
 SCimplify <- function(X,
                       genes.use = NULL,
                       genes.exclude = NULL,
+                      cell.annotation = NULL,
+                      cell.split.condition = NULL,
                       n.var.genes = min(1000, nrow(X)),
                       gamma = 10,
                       k.knn = 5,
@@ -59,23 +74,28 @@ SCimplify <- function(X,
                       do.approx = FALSE,
                       approx.N = 20000,
                       directed = FALSE,
+                      DoSNN = FALSE,
+                      pruning = NULL,
+                      kmin = 0,
                       use.nn2 = TRUE,
                       seed = 12345,
                       igraph.clustering = c("walktrap", "louvain"),
                       return.singlecell.NW = TRUE,
                       return.hierarchical.structure = TRUE,
-                      block.size = 10000){
+                      block.size = 10000,
+                      which.snn = c("bluster", "dbscan"),
+                      ...){
 
   N.c <- ncol(X)
 
   if(is.null(rownames(X))){
-     if(!(is.null(genes.use) | is.null(genes.exclude))){
-        stop("rownames(X) is Null \nGene expression matrix X is expected to have genes as rownames")
-     } else {
-       warning("colnames(X) is Null, \nGene expression matrix X is expected to have genes as rownames! \ngenes will be created automatically in a form 'gene_i' ")
-       rownames(X) <- paste("gene", 1:nrow(X), sep = "_")
-     }
-}
+    if(!(is.null(genes.use) | is.null(genes.exclude))){
+      stop("rownames(X) is Null \nGene expression matrix X is expected to have genes as rownames")
+    } else {
+      warning("colnames(X) is Null, \nGene expression matrix X is expected to have genes as rownames! \ngenes will be created automatically in a form 'gene_i' ")
+      rownames(X) <- paste("gene", 1:nrow(X), sep = "_")
+    }
+  }
 
   if(is.null(colnames(X))){
     warning("colnames(X) is Null, \nGene expression matrix X is expected to have cellIDs as colnames! \nCellIDs will be created automatically in a form 'cell_i' ")
@@ -146,12 +166,26 @@ SCimplify <- function(X,
   if(!fast.pca){
     PCA.presampled          <- prcomp(X.for.pca, rank. = max(n.pc), scale. = F, center = F)
   } else {
+    set.seed(seed)
     PCA.presampled          <- irlba::irlba(X.for.pca, nv = max(n.pc, 25))
     PCA.presampled$x        <- PCA.presampled$u %*% diag(PCA.presampled$d)
     PCA.presampled$rotation <- PCA.presampled$v
   }
 
-  sc.nw <- build_knn_graph(X = PCA.presampled$x[,n.pc], k = k.knn, from = "coordinates", use.nn2 = use.nn2, dist_method = "euclidean", directed = directed)
+
+  sc.nw <- build_knn_graph(
+    X = PCA.presampled$x[,n.pc],
+    k = k.knn, from = "coordinates",
+    use.nn2 = use.nn2,
+    dist_method = "euclidean",
+    directed = directed,
+    DoSNN = DoSNN,
+    pruning = pruning,
+    which.snn = which.snn,
+    kmin = kmin,
+    ...
+  )
+
 
   #simplify
 
@@ -172,8 +206,30 @@ SCimplify <- function(X,
   membership.presampled        <- g.s$membership
   names(membership.presampled) <- presampled.cell.ids
 
+  ## Split super-cells containing cells from different annotations or conditions
+  if(!is.null(cell.annotation) | !is.null(cell.split.condition)){
+    if(is.null(cell.annotation)) cell.annotation <- rep("a", N.c)
+    if(is.null(cell.split.condition)) cell.split.condition <- rep("s", N.c)
+    names(cell.annotation) <- names(cell.split.condition) <- colnames(X)
+
+    split.cells <- interaction(cell.annotation[presampled.cell.ids], cell.split.condition[presampled.cell.ids], drop = TRUE)
+
+    membership.presampled.intr <- interaction(membership.presampled, split.cells, drop = TRUE)
+    membership.presampled <- as.numeric(membership.presampled.intr)
+
+    map.membership <- unique(membership.presampled)
+    names(map.membership) <- unique(as.vector(membership.presampled.intr))
+
+    names(membership.presampled) <- presampled.cell.ids
+  }
+
+
+
   SC.NW                        <- igraph::contract(sc.nw$graph.knn, membership.presampled)
-  SC.NW                        <- igraph::simplify(SC.NW, remove.loops = T, edge.attr.comb="sum")
+  if(!do.approx){
+    SC.NW                        <- igraph::simplify(SC.NW, remove.loops = T, edge.attr.comb="sum")
+  }
+
 
   if(do.approx){
 
@@ -212,11 +268,67 @@ SCimplify <- function(X,
     }
 
     membership.all       <- c(membership.presampled, membership.omitted)
-    membership.all       <- membership.all[colnames(X)]
+    #membership.all       <- membership.all[colnames(X)]
+
+
+    names_membership.all <- names(membership.all)
+    ## again split super-cells containing cells from different annotation or split conditions
+    if(!is.null(cell.annotation) | !is.null(cell.split.condition)){
+
+      split.cells <- interaction(cell.annotation[names_membership.all],
+                                 cell.split.condition[names_membership.all], drop = TRUE)
+
+
+      membership.all.intr <- interaction(membership.all, split.cells, drop = TRUE)
+
+      membership.all.intr.v <- as.vector(membership.all.intr)
+      membership.all.intr.v.u <- unique(membership.all.intr.v)
+
+      ## add new nodes to SC.NW
+      adj <- igraph::get.adjlist(SC.NW, mode = "all")
+
+      add.node.id <- igraph::vcount(SC.NW) + 1
+      membership.all.const <- membership.all
+
+      for(i in sort(unique(membership.all.const))){
+
+        cur.sc <- which(membership.all == i)
+        cur.main.node <- membership.all.intr.v[cur.sc[1]]
+        n.add.nodes <- length(unique(membership.all.intr.v[cur.sc])) - 1
+
+        additional.nodes <- setdiff(unique(membership.all.intr.v[cur.sc]), cur.main.node)
+
+        a.n <- 1
+        if(n.add.nodes > 0){
+          f.node.id <- add.node.id
+          l.node.id <- add.node.id + n.add.nodes -1
+
+          for(j in f.node.id:l.node.id){
+
+
+            membership.all[membership.all.intr.v == additional.nodes[a.n]] <- j
+            a.n <- a.n+1
+            adj[[j]] <- c(as.numeric(adj[[i]]), i, f.node.id:l.node.id) # split super-cell node by adding additional node and connecting it to the same neighbours
+            add.node.id <- add.node.id + 1
+          }
+
+          adj[[i]] <- c(as.numeric(adj[[i]]), f.node.id:l.node.id)
+        }
+      }
+
+
+      SC.NW                        <- igraph::graph_from_adj_list(adj, duplicate = F)
+      SC.NW                        <- igraph::as.undirected(SC.NW)
+
+
+    }
+    SC.NW                        <- igraph::simplify(SC.NW, remove.loops = T, edge.attr.comb="sum")
+    names(membership.all) <- names_membership.all
+    membership.all <- membership.all[colnames(X)]
+
   } else {
     membership.all       <- membership.presampled[colnames(X)]
   }
-
   membership       <- membership.all
 
   supercell_size   <- as.vector(table(membership))
@@ -227,16 +339,23 @@ SCimplify <- function(X,
 
   res <- list(graph.supercells = SC.NW,
               gamma = gamma,
-              N.SC = length(membership),
+              N.SC = length(unique(membership)),
               membership = membership,
               supercell_size = supercell_size,
               genes.use = genes.use,
               simplification.algo = igraph.clustering[1],
               do.approx = do.approx,
               n.pc = n.pc,
-              k.knn = k.knn)
+              k.knn = k.knn,
+              sc.cell.annotation. = cell.annotation,
+              sc.cell.split.condition. = cell.split.condition
+  )
 
   if(return.singlecell.NW){res$graph.singlecell <- sc.nw$graph.knn}
+  if(!is.null(cell.annotation) | !is.null(cell.split.condition)){
+    res$SC.cell.annotation. <- supercell_assign(cell.annotation, res$membership)
+    res$SC.cell.split.condition. <- supercell_assign(cell.split.condition, res$membership)
+  }
 
   if(igraph.clustering[1] == "walktrap" & return.hierarchical.structure)  res$h_membership <- g.s
 

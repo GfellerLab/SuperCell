@@ -7,7 +7,7 @@
 #' for \link[igraph]{layout_licely} and "fr" for \link[igraph]{layout_with_fr}, "components" for \link[igraph]{layout_components},
 #' "drl" for \link[igraph]{layout_with_drl}, "graphopt" for \link[igraph]{layout_with_graphopt}). If your dataset has clear clusters, use "components"
 #' @param lay a particular layout of a graph to plot (in is not \code{NULL}, \code{lay.method} is ignored and new layout is not computed)
-#' @param alpha a rotation of the layout (either orivided or computed)
+#' @param alpha a rotation of the layout (either provided or computed)
 #' @param seed a random seed used to compute graph layout
 #' @param main a title of a plot
 #' @param do.frames whether to keep vertex.frames in the plot
@@ -146,13 +146,7 @@ supercell_plot <- function(SC.nw,
   v.colors <- color.use[group]
   ifelse(do.frames, v.frame.colors <- rep(frame.color, length(v.colors)), v.frame.colors <- v.colors)
 
-  edgelist <- igraph::get.edgelist(SC.nw)
-
-  if(!do.directed){
-    SC.nw <- igraph::as.undirected(SC.nw)
-  }
-
-  plot(SC.nw, vertex.label = NA, vertex.color = v.colors[cells.to.use],
+  plot(igraph::as.undirected(SC.nw), vertex.label = NA, vertex.color = v.colors[cells.to.use],
        vertex.frame.color = v.frame.colors[cells.to.use],
        layout = lay.rotated, main = main, vertex.size = vsize[cells.to.use])
 

@@ -5,7 +5,16 @@
 \title{Build kNN graph using RANN::nn2
 (used in \code{"build_knn_graph"})}
 \usage{
-build_knn_graph_nn2(X, k = min(5, ncol(X)), mode = "all")
+build_knn_graph_nn2(
+  X,
+  k = min(5, ncol(X)),
+  mode = "all",
+  DoSNN = FALSE,
+  which.snn = c("bluster", "dbscan"),
+  pruning = NULL,
+  kmin = 0,
+  ...
+)
 }
 \arguments{
 \item{X}{matrix of coordinates (rows are samples and cols are coordinates)}

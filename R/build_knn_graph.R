@@ -30,7 +30,12 @@ build_knn_graph <- function(
   dist_method = "euclidean",
   cor_method = "pearson",
   p = 2,
-  directed = FALSE
+  directed = FALSE,
+  DoSNN = FALSE,
+  which.snn = c("bluster", "dbscan"),
+  pruning = NULL,
+  kmin = 0,
+  ...
   )
 {
   av.methods <- c("dist", "coordinates")
@@ -48,7 +53,9 @@ build_knn_graph <- function(
                   To use nn2 method, please, choose eucleadian distance.
                   If you want to use", dist_method, "distance, please set parameter use.nn2 to FALSE"))}
       mode <- ifelse(directed, 'out', 'all')
-      return(build_knn_graph_nn2(X = X, k = k, mode = mode))
+
+      return(build_knn_graph_nn2(X = X, k = k, mode = mode, DoSNN = DoSNN, pruning = pruning, which.snn = which.snn, kmin = kmin, ...))
+
     } else {
       av.dist      <- c("cor", "euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski")
       dist_method_ <-  pmatch(dist_method, av.dist)
@@ -98,16 +105,141 @@ build_knn_graph <- function(
 #' }
 #'
 
-build_knn_graph_nn2 <- function(X, k = min(5, ncol(X)), mode = 'all'){
+
+build_knn_graph_nn2 <- function(
+  X,
+  k = min(5, ncol(X)),
+  mode = 'all',
+  DoSNN = FALSE,
+  which.snn = c("bluster", "dbscan"),
+  pruning = NULL,
+  kmin = 0,
+  ...
+){
+
+
+  if(is.numeric(pruning)){
+    if(pruning < 0 | pruning > 1){
+      stop(paste("Pruning has to be numeric from 0 to 1 or NULL"))
+    }
+  } else {
+    if(!is.null(pruning)){
+      warning("Pruning has to be numeric from 0 to 1 or NULL. pruning was set to NULL")
+    }
+    pruning <- NULL
+  }
+
+
+  if(DoSNN){
+
+    which.snn <- which.snn[1]
+    if(!(which.snn %in% c("bluster", "dbscan"))){
+      stop(paste("Which SNN:", which.snn, "is unknown, available parameters are:", paste(c("bluster", "dbscan"), collapse = ", ")))
+    }
+
+    if(which.snn == "bluster"){
+
+      nn2.res <- RANN::nn2(data = X, k = k) # it is faster and memory more efficietn to run RANN::nn2() + bluster::neighborsToSNNGraph() instead of bluster::makeSNNGraph()
+      snn <- bluster::neighborsToSNNGraph(nn2.res$nn.idx, ...)
+
+      if(!is.null(pruning)){
+        pca_edje_dist      <- apply(igraph::get.edgelist(snn), 1, function(i){dist(X[i,])})
+        igraph::E(snn)$pca_edje_dist <- pca_edje_dist
+        pruning_cutoff     <- quantile(pca_edje_dist, pruning)
+        edges_to_remove    <- which(pca_edje_dist > pruning_cutoff)
+        snn <- igraph::delete_edges(snn, edges_to_remove)
+      }
+
+      graph.knn     <- igraph::simplify(snn, remove.multiple = T)
+      #igraph::E(snn)$weight <- 1
+      return(res <- list(graph.knn = graph.knn))
+
+    } else if (which.snn == "dbscan"){
+
+      kt          <- max(1, round(k/3))
+
+      dbsnn       <- dbscan::sNN(x = X, k = 2*(k-1), ...) # does not create self-loop, so k = k-1
+
+      if(!is.null(pruning)){
+        pca_edje_dist      <- as.vector(dbsnn$dist)
+        pruning_cutoff     <- quantile(pca_edje_dist, pruning)
+
+        remove_edges       <- dbsnn$dist > pruning_cutoff
+        # keep at least (kmin) edges
+        if(kmin > 0){
+          remove_edges[,1:kmin] <- FALSE
+        }
+
+        nn.idx             <- dbsnn$id
+
+        dbsnn$id[remove_edges]     <- NA
+        dbsnn$dist[remove_edges]   <- NA
+        dbsnn$shared[remove_edges] <- NA
+
+      }
+
+      adj.knn       <- split(dbsnn$id, rep(1:nrow(dbsnn$id), times = ncol(dbsnn$id))) # get adj list
+      adj.knn       <- lapply(adj.knn, function(x){x[!is.na(x)]}) # remove NA
+
+      edge.dist   <- split(dbsnn$dist, rep(1:nrow(dbsnn$dist), times = ncol(dbsnn$dist))) # get edje weight in a format of adj list
+      edge.dist   <- lapply(edge.dist, function(x){x[!is.na(x)]}) # remove NA
+
+      edge.weight   <- split(dbsnn$shared, rep(1:nrow(dbsnn$shared), times = ncol(dbsnn$shared))) # get edje weight in a format of adj list
+      edge.weight   <- lapply(edge.weight, function(x){x[!is.na(x)]}) # remove NA
+
+
+      graph.knn                             <- igraph::graph_from_adj_list(adj.knn, duplicate = F, mode = mode)
+      print(paste("N edges =", igraph::ecount(graph.knn)))
+      print(paste("Length of edge.weight =", length(unlist(edge.weight))))
+      print(paste("Length of edge.weight =", length(unlist(edge.weight))))
+
+      igraph::E(graph.knn)$weight           <- unlist(edge.weight)
+      igraph::E(graph.knn)$pca_edje_dist    <- unlist(edge.dist)
+
+      return(res <- list(graph.knn = graph.knn))
+
+    } else {
+      stop(paste("Which SNN:", which.snn, "is unknown, available parameters are:", paste(c("bluster", "dbscan"), collapse = ", ")))
+    }
+  }
+
+
+  # run just kNN
+
   nn2.res <- RANN::nn2(data = X, k = k)
-  nn2.res <- nn2.res$nn.idx
+  if(!is.null(pruning)){
 
-  adj.knn       <- split(nn2.res, rep(1:nrow(nn2.res), times = ncol(nn2.res))) # get adj list
+    nn2.res$nn.dists <- nn2.res$nn.dists[,-1] #remove self loops
+    nn2.res$nn.idx   <- nn2.res$nn.idx[,-1]
 
-  graph.knn     <- igraph::graph_from_adj_list(adj.knn,  duplicate = F, mode = mode)
+    pca_edje_dist      <- as.vector(nn2.res$nn.dists)
+    pruning_cutoff     <- quantile(pca_edje_dist, pruning)
+
+    remove_edges       <- nn2.res$nn.dists > pruning_cutoff
+    # keep at least (kmin) edges
+    if(kmin > 0){
+      remove_edges[,1:kmin] <- FALSE
+    }
+
+
+    nn.idx                   <- nn2.res$nn.idx
+    nn.idx[remove_edges]     <- NA
+
+  } else {
+    nn.idx <- nn2.res$nn.idx
+  }
+
+  adj.knn       <- split(nn.idx, rep(1:nrow(nn.idx), times = ncol(nn.idx))) # get adj list
+  adj.knn       <- lapply(adj.knn, function(x){x[!is.na(x)]}) # remove NA
+
+  graph.knn     <- igraph::graph_from_adj_list(adj.knn, duplicate = F, mode = mode)
+
 
   graph.knn     <- igraph::simplify(graph.knn, remove.multiple = T)
   igraph::E(graph.knn)$weight <- 1
+
+  pca_edje_dist      <- apply(igraph::get.edgelist(graph.knn), 1, function(i){dist(X[i,])})
+  igraph::E(graph.knn)$pca_edje_dist <- pca_edje_dist
 
   return(res <- list(graph.knn = graph.knn))
 
@@ -153,7 +285,6 @@ knn_graph_from_dist <- function(D, k = 5, return_neighbors_order = T, mode = 'al
              NA,
              if(i < N) D[((i-1)*(N-1) - ((i-1)*(i-2)/2) + 1) : (((i-1)*(N-1) - ((i-1)*(i-2)/2) + 1) + N-i-1)]))
   }
-
   neighbors <- t(sapply(1:N, function(i) {order(row(i,N))[1:k]}))
 
   adj.knn <- split(neighbors, rep(1:nrow(neighbors), times = ncol(neighbors)))

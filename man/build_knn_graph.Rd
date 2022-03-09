@@ -13,7 +13,12 @@ build_knn_graph(
   dist_method = "euclidean",
   cor_method = "pearson",
   p = 2,
-  directed = FALSE
+  directed = FALSE,
+  DoSNN = FALSE,
+  which.snn = c("bluster", "dbscan"),
+  pruning = NULL,
+  kmin = 0,
+  ...
 )
 }
 \arguments{
