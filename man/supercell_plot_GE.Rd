@@ -16,6 +16,7 @@ supercell_plot_GE(
   main = NA,
   do.frames = TRUE,
   do.extra.log.rescale = FALSE,
+  do.directed = FALSE,
   log.base = 2,
   do.extra.sqtr.rescale = FALSE,
   frame.color = "black",

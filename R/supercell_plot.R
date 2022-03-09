@@ -12,6 +12,7 @@
 #' @param main a title of a plot
 #' @param do.frames whether to keep vertex.frames in the plot
 #' @param do.extra.log.rescale whether to log-scale node size (to balance plot if some super-cells are large and covers smaller super-cells)
+#' @param do.directed whether to plot edge direction
 #' @param log.base base with thich to log-scale node size
 #' @param do.extra.sqtr.rescale  whether to sqrt-scale node size (to balance plot if some super-cells are large and covers smaller super-cells)
 #' @param frame.color color of node frames, black by default
@@ -54,6 +55,7 @@ supercell_plot <- function(SC.nw,
                            main = NA,
                            do.frames = TRUE,
                            do.extra.log.rescale = FALSE,
+                           do.directed = FALSE,
                            log.base = 2,
                            do.extra.sqtr.rescale = FALSE,
                            frame.color = "black",
@@ -77,6 +79,10 @@ supercell_plot <- function(SC.nw,
     vsize <- sqrt(vsize)
 
   if(is.null(group)) group <- rep(1, N.SC)
+  if(is.numeric(group)){
+    group <- group + (1 - min(group)) # min group to 1
+  }
+  if(!is.character(group)) group <- as.character(group)
   if(length(group) != N.SC) stop(paste("Vector groups has to be the same length as number of super-cells:", N.SC))
 
   N.groups <- length(unique(group))
@@ -147,7 +153,7 @@ supercell_plot <- function(SC.nw,
   if(return.meta){
     p <- grDevices::recordPlot()
     res <- list(p = p,
-                edgelist = igraph::get.edgelist(SC.nw),
+                edgelist = edgelist,
                 lay = lay,
                 lay.rotated = lay.rotated,
                 alpha = alpha,

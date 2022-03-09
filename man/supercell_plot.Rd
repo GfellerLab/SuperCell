@@ -15,6 +15,7 @@ supercell_plot(
   main = NA,
   do.frames = TRUE,
   do.extra.log.rescale = FALSE,
+  do.directed = FALSE,
   log.base = 2,
   do.extra.sqtr.rescale = FALSE,
   frame.color = "black",
@@ -45,6 +46,8 @@ for \link[igraph]{layout_licely} and "fr" for \link[igraph]{layout_with_fr}, "co
 \item{do.frames}{whether to keep vertex.frames in the plot}
 
 \item{do.extra.log.rescale}{whether to log-scale node size (to balance plot if some super-cells are large and covers smaller super-cells)}
+
+\item{do.directed}{whether to plot edge direction}
 
 \item{log.base}{base with thich to log-scale node size}
 

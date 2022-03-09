@@ -53,7 +53,9 @@ build_knn_graph <- function(
                   To use nn2 method, please, choose eucleadian distance.
                   If you want to use", dist_method, "distance, please set parameter use.nn2 to FALSE"))}
       mode <- ifelse(directed, 'out', 'all')
+
       return(build_knn_graph_nn2(X = X, k = k, mode = mode, DoSNN = DoSNN, pruning = pruning, which.snn = which.snn, kmin = kmin, ...))
+
     } else {
       av.dist      <- c("cor", "euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski")
       dist_method_ <-  pmatch(dist_method, av.dist)
@@ -102,6 +104,7 @@ build_knn_graph <- function(
 #'   \item graph.knn - igraph object
 #' }
 #'
+
 
 build_knn_graph_nn2 <- function(
   X,
@@ -202,6 +205,7 @@ build_knn_graph_nn2 <- function(
 
 
   # run just kNN
+
   nn2.res <- RANN::nn2(data = X, k = k)
   if(!is.null(pruning)){
 
@@ -217,6 +221,7 @@ build_knn_graph_nn2 <- function(
       remove_edges[,1:kmin] <- FALSE
     }
 
+
     nn.idx                   <- nn2.res$nn.idx
     nn.idx[remove_edges]     <- NA
 
@@ -228,6 +233,7 @@ build_knn_graph_nn2 <- function(
   adj.knn       <- lapply(adj.knn, function(x){x[!is.na(x)]}) # remove NA
 
   graph.knn     <- igraph::graph_from_adj_list(adj.knn, duplicate = F, mode = mode)
+
 
   graph.knn     <- igraph::simplify(graph.knn, remove.multiple = T)
   igraph::E(graph.knn)$weight <- 1

@@ -73,6 +73,7 @@ SC <- SCimplify(GE,  # gene expression matrix
                 directed = TRUE
 )
 
+
 # plot super-cell network
 supercell_plot(SC$graph.supercells, # network
                color.use = "gray", # color of the nodes
@@ -153,6 +154,7 @@ supercell_plot(SC$graph.supercells,
                main  = "Super-cell colored by cell line assignment (averaged coordinates)")
 ```
 
+
 ## Cluster super-cell data
 
 ```{r clustering}
@@ -183,6 +185,7 @@ supercell_plot(SC$graph.supercells,
                alpha = -pi/2,
                main = "Super-cell colored by cluster")
 ```
+
 
 ## Differential expression analysis of clustered super-cell data
 
@@ -255,6 +258,7 @@ m.seurat <- FindNeighbors(m.seurat, verbose = FALSE)  # RNA_nn has been replaced
 m.seurat <- FindClusters(m.seurat, graph.name = "RNA_nn") 
 ```
 
+# [RNA velocity applied to super-cells](https://github.com/GfellerLab/SuperCell/blob/master/workbooks/RNAvelocity_for_SuperCells.md)
 
 # [License](https://github.com/GfellerLab/SuperCell/blob/master/License.pdf)
 
