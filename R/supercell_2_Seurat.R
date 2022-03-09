@@ -121,7 +121,7 @@ supercell_2_Seurat <- function(SC.GE, SC, fields = c(),
 
   if(is.null(N.comp)) N.comp <- min(50, ncol(m.seurat@assays$RNA@counts)-1)
 
-  VariableFeatures(m.seurat) <- var.genes
+  Seurat::VariableFeatures(m.seurat) <- var.genes
   m.seurat <- Seurat::RunPCA(m.seurat, verbose = F, npcs = max(N.comp))
   m.seurat@reductions$pca_seurat <- m.seurat@reductions$pca
 
@@ -144,7 +144,7 @@ supercell_2_Seurat <- function(SC.GE, SC, fields = c(),
 
   ## Super-cell netwok:
   ## 1) create graph field
-  m.seurat            <- FindNeighbors(m.seurat, compute.SNN = TRUE, verbose = FALSE)
+  m.seurat            <- Seurat::FindNeighbors(m.seurat, compute.SNN = TRUE, verbose = FALSE)
 
   ## 2) add self-loops to our super-cell graph to indicate super-cell size (does not work, as Seurat removes loops...)
   if(!is.null(SC$graph.supercells)){
