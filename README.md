@@ -61,9 +61,9 @@ cell.meta <- cell_lines$meta
 Simplify single-cell data at the graining level *g**a**m**m**a* = 20
 --------------------------------------------------------------------
 
-(i.e., `20` times less metacells (called ‘supercells’ in the package)
-than single cells) by first building a kNN (*k* = 5) network using top
-*n*.*v**a**r*.*g**e**n**e**s* = 1000 most variable genes for
+(i.e., `20` times less metacells (called ‘supercells’ in the package
+functions) than single cells) by first building a kNN (*k* = 5) network
+using top *n*.*v**a**r*.*g**e**n**e**s* = 1000 most variable genes for
 dimentionality reduction. Function `SCimplify()` computes the partition
 into metacells, this information is available with the field
 `membership`.
@@ -83,7 +83,7 @@ SC <- SCimplify(GE,  # gene expression matrix
 
 supercell_plot(SC$graph.supercells, # network
                color.use = "gray", # color of the nodes
-               main = paste("Super-cell network, gamma =", gamma), 
+               main = paste("Metacell network, gamma =", gamma), 
                seed = 1) 
 ```
 
@@ -133,7 +133,7 @@ SC$cell_line <- supercell_assign(clusters = cell.meta, # single-cell assigment t
 
 seed <- 1 # seed for network plotting 
 
-# plot super-cell network colored by cell line assignment 
+# plot network of metacells colored by cell line assignment 
 supercell_plot(SC$graph.supercells, 
                group = SC$cell_line, 
                seed = seed, 
@@ -142,20 +142,20 @@ supercell_plot(SC$graph.supercells,
 
 ![](figures/assign%20metacells%20to%20cell%20line%20infromation-1.png)
 
-The quality of assigment can be evaluated with super-cell purity
-(function `supercell_purity()`) that returns the proportion of the most
-abundant cell type (in this case, cell line) in each super-cell.
+The quality of assigment can be evaluated with metacell purity (function
+`supercell_purity()`) that returns the proportion of the most abundant
+cell type (in this case, cell line) in each metacell.
 
 ``` r
 # compute purity of metacells in terms of cell line composition
 purity <- supercell_purity(clusters = cell.meta, 
                            supercell_membership = SC$membership, method = 'entropy')
-hist(purity, main = "Super-cell purity \nin terms of cell line composition")
+hist(purity, main = "Purity of metacells \nin terms of cell line composition")
 ```
 
 ![](figures/purity%20of%20supercell%20in%20terms%20of%20cell%20line%20composition-1.png)
 
-Some options to plot super-cell networks
+Some options to plot networks of metacells
 
 ``` r
 ## rotate network to be more consistent with the single-cell one
@@ -397,11 +397,8 @@ m.seurat <- FindClusters(m.seurat, graph.name = "RNA_nn")
 ## Elapsed time: 0 seconds
 ```
 
-[RNA velocity applied to super-cells](https://github.com/GfellerLab/SuperCell/blob/master/workbooks/RNAvelocity_for_SuperCells.md)
-==================================================================================================================================
-
-[RNA velocity applied to super-cells](https://github.com/GfellerLab/SuperCell/blob/master/workbooks/RNAvelocity_for_SuperCells.md)
-==================================================================================================================================
+[RNA velocity applied to SuperCell object](https://github.com/GfellerLab/SuperCell/blob/master/workbooks/RNAvelocity_for_SuperCells.md)
+=======================================================================================================================================
 
 [License](https://github.com/GfellerLab/SuperCell/blob/master/License.pdf)
 ==========================================================================
