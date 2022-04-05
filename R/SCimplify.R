@@ -173,7 +173,6 @@ SCimplify <- function(X,
   }
 
 
-
   sc.nw <- build_knn_graph(
     X = PCA.presampled$x[,n.pc],
     k = k.knn, from = "coordinates",
@@ -186,6 +185,7 @@ SCimplify <- function(X,
     kmin = kmin,
     ...
   )
+
 
   #simplify
 

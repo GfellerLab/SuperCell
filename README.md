@@ -78,7 +78,9 @@ SC <- SCimplify(GE,  # gene expression matrix
                 n.var.genes = 1000 # number of the top variable genes to use for dimentionality reduction 
 )
 
+
 # plot network of metacells
+
 supercell_plot(SC$graph.supercells, # network
                color.use = "gray", # color of the nodes
                main = paste("Super-cell network, gamma =", gamma), 
@@ -394,6 +396,9 @@ m.seurat <- FindClusters(m.seurat, graph.name = "RNA_nn")
 ## Number of communities: 5
 ## Elapsed time: 0 seconds
 ```
+
+[RNA velocity applied to super-cells](https://github.com/GfellerLab/SuperCell/blob/master/workbooks/RNAvelocity_for_SuperCells.md)
+==================================================================================================================================
 
 [RNA velocity applied to super-cells](https://github.com/GfellerLab/SuperCell/blob/master/workbooks/RNAvelocity_for_SuperCells.md)
 ==================================================================================================================================
