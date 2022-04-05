@@ -1,5 +1,5 @@
-RNA velocity combining with super-cells
----------------------------------------
+RNA velocity combining with metacells computed with SuperCell
+-------------------------------------------------------------
 
 ``` r
 if (!requireNamespace("remotes")) install.packages("remotes")
@@ -8,27 +8,8 @@ if (!requireNamespace("remotes")) install.packages("remotes")
     ## Loading required namespace: remotes
 
 ``` r
-remotes::install_github("GfellerLab/SuperCell", ref = 'dev')
-```
+#remotes::install_github("GfellerLab/SuperCell")
 
-    ## Downloading GitHub repo GfellerLab/SuperCell@dev
-
-    ## 
-    ##      checking for file ‘/private/var/folders/g3/m1nhnz5910s9mckg3ymbz_b80000gn/T/Rtmpn9lC1Y/remotes1269e302e8c28/GfellerLab-SuperCell-6262c57/DESCRIPTION’ ...  ✓  checking for file ‘/private/var/folders/g3/m1nhnz5910s9mckg3ymbz_b80000gn/T/Rtmpn9lC1Y/remotes1269e302e8c28/GfellerLab-SuperCell-6262c57/DESCRIPTION’
-    ##   ─  preparing ‘SuperCell’:
-    ##      checking DESCRIPTION meta-information ...  ✓  checking DESCRIPTION meta-information
-    ##   ─  excluding invalid files
-    ##      Subdirectory 'R' contains invalid file names:
-    ##      ‘test_GE.Rmd’
-    ##   ─  checking for LF line-endings in source and make files and shell scripts
-    ##   ─  checking for empty or unneeded directories
-    ##        NB: this package now depends on R (>= 3.5.0)
-    ##        WARNING: Added dependency on R >= 3.5.0 because serialized objects in  serialize/load version 3 cannot be read in older versions of R.  File(s) containing such objects:  ‘SuperCell/data/5cancer_cell_lines_10x_GE.Rds’  WARNING: Added dependency on R >= 3.5.0 because serialized objects in  serialize/load version 3 cannot be read in older versions of R.  File(s) containing such objects:  ‘SuperCell/data/5cancer_cell_lines_10x_cell_line_assignment.Rds’  WARNING: Added dependency on R >= 3.5.0 because serialized objects in  serialize/load version 3 cannot be read in older versions of R.  File(s) containing such objects: ‘SuperCell/data/cell_lines.RData’
-    ##   ─  building ‘SuperCell_1.0.tar.gz’
-    ##      
-    ## 
-
-``` r
 library(SuperCell)
 library(velocyto.R)
 ```
@@ -38,7 +19,7 @@ library(velocyto.R)
 We show an example of how SuperCell can be used prior to velocyto.R to
 compute RNA velocity.
 
-### Load data and compute Super-cells’ spliced and un-spliced counts
+### Load data and compute metacells’ spliced and un-spliced counts
 
 We use a built-in *pancreas* dataset from [Bastidas-Ponce et al.
 (2019)](https://journals.biologists.com/dev/article/146/12/dev173849/19483/Comprehensive-single-cell-mRNA-profiling-reveals-a)
@@ -49,8 +30,10 @@ data("pancreas")
 ```
 
 ``` r
-SC_pancreas <- SCimplify_for_velocity(pancreas$emat, 
-                                        pancreas$nmat, gamma = 10)
+SC_pancreas <- SCimplify_for_velocity(
+  pancreas$emat, 
+  pancreas$nmat, 
+  gamma = 10)
 ```
 
 ### Compute RNA velocity
@@ -64,15 +47,15 @@ Vel <- supercell_estimate_velocity(SC_pancreas$emat, SC_pancreas$nmat)
     ## calculating cell knn ... done
     ## calculating convolved matrices ... done
     ## fitting gamma coefficients ... done. succesfful fit for 14807 genes
-    ## filtered out 3406 out of 14807 genes due to low nmat-emat correlation
-    ## filtered out 1043 out of 11401 genes due to low nmat-emat slope
+    ## filtered out 3459 out of 14807 genes due to low nmat-emat correlation
+    ## filtered out 1069 out of 11348 genes due to low nmat-emat slope
     ## calculating RNA velocity shift ... done
     ## calculating extrapolated cell state ... done
 
 ### Plot RNA velocity on a tSNE’s coordinates
 
 ``` r
-# Assign clusters to super-cells based on the given single clustering
+# Assign clusters to metacells based on the given single clustering
 clusters <- supercell_assign(pancreas$meta$clusters, SC_pancreas$membership)
 ```
 
@@ -85,9 +68,7 @@ pal <- setNames(colorRampPalette(RColorBrewer::brewer.pal(8, name= "Set1"))(N.cl
                 as.character(unique(clusters))) 
 color <- setNames(pal[as.character(clusters)], names(clusters))
 
-map_cluster_to_cluster_name <- c('Ngn3 low EP', 'Alpha', 'Delta',
-                                          'Beta', 'Pre-endocrine', 'Ngn3 high EP',
-                                          'Ductal', 'Epsilon')
+map_cluster_to_cluster_name <- c('Ngn3 low EP', 'Alpha', 'Delta', 'Beta', 'Pre-endocrine', 'Ngn3 high EP', 'Ductal', 'Epsilon')
 ```
 
 #### Plot tSNE
@@ -111,29 +92,29 @@ tsne10 <- tSNE.velocity.plot(Vel,
     ## Using no_dims = 2, perplexity = 50.000000, and theta = 0.500000
     ## Computing input similarities...
     ## Building tree...
-    ## Done in 0.10 seconds (sparsity = 0.249310)!
+    ## Done in 0.10 seconds (sparsity = 0.251658)!
     ## Learning embedding...
-    ## Iteration 50: error is 60.800991 (50 iterations in 0.11 seconds)
-    ## Iteration 100: error is 50.997427 (50 iterations in 0.10 seconds)
-    ## Iteration 150: error is 50.493617 (50 iterations in 0.10 seconds)
-    ## Iteration 200: error is 50.302629 (50 iterations in 0.10 seconds)
-    ## Iteration 250: error is 50.263116 (50 iterations in 0.10 seconds)
-    ## Iteration 300: error is 0.470060 (50 iterations in 0.10 seconds)
-    ## Iteration 350: error is 0.376875 (50 iterations in 0.10 seconds)
-    ## Iteration 400: error is 0.350275 (50 iterations in 0.11 seconds)
-    ## Iteration 450: error is 0.342156 (50 iterations in 0.11 seconds)
-    ## Iteration 500: error is 0.337179 (50 iterations in 0.11 seconds)
-    ## Iteration 550: error is 0.331093 (50 iterations in 0.11 seconds)
-    ## Iteration 600: error is 0.325433 (50 iterations in 0.11 seconds)
-    ## Iteration 650: error is 0.323196 (50 iterations in 0.11 seconds)
-    ## Iteration 700: error is 0.320226 (50 iterations in 0.10 seconds)
-    ## Iteration 750: error is 0.318516 (50 iterations in 0.11 seconds)
-    ## Iteration 800: error is 0.316694 (50 iterations in 0.11 seconds)
-    ## Iteration 850: error is 0.315215 (50 iterations in 0.10 seconds)
-    ## Iteration 900: error is 0.314090 (50 iterations in 0.11 seconds)
-    ## Iteration 950: error is 0.313261 (50 iterations in 0.11 seconds)
-    ## Iteration 1000: error is 0.312096 (50 iterations in 0.10 seconds)
-    ## Fitting performed in 2.10 seconds.
+    ## Iteration 50: error is 54.139075 (50 iterations in 0.12 seconds)
+    ## Iteration 100: error is 51.014458 (50 iterations in 0.11 seconds)
+    ## Iteration 150: error is 50.634534 (50 iterations in 0.11 seconds)
+    ## Iteration 200: error is 50.576768 (50 iterations in 0.11 seconds)
+    ## Iteration 250: error is 50.603303 (50 iterations in 0.11 seconds)
+    ## Iteration 300: error is 0.462160 (50 iterations in 0.11 seconds)
+    ## Iteration 350: error is 0.367978 (50 iterations in 0.12 seconds)
+    ## Iteration 400: error is 0.340768 (50 iterations in 0.11 seconds)
+    ## Iteration 450: error is 0.328365 (50 iterations in 0.11 seconds)
+    ## Iteration 500: error is 0.320690 (50 iterations in 0.11 seconds)
+    ## Iteration 550: error is 0.316286 (50 iterations in 0.11 seconds)
+    ## Iteration 600: error is 0.312205 (50 iterations in 0.14 seconds)
+    ## Iteration 650: error is 0.310185 (50 iterations in 0.14 seconds)
+    ## Iteration 700: error is 0.308466 (50 iterations in 0.14 seconds)
+    ## Iteration 750: error is 0.307457 (50 iterations in 0.13 seconds)
+    ## Iteration 800: error is 0.306119 (50 iterations in 0.14 seconds)
+    ## Iteration 850: error is 0.304557 (50 iterations in 0.12 seconds)
+    ## Iteration 900: error is 0.303455 (50 iterations in 0.12 seconds)
+    ## Iteration 950: error is 0.303192 (50 iterations in 0.12 seconds)
+    ## Iteration 1000: error is 0.302741 (50 iterations in 0.12 seconds)
+    ## Fitting performed in 2.41 seconds.
     ## delta norm ... done
 
 ``` r

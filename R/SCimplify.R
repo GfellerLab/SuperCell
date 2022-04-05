@@ -1,15 +1,15 @@
-#' Detection of super-cells
+#' Detection of metacells with the SuperCell approach
 #'
-#' This function detects super-cells from single-cell gene expression matrix
+#' This function detects metacells (former super-cells) from single-cell gene expression matrix
 #'
 #'
 #' @param X log-normalized gene expression matrix with rows to be genes and cols to be cells
 #' @param genes.use a vector of genes used to compute PCA
 #' @param genes.exclude a vector of genes to be excluded when computing PCA
-#' @param cell.annotation a vector of cell type anotation, if provided, super-cells that contain single cells of different cell type annotation will be split in multiple pure super-cell (may result in slightly larger numbe of super-cells than expected with a given gamma)
-#' @param cell.split.condition a vector of cell conditions that must not be mixed in one super-cell. If provided, super-cells will be split in condition-pure super-cell (may result in significantly(!) larger number of super-cells than expected)
+#' @param cell.annotation a vector of cell type anotation, if provided, metacells that contain single cells of different cell type annotation will be split in multiple pure metacell (may result in slightly larger numbe of metacells than expected with a given gamma)
+#' @param cell.split.condition a vector of cell conditions that must not be mixed in one metacell. If provided, metacells will be split in condition-pure metacell (may result in significantly(!) larger number of metacells than expected)
 #' @param n.var.genes if \code{"genes.use"} is not provided, \code{"n.var.genes"} genes with the largest variation are used
-#' @param gamma graining level of data (proportion of number of single cells in the initial dataset to the number of super-cells in the final dataset)
+#' @param gamma graining level of data (proportion of number of single cells in the initial dataset to the number of metacells in the final dataset)
 #' @param k.knn parameter to compute single-cell kNN network
 #' @param do.scale whether to scale gene expression matrix when computing PCA
 #' @param n.pc number of principal components to use for construction of single-cell kNN network
@@ -18,21 +18,21 @@
 #' @param directed whether to build a directed graph
 #' @param approx.N number of cells to subsample for an approximate approach
 #' @param seed seed to use to subsample cells for an approximate approach
-#' @param igraph.clustering clustering method to identify super-cells (available methods "walktrap" (default) and "louvain" (not recommended, gamma is ignored)).
+#' @param igraph.clustering clustering method to identify metacells (available methods "walktrap" (default) and "louvain" (not recommended, gamma is ignored)).
 #' @param return.singlecell.NW whether return single-cell network (which consists of approx.N if \code{"do.approx"} or all cells otherwise)
-#' @param return.hierarchical.structure whether return hierarchical structure of super-cell
+#' @param return.hierarchical.structure whether return hierarchical structure of metacell
 #'
 #' @return a list with components
 #' \itemize{
-#'   \item graph.supercells - igraph object of a simplified network (number of nodes corresponds to number of super-cells)
-#'   \item membership - assigmnent of each single cell to a particular super-cell
+#'   \item graph.supercells - igraph object of a simplified network (number of nodes corresponds to number of metacells)
+#'   \item membership - assigmnent of each single cell to a particular metacell
 #'   \item graph.singlecells - igraph object (kNN network) of single-cell data
-#'   \item supercell_size - size of super-cells
+#'   \item supercell_size - size of metacells (former super-cells)
 #'   \item gamma - requested graining level
-#'   \item N.SC - number of obtained super-cells
+#'   \item N.SC - number of obtained metacells
 #'   \item genes.use - used genes
 #'   \item do.approx - whether approximate coarse-graining was perfirmed
-#'   \item n.pc - number of principal components used for SC construction
+#'   \item n.pc - number of principal components used for metacells construction
 #'   \item k.knn - number of neighbors to build single-cell graph
 #'   \item sc.cell.annotation. - single-cell cell type annotation (if provided)
 #'   \item sc.cell.split.condition. - single-cell split condition (if provided)
