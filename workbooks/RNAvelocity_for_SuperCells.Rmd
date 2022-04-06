@@ -1,14 +1,15 @@
 ---
-title: "RNA-velocity for super-cells"
+title: "RNA-velocity for SuperCell"
 output:
   md_document:
     variant: markdown_github
 ---
-## RNA velocity combining with super-cells
+## RNA velocity combining with metacells computed with SuperCell
 
 ```{r library}
 if (!requireNamespace("remotes")) install.packages("remotes")
-remotes::install_github("GfellerLab/SuperCell")
+
+#remotes::install_github("GfellerLab/SuperCell")
 
 library(SuperCell)
 library(velocyto.R)
@@ -16,8 +17,7 @@ library(velocyto.R)
 
 We show an example of how SuperCell can be used prior to velocyto.R to compute RNA velocity.
 
-### Load data and compute Super-cells' spliced and un-spliced counts
-
+### Load data and compute metacells' spliced and un-spliced counts
 
 
 We use a built-in *pancreas* dataset from [Bastidas-Ponce et al. (2019)](https://journals.biologists.com/dev/article/146/12/dev173849/19483/Comprehensive-single-cell-mRNA-profiling-reveals-a) For RNA velocity, we need spliced and un-spliced count matrices.
@@ -28,8 +28,10 @@ data("pancreas")
 
 ```{r load data for RNA velocity}
 
-SC_pancreas <- SCimplify_for_velocity(pancreas$emat, 
-                                        pancreas$nmat, gamma = 10)
+SC_pancreas <- SCimplify_for_velocity(
+  pancreas$emat, 
+  pancreas$nmat, 
+  gamma = 10)
 ```
 
 ### Compute RNA velocity
@@ -41,7 +43,7 @@ Vel <- supercell_estimate_velocity(SC_pancreas$emat, SC_pancreas$nmat)
 ### Plot RNA velocity on a tSNE's coordinates
 
 ```{r Plot RNA velocity}
-# Assign clusters to super-cells based on the given single clustering
+# Assign clusters to metacells based on the given single clustering
 clusters <- supercell_assign(pancreas$meta$clusters, SC_pancreas$membership)
 ```
 
@@ -53,9 +55,7 @@ pal <- setNames(colorRampPalette(RColorBrewer::brewer.pal(8, name= "Set1"))(N.cl
                 as.character(unique(clusters))) 
 color <- setNames(pal[as.character(clusters)], names(clusters))
 
-map_cluster_to_cluster_name <- c('Ngn3 low EP', 'Alpha', 'Delta',
-                                          'Beta', 'Pre-endocrine', 'Ngn3 high EP',
-                                          'Ductal', 'Epsilon')
+map_cluster_to_cluster_name <- c('Ngn3 low EP', 'Alpha', 'Delta', 'Beta', 'Pre-endocrine', 'Ngn3 high EP', 'Ductal', 'Epsilon')
 ```
 
 #### Plot tSNE

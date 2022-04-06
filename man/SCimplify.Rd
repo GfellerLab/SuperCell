@@ -2,7 +2,7 @@
 % Please edit documentation in R/SCimplify.R
 \name{SCimplify}
 \alias{SCimplify}
-\title{Detection of super-cells}
+\title{Detection of metacells with the SuperCell approach}
 \usage{
 SCimplify(
   X,
@@ -39,13 +39,13 @@ SCimplify(
 
 \item{genes.exclude}{a vector of genes to be excluded when computing PCA}
 
-\item{cell.annotation}{a vector of cell type anotation, if provided, super-cells that contain single cells of different cell type annotation will be split in multiple pure super-cell (may result in slightly larger numbe of super-cells than expected with a given gamma)}
+\item{cell.annotation}{a vector of cell type anotation, if provided, metacells that contain single cells of different cell type annotation will be split in multiple pure metacell (may result in slightly larger numbe of metacells than expected with a given gamma)}
 
-\item{cell.split.condition}{a vector of cell conditions that must not be mixed in one super-cell. If provided, super-cells will be split in condition-pure super-cell (may result in significantly(!) larger number of super-cells than expected)}
+\item{cell.split.condition}{a vector of cell conditions that must not be mixed in one metacell. If provided, metacells will be split in condition-pure metacell (may result in significantly(!) larger number of metacells than expected)}
 
 \item{n.var.genes}{if \code{"genes.use"} is not provided, \code{"n.var.genes"} genes with the largest variation are used}
 
-\item{gamma}{graining level of data (proportion of number of single cells in the initial dataset to the number of super-cells in the final dataset)}
+\item{gamma}{graining level of data (proportion of number of single cells in the initial dataset to the number of metacells in the final dataset)}
 
 \item{k.knn}{parameter to compute single-cell kNN network}
 
@@ -63,24 +63,24 @@ SCimplify(
 
 \item{seed}{seed to use to subsample cells for an approximate approach}
 
-\item{igraph.clustering}{clustering method to identify super-cells (available methods "walktrap" (default) and "louvain" (not recommended, gamma is ignored)).}
+\item{igraph.clustering}{clustering method to identify metacells (available methods "walktrap" (default) and "louvain" (not recommended, gamma is ignored)).}
 
 \item{return.singlecell.NW}{whether return single-cell network (which consists of approx.N if \code{"do.approx"} or all cells otherwise)}
 
-\item{return.hierarchical.structure}{whether return hierarchical structure of super-cell}
+\item{return.hierarchical.structure}{whether return hierarchical structure of metacell}
 }
 \value{
 a list with components
 \itemize{
-  \item graph.supercells - igraph object of a simplified network (number of nodes corresponds to number of super-cells)
-  \item membership - assigmnent of each single cell to a particular super-cell
+  \item graph.supercells - igraph object of a simplified network (number of nodes corresponds to number of metacells)
+  \item membership - assigmnent of each single cell to a particular metacell
   \item graph.singlecells - igraph object (kNN network) of single-cell data
-  \item supercell_size - size of super-cells
+  \item supercell_size - size of metacells (former super-cells)
   \item gamma - requested graining level
-  \item N.SC - number of obtained super-cells
+  \item N.SC - number of obtained metacells
   \item genes.use - used genes
   \item do.approx - whether approximate coarse-graining was perfirmed
-  \item n.pc - number of principal components used for SC construction
+  \item n.pc - number of principal components used for metacells construction
   \item k.knn - number of neighbors to build single-cell graph
   \item sc.cell.annotation. - single-cell cell type annotation (if provided)
   \item sc.cell.split.condition. - single-cell split condition (if provided)
@@ -90,7 +90,7 @@ a list with components
 }
 }
 \description{
-This function detects super-cells from single-cell gene expression matrix
+This function detects metacells (former super-cells) from single-cell gene expression matrix
 }
 \examples{
 \dontrun{
