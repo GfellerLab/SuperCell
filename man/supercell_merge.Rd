@@ -4,10 +4,12 @@
 \alias{supercell_merge}
 \title{Merging independent SuperCell objects}
 \usage{
-supercell_merge(SCs)
+supercell_merge(SCs, fields = c())
 }
 \arguments{
 \item{SCs}{list of SuperCell objects (resuls of \link[SCimplify])}
+
+\item{fields}{which additional fields (e.g., metadata) of the the SuperCell objects to keep when merging}
 }
 \value{
 a list with components
@@ -21,4 +23,38 @@ a list with components
 }
 \description{
 This function merges independent SuperCell objects
+}
+\examples{
+\dontrun{
+data(cell_lines) # list with GE - gene expression matrix (logcounts), meta - cell meta data
+GE <- cell_lines$GE
+cell.meta <- cell_lines$meta
+
+cell.idx.HCC827 <- which(cell.meta == "HCC827")
+cell.idx.H838   <- which(cell.meta == "H838")
+
+SC.HCC827 <- SCimplify(GE[,cell.idx.HCC827],  # log-normalized gene expression matrix
+                gamma = 20, # graining level
+                n.var.genes = 1000, # number of top varible genes to use for the dimensionality reduction, the list of genes can be provided instead (with 'genes.use')
+                k.knn = 5, # k for kNN algorithm
+                n.pc = 10) # number of proncipal components to use
+SC.HCC827$cell.line <- supercell_assign(cell.meta[cell.idx.HCC827], supercell_membership = SC.HCC827$membership)
+
+SC.H838 <- SCimplify(GE[,cell.idx.H838],  # log-normalized gene expression matrix
+                gamma = 30, # graining level
+                n.var.genes = 1000, # number of top varible genes to use for the dimensionality reduction, the list of genes can be provided instead (with 'genes.use')
+                k.knn = 5, # k for kNN algorithm
+                n.pc = 15) # number of proncipal components to use
+SC.H838$cell.line <- supercell_assign(cell.meta[cell.idx.H838], supercell_membership = SC.H838$membership)
+
+SC.merged <- supercell_merge(list(SC.HCC827, SC.H838), fields = c("cell.line"))
+
+# compute metacell gene expression for SC.HCC827
+SC.GE.HCC827 <- supercell_GE(GE[, cell.idx.HCC827], groups = SC.HCC827$membership)
+# compute metacell gene expression for SC.H838
+SC.GE.H838 <- supercell_GE(GE[, cell.idx.H838], groups = SC.H838$membership)
+# merge GE matricies
+SC.GE.merged <- supercell_mergeGE(list(SC.GE.HCC827, SC.GE.H838))
+
+}
 }

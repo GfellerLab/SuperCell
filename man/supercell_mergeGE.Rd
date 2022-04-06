@@ -15,3 +15,7 @@ a merged matrix of gene expression
 \description{
 This function merges independent SuperCell objects
 }
+\examples{
+see examples in \link[supercell_merge]
+
+}
