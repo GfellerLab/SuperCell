@@ -34,6 +34,7 @@ supercell_tSNE <- function(
 
   set.seed(seed)
   SC_tsne <- Rtsne::Rtsne(SC_pca, pca = FALSE, perplexity = perplexity, ...)
+  SC_tsne$layout <- SC_tsne$Y
 
   return(SC_tsne)
 }
