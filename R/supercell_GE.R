@@ -1,20 +1,27 @@
 #' Simplification of scRNA-seq dataset
 #'
-#' This function converts gene-expression matrix of single-cell data into a gene expression
-#' matrix of super-cells
+#' This function converts (i.e., averages or sums up) gene-expression matrix of single-cell data into a gene expression
+#' matrix of metacells
 #'
 #' @param ge gene expression matrix (or any coordinate matrix) with genes as rows and cells as cols
-#' @param groups vector of membership (assignment of single-cell to super-cells)
-#' @param weights vector of a cell weight (NULL by default), used for computing average gene expression withing cluster of super-cells
+#' @param groups vector of membership (assignment of single-cell to metacells)
+#' @param mode string indicating whether to average or sum up `ge` within metacells
+#' @param weights vector of a cell weight (NULL by default), used for computing average gene expression withing cluster of metaells
 #' @param do.median.norm whether to normalize by median value (FALSE by default)
 #'
 #' @return a matrix of simplified (averaged withing groups) data with ncol equal to number of groups and nrows as in the initial dataset
 #' @export
 
-supercell_GE <- function(ge, groups, weights = NULL, do.median.norm = FALSE){
+supercell_GE <- function(ge, groups, mode = c("average", "sum"), weights = NULL, do.median.norm = FALSE){
   if(ncol(ge) != length(groups)){
     stop("Length of the vector groups has to be equal to the number of cols in matrix ge")
   }
+
+  mode <- mode[1]
+  if(!(mode %in% c("average", "sum"))){
+    stop(paste("mode", mode, "is unknown. Available values are 'average' and 'sum'."))
+  }
+
   N.SC <- max(groups)
   supercell_size <- as.vector(table(groups))
   j <- rep(1:N.SC, supercell_size) # column indices of matrix M.AV that, whene GE.SC <- ge %M.AV%
@@ -25,12 +32,20 @@ supercell_GE <- function(ge, groups, weights = NULL, do.median.norm = FALSE){
   if(is.null(weights)){
     M.AV <- Matrix::sparseMatrix(i = i, j = j)
     GE.SC <- ge %*% M.AV
-    GE.SC <- sweep(GE.SC, 2, supercell_size, "/")
+
+    if(mode == "average"){
+      GE.SC <- sweep(GE.SC, 2, supercell_size, "/")
+    }
   } else {
 
     if(length(weights) != length(groups)){
       stop("weights must be the same length as groups or NULL in case of unweighted averaging")
     }
+
+    if(mode != "average"){
+      stop(paste("weighted averaging is supposted only for mode = 'average', not for", mode))
+    }
+
     M.AV <- Matrix::sparseMatrix(i = i, j = j, x = weights[i])
     GE.SC <- ge %*% M.AV
 
