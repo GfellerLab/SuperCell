@@ -163,12 +163,12 @@ supercell_VlnPlot_single <- function(ge1,
   }
 
   if(!is.null(color.use)){
-    g <- g + scale_fill_manual(values = color.use)
+    g <- g + ggplot2::scale_fill_manual(values = color.use)
   }
-  g <- g + theme(legend.position = "none",
-                 plot.title = element_text(hjust = 0.5),
-                 axis.text.x = element_text(angle = angle.text.x, hjust = 1),
-                 axis.text.y = element_text(angle = angle.text.y, hjust = 0.5))
+  g <- g + ggplot2::theme(legend.position = "none",
+                 plot.title = ggplot2::element_text(hjust = 0.5),
+                 axis.text.x = ggplot2::element_text(angle = angle.text.x, hjust = 1),
+                 axis.text.y = ggplot2::element_text(angle = angle.text.y, hjust = 0.5))
 
   return(g)
 }
