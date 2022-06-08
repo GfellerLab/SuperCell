@@ -88,6 +88,10 @@ SCimplify <- function(X,
 
   N.c <- ncol(X)
 
+  if(gamma > 100 & N.c < 100000){
+    warning(paste0("Graining level (gamma = ", gamma, ") seems to be very large! Please, consider using smaller gamma, the suggested range is 10-50."))
+  }
+
   if(is.null(rownames(X))){
     if(!(is.null(genes.use) | is.null(genes.exclude))){
       stop("rownames(X) is Null \nGene expression matrix X is expected to have genes as rownames")
