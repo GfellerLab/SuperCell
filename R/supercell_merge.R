@@ -2,16 +2,17 @@
 #'
 #' This function merges independent SuperCell objects
 #'
-#' @param SCs list of SuperCell objects (resuls of \link[SCimplify])
+#' @param SCs list of SuperCell objects (results of \link{SCimplify} )
 #' @param fields which additional fields (e.g., metadata) of the the SuperCell objects to keep when merging
 #'
 #' @return a list with components
 #' \itemize{
-#'   \item membership - assigmnent of each single cell to a particular metacell
+#'   \item membership - assignment of each single cell to a particular metacell
 #'   \item cell.ids - the original ids of single-cells
 #'   \item supercell_size - size of metacells (former super-cells)
-#'   \item gamma -  graining level of the merged object (astimated as an average size of metacells as the independent SuperCell objects might have different graining levels)
+#'   \item gamma -  graining level of the merged object (estimated as an average size of metacells as the independent SuperCell objects might have different graining levels)
 #'   \item N.SC - number of obtained metacells
+#'
 #' }
 #'
 #'
@@ -113,11 +114,11 @@ supercell_merge <- function(
 #'
 #' This function merges independent SuperCell objects
 #'
-#' @param SC.GEs list of metacell gene expression matricies (result of \link[supercell_GE]), make sure the order of the gene expression metricies is the same as in the call of \link[supercell_merge]
+#' @param SC.GEs list of metacell gene expression matricies (result of \link{supercell_GE} ), make sure the order of the gene expression metricies is the same as in the call of \link{supercell_merge}
 #'
 #' @return a merged matrix of gene expression
 #'
-#' @examples see examples in \link[supercell_merge]
+#' @examples see examples in \link{supercell_merge}
 #'
 #' @export
 

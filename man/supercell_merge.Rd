@@ -7,18 +7,19 @@
 supercell_merge(SCs, fields = c())
 }
 \arguments{
-\item{SCs}{list of SuperCell objects (resuls of \link[SCimplify])}
+\item{SCs}{list of SuperCell objects (results of \link{SCimplify} )}
 
 \item{fields}{which additional fields (e.g., metadata) of the the SuperCell objects to keep when merging}
 }
 \value{
 a list with components
 \itemize{
-  \item membership - assigmnent of each single cell to a particular metacell
+  \item membership - assignment of each single cell to a particular metacell
   \item cell.ids - the original ids of single-cells
   \item supercell_size - size of metacells (former super-cells)
-  \item gamma -  graining level of the merged object (astimated as an average size of metacells as the independent SuperCell objects might have different graining levels)
+  \item gamma -  graining level of the merged object (estimated as an average size of metacells as the independent SuperCell objects might have different graining levels)
   \item N.SC - number of obtained metacells
+
 }
 }
 \description{

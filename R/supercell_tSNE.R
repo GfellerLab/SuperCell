@@ -40,9 +40,12 @@ supercell_tSNE <- function(
 }
 
 #' Plot super-cell tSNE
+#' (Use \link{supercell_DimPlot} instead)
 #' Plots super-cell tSNE (result of \link{supercell_tSNE})
 #'
-#' @param
+#' @param SC super-cell structure (output of \link{SCimplify}) with a field \code{tSNE_name} containing tSNE result
+#' @param UMAP_name the mane of the field containing UMAP result
+#' @param groups coloring metacells by groups
 #'
 #' @return \link[ggplot2]{ggplot}
 #' @export

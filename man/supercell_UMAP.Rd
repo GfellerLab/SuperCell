@@ -7,7 +7,7 @@
 supercell_UMAP(SC, PCA_name = "SC_PCA", n.comp = NULL, n_neighbors = 15, ...)
 }
 \arguments{
-\item{SC}{super-cell structure (output of \link{SCimplify}) with a field \code{PCA_name} containig PCA result}
+\item{SC}{super-cell structure (output of \link{SCimplify}) with a field \code{PCA_name} containing PCA result}
 
 \item{PCA_name}{name of \code{SC} field containing result of \link{supercell_prcomp}}
 
