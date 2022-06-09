@@ -7,7 +7,7 @@
 supercell_mergeGE(SC.GEs)
 }
 \arguments{
-\item{SC.GEs}{list of metacell gene expression matricies (result of \link[supercell_GE]), make sure the order of the gene expression metricies is the same as in the call of \link[supercell_merge]}
+\item{SC.GEs}{list of metacell gene expression matricies (result of \link{supercell_GE} ), make sure the order of the gene expression metricies is the same as in the call of \link{supercell_merge}}
 }
 \value{
 a merged matrix of gene expression
@@ -16,6 +16,6 @@ a merged matrix of gene expression
 This function merges independent SuperCell objects
 }
 \examples{
-see examples in \link[supercell_merge]
+see examples in \link{supercell_merge}
 
 }

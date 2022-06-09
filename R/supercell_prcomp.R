@@ -60,6 +60,7 @@ supercell_prcomp <- function(X,
 
 
   pca$x <- X %*% pca$rotation
+  pca$layout <- pca$x
   return(pca)
 }
 

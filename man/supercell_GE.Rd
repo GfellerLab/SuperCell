@@ -4,14 +4,22 @@
 \alias{supercell_GE}
 \title{Simplification of scRNA-seq dataset}
 \usage{
-supercell_GE(ge, groups, weights = NULL, do.median.norm = FALSE)
+supercell_GE(
+  ge,
+  groups,
+  mode = c("average", "sum"),
+  weights = NULL,
+  do.median.norm = FALSE
+)
 }
 \arguments{
 \item{ge}{gene expression matrix (or any coordinate matrix) with genes as rows and cells as cols}
 
-\item{groups}{vector of membership (assignment of single-cell to super-cells)}
+\item{groups}{vector of membership (assignment of single-cell to metacells)}
 
-\item{weights}{vector of a cell weight (NULL by default), used for computing average gene expression withing cluster of super-cells}
+\item{mode}{string indicating whether to average or sum up `ge` within metacells}
+
+\item{weights}{vector of a cell weight (NULL by default), used for computing average gene expression withing cluster of metaells}
 
 \item{do.median.norm}{whether to normalize by median value (FALSE by default)}
 }
@@ -19,6 +27,6 @@ supercell_GE(ge, groups, weights = NULL, do.median.norm = FALSE)
 a matrix of simplified (averaged withing groups) data with ncol equal to number of groups and nrows as in the initial dataset
 }
 \description{
-This function converts gene-expression matrix of single-cell data into a gene expression
-matrix of super-cells
+This function converts (i.e., averages or sums up) gene-expression matrix of single-cell data into a gene expression
+matrix of metacells
 }

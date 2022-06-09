@@ -2,7 +2,7 @@
 % Please edit documentation in R/supercell_plot.R
 \name{supercell_plot}
 \alias{supercell_plot}
-\title{Plot super-cell NW}
+\title{Plot metacell NW}
 \usage{
 supercell_plot(
   SC.nw,
@@ -25,9 +25,9 @@ supercell_plot(
 )
 }
 \arguments{
-\item{SC.nw}{a super-cell network (a field \code{supercell_network} of the output of \link{SCimplify})}
+\item{SC.nw}{a super-cell (metacell) network (a field \code{supercell_network} of the output of \link{SCimplify})}
 
-\item{group}{an assigment of super cell to any group (for ploting in different colors)}
+\item{group}{an assigment of metacells to any group (for ploting in different colors)}
 
 \item{color.use}{colros to use for groups, if \code{NULL}, an automatic palette of colors will be applied}
 
@@ -45,13 +45,13 @@ for \link[igraph]{layout_licely} and "fr" for \link[igraph]{layout_with_fr}, "co
 
 \item{do.frames}{whether to keep vertex.frames in the plot}
 
-\item{do.extra.log.rescale}{whether to log-scale node size (to balance plot if some super-cells are large and covers smaller super-cells)}
+\item{do.extra.log.rescale}{whether to log-scale node size (to balance plot if some metacells are large and covers smaller metacells)}
 
 \item{do.directed}{whether to plot edge direction}
 
 \item{log.base}{base with thich to log-scale node size}
 
-\item{do.extra.sqtr.rescale}{whether to sqrt-scale node size (to balance plot if some super-cells are large and covers smaller super-cells)}
+\item{do.extra.sqtr.rescale}{whether to sqrt-scale node size (to balance plot if some metacells are large and covers smaller metacells)}
 
 \item{frame.color}{color of node frames, black by default}
 
@@ -65,7 +65,7 @@ for \link[igraph]{layout_licely} and "fr" for \link[igraph]{layout_with_fr}, "co
 plot of a super-cell network
 }
 \description{
-Plot super-cell NW
+Plot metacell NW
 }
 \examples{
 \dontrun{
@@ -76,14 +76,14 @@ cell.meta <- cell_lines$meta
 SC <- SCimplify(GE,  # gene expression matrix
                 gamma = 20) # graining level
 
-# Assign super-cell to a cell line
+# Assign metacell to a cell line
 SC2cellline  <- supercell_assign(clusters = cell.meta, # single-cell assigment to cell lines
-                                 supercell_membership = SC$membership) # single-cell assignment to super-cells
+                                 supercell_membership = SC$membership) # single-cell assignment to metacells
 
-# Plot super-cell network colored by cell line
+# Plot metacell network colored by cell line
 supercell_plot(SC$graph.supercells, # network
                group = SC2cellline, # group assignment
-               main = "Super-cell colored by cell line assignment",
+               main = "Metacell colored by cell line assignment",
                lay.method = 'nicely')
 }
 

@@ -1,7 +1,7 @@
 #' Compute UMAP of super-cells
 #'
 #' Computes UMAP of super-cells
-#' @param SC super-cell structure (output of \link{SCimplify}) with a field \code{PCA_name} containig PCA result
+#' @param SC super-cell structure (output of \link{SCimplify}) with a field \code{PCA_name} containing PCA result
 #' @param PCA_name name of \code{SC} field containing result of \link{supercell_prcomp}
 #' @param n.comp number of vector of principal components to use for computing UMAP
 #' @param ... other parameters of \link[umap]{umap}
@@ -40,9 +40,12 @@ supercell_UMAP <- function(
 }
 
 #' Plot super-cell UMAP
+#' (Use \link{supercell_DimPlot} instead)
 #' Plots super-cell UMAP (result of \link{supercell_UMAP})
 #'
-#' @param
+#' @param SC super-cell structure (output of \link{SCimplify}) with a field \code{UMAP_name} containing UMAP result
+#' @param UMAP_name the mane of the field containing UMAP result
+#' @param groups coloring metacells by groups
 #'
 #' @return \link[ggplot2]{ggplot}
 #' @export

@@ -3,6 +3,7 @@
 \name{supercell_plot_tSNE}
 \alias{supercell_plot_tSNE}
 \title{Plot super-cell tSNE
+(Use \link{supercell_DimPlot} instead)
 Plots super-cell tSNE (result of \link{supercell_tSNE})}
 \usage{
 supercell_plot_tSNE(
@@ -16,10 +17,18 @@ supercell_plot_tSNE(
   ...
 )
 }
+\arguments{
+\item{SC}{super-cell structure (output of \link{SCimplify}) with a field \code{tSNE_name} containing tSNE result}
+
+\item{groups}{coloring metacells by groups}
+
+\item{UMAP_name}{the mane of the field containing UMAP result}
+}
 \value{
 \link[ggplot2]{ggplot}
 }
 \description{
 Plot super-cell tSNE
+(Use \link{supercell_DimPlot} instead)
 Plots super-cell tSNE (result of \link{supercell_tSNE})
 }

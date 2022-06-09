@@ -1,7 +1,7 @@
-#' Plot super-cell NW
+#' Plot metacell NW
 #'
-#' @param SC.nw a super-cell network (a field \code{supercell_network} of the output of \link{SCimplify})
-#' @param group an assigment of super cell to any group (for ploting in different colors)
+#' @param SC.nw a super-cell (metacell) network (a field \code{supercell_network} of the output of \link{SCimplify})
+#' @param group an assigment of metacells to any group (for ploting in different colors)
 #' @param color.use colros to use for groups, if \code{NULL}, an automatic palette of colors will be applied
 #' @param lay.method method to compute layout of the network (for the moment there several available: "nicely"
 #' for \link[igraph]{layout_licely} and "fr" for \link[igraph]{layout_with_fr}, "components" for \link[igraph]{layout_components},
@@ -11,10 +11,10 @@
 #' @param seed a random seed used to compute graph layout
 #' @param main a title of a plot
 #' @param do.frames whether to keep vertex.frames in the plot
-#' @param do.extra.log.rescale whether to log-scale node size (to balance plot if some super-cells are large and covers smaller super-cells)
+#' @param do.extra.log.rescale whether to log-scale node size (to balance plot if some metacells are large and covers smaller metacells)
 #' @param do.directed whether to plot edge direction
 #' @param log.base base with thich to log-scale node size
-#' @param do.extra.sqtr.rescale  whether to sqrt-scale node size (to balance plot if some super-cells are large and covers smaller super-cells)
+#' @param do.extra.sqtr.rescale  whether to sqrt-scale node size (to balance plot if some metacells are large and covers smaller metacells)
 #' @param frame.color color of node frames, black by default
 #' @param weights edge weights used for some layout algorithms
 #' @param min.cell.size do not plot cells with smaller size
@@ -31,14 +31,14 @@
 #' SC <- SCimplify(GE,  # gene expression matrix
 #'                 gamma = 20) # graining level
 #'
-#' # Assign super-cell to a cell line
+#' # Assign metacell to a cell line
 #' SC2cellline  <- supercell_assign(clusters = cell.meta, # single-cell assigment to cell lines
-#'                                  supercell_membership = SC$membership) # single-cell assignment to super-cells
+#'                                  supercell_membership = SC$membership) # single-cell assignment to metacells
 #'
-#' # Plot super-cell network colored by cell line
+#' # Plot metacell network colored by cell line
 #' supercell_plot(SC$graph.supercells, # network
 #'                group = SC2cellline, # group assignment
-#'                main = "Super-cell colored by cell line assignment",
+#'                main = "Metacell colored by cell line assignment",
 #'                lay.method = 'nicely')
 #' }
 #'
@@ -166,4 +166,118 @@ supercell_plot <- function(SC.nw,
   }
 }
 
+
+#' Plot metacell 2D plot (PCA, UMAP, tSNE etc)
+#'
+#' Plots 2d representation of metacells
+#'
+#' @param SC SuperCell computed metacell object (the output of \link{SCimplify})
+#' @param group an assigment of metacells to any group (for ploting in different colors)
+#' @param color.use colros to use for groups, if \code{NULL}, an automatic palette of colors will be applied
+#' @param dim.name name of the dimensionality reduction to plot (must be a field in \code{SC})
+#' @param alpha a rotation of the layout (either provided or computed)
+#' @param seed a random seed used to compute graph layout
+#' @param title a title of a plot
+#' @param do.sqtr.rescale  whether to sqrt-scale node size (to balance plot if some metacells are large and covers smaller metacells)
+#' @return \link[ggplot2]{ggplot}
+#'
+#' @examples
+#' \dontrun{
+#' data(cell_lines) # list with GE - gene expression matrix (logcounts), meta - cell meta data
+#' GE <- cell_lines$GE
+#' cell.meta <- cell_lines$meta
+#'
+#' SC <- SCimplify(GE,  # gene expression matrix
+#'                 gamma = 20) # graining level
+#'
+#' # Assign metacell to a cell line
+#' SC2cellline  <- supercell_assign(clusters = cell.meta, # single-cell assigment to cell lines
+#'                                  supercell_membership = SC$membership) # single-cell assignment to metacells
+#'
+#'
+#' SC$PCA <- supercell_prcomp(SC)
+#'
+#' supercell_DimPlot(SC, groups = SC2cellline, dim.name = "PCA")
+#'
+#' }
+#'
+#' @export
+
+supercell_DimPlot <- function(
+  SC,
+  groups = NULL,
+  dim.name = "PCA",
+  dim.1 = 1,
+  dim.2 = 2,
+  color.use = NULL,
+  asp = 1,
+  alpha = 0.7,
+  title = NULL,
+  do.sqtr.rescale = FALSE,
+  ...
+){
+
+  N.SC <- SC$N.SC
+
+  if(!(dim.name %in% names(SC))){
+    stop(paste("dim.name", dim.name,
+               "field is not found in SC. Please,
+               compute dimensionality reduction or assign `SC[[dim.name]]` to a layout result.
+               For instance, `SC[[dim.name]] <- supercell_tSNE(SC)`"))
+  }
+
+  if(length(groups) == 1){ #groups stands for SC field name
+    if(!(groups %in% names(SC))){
+      stop(paste("groups", groups, "is not found in SC. Please provide correct  group name field"))
+    }
+    real_groups <- SC[[groups]]
+  } else {
+    real_groups <- groups
+  }
+
+  if(length(real_groups) != N.SC){
+    stop(paste0("Length of groups (n = ", length(real_groups), ") != real number of super-cells (n = ", N.SC, ")"))
+  }
+
+  if(is.list(SC[[dim.name]])){
+    lay <- SC[[dim.name]]$layout
+  } else {
+    lay <- SC[[dim.name]]
+  }
+
+  colnames(lay) <- NULL
+
+  if(max(dim.1, dim.2) > ncol(lay)){
+    warning(paste("dim.1 or dim.2 are out of bounds, the default values are set (dim.1 <- 1, dim.2 <- 2)"))
+    dim.1 <- 1
+    dim.2 <- 2
+  }
+  lay.df                <- data.frame(lay[,c(dim.1, dim.2)])
+  lay.df$groups         <- real_groups
+  lay.df$supercell_size <- SC$supercell_size
+  lay.df$size           <- SC$supercell_size
+
+  if(do.sqtr.rescale){
+    lay.df$size <- sqrt(lay.df$size)
+  }
+
+  g <- ggplot2::ggplot(
+    lay.df,
+    ggplot2::aes(x = X1, y = X2, color = groups, fill = groups, size = size)
+  ) +
+    ggplot2::scale_size_continuous(range = c(0.5, 0.5*max(log1p((SC$supercell_size))))) +
+    ggplot2::labs(x = paste0(dim.name, "-", dim.1), y = paste0(dim.name, "-", dim.2),  title = title) +
+    ggplot2::geom_point(alpha = alpha) +
+    ggplot2::theme_classic() +
+    ggplot2::theme(asp = asp)
+
+  if(!is.null(color.use)){
+    g <- g + ggplot2::scale_color_manual(values = color.use)
+    g <- g + ggplot2::scale_fill_manual(values = color.use)
+  }
+
+  plot(g)
+
+  return(invisible(g))
+}
 

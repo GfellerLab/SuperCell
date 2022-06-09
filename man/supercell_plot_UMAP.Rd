@@ -3,6 +3,7 @@
 \name{supercell_plot_UMAP}
 \alias{supercell_plot_UMAP}
 \title{Plot super-cell UMAP
+(Use \link{supercell_DimPlot} instead)
 Plots super-cell UMAP (result of \link{supercell_UMAP})}
 \usage{
 supercell_plot_UMAP(
@@ -16,10 +17,18 @@ supercell_plot_UMAP(
   ...
 )
 }
+\arguments{
+\item{SC}{super-cell structure (output of \link{SCimplify}) with a field \code{UMAP_name} containing UMAP result}
+
+\item{groups}{coloring metacells by groups}
+
+\item{UMAP_name}{the mane of the field containing UMAP result}
+}
 \value{
 \link[ggplot2]{ggplot}
 }
 \description{
 Plot super-cell UMAP
+(Use \link{supercell_DimPlot} instead)
 Plots super-cell UMAP (result of \link{supercell_UMAP})
 }
