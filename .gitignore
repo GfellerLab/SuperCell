@@ -2,9 +2,19 @@
 .Rhistory
 .Ruserdata
 .RData
+.RDs
+.Rds
 .Rbuildignore
 .DS_Store
 *.pdf
 #*.html
+*.docx
+
 
 !License.pdf
+#inst/doc
+#/doc/
+/Meta/
+/plots_test/
+/test_GE/
+data/*
