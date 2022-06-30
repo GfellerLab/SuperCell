@@ -4,7 +4,7 @@ Title: Simplification of scRNA-seq data by merging together similar cells
 Version: 1.0
 Author: Mariia Bilous
 Maintainer: The package maintainer <mariia.bilous@unil.ch>
-Description: Aggregates large single-cell data into super-cell dataset by merging together gene expression of very similar cells. 
+Description: Aggregates large single-cell data into metacell dataset by merging together gene expression of very similar cells. 
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
@@ -16,6 +16,7 @@ Imports:
 	weights,
 	Hmisc,
 	Matrix,
+	matrixStats,
 	plyr,
 	irlba,
 	grDevices,
@@ -23,9 +24,12 @@ Imports:
 	ggplot2
 RoxygenNote: 7.1.1
 Suggests:
-	SingleCellExperiment,
-	Seurat,
-	Velocyto.R,
-	MAGIC
+    SingleCellExperiment,
+    Seurat,
+    Velocyto.R,
+    MAGIC,
+    knitr,
+    rmarkdown
 Depends: 
     R (>= 2.10)
+VignetteBuilder: knitr
