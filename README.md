@@ -94,9 +94,9 @@ library(SuperCell)
 ## Examples
 
 1.  [Building and analyzing metacells with
-    SuperCell](./vignettes/SuperCell.Rmd)
+    SuperCell](./vignettes/10-SuperCell.Rmd)
 2.  [RNA velocity applied to SuperCell
-    object](./vignettes/RNAvelocity_for_SuperCell.Rmd)
+    object](./vignettes/20-RNAvelocity_for_SuperCell.Rmd)
 3.  [Building metacells with SuperCell and alayzing them with a standard
     Seurat
     pipeline](https://github.com/GfellerLab/SIB_workshop/blob/main/workbooks/Workbook_1__cancer_cell_lines.md)
