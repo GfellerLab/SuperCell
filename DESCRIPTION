@@ -11,7 +11,7 @@ LazyData: true
 Imports: 
 	igraph, 
 	RANN,
-        WeightedCluster,
+  WeightedCluster,
 	corpcor,
 	weights,
 	Hmisc,
@@ -26,8 +26,6 @@ RoxygenNote: 7.1.1
 Suggests:
     SingleCellExperiment,
     Seurat,
-    Velocyto.R,
-    MAGIC,
     knitr,
     rmarkdown
 Depends: 
