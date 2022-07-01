@@ -139,7 +139,7 @@ supercell_FindMarkers <- function(
     colnames(dd)  <- c("test", "t.value", "df", "p.value", "difference", "mean_x", "mean_y", "std_err")
     rownames(dd)  <- names(w.t.test)
 
-    adj.p.value <- p.adjust(as.vector(dd$p.value), method = p.adjust.methods[4], n = total.number.of.genes)
+    adj.p.value <- stats::p.adjust(as.vector(dd$p.value), method = stats::p.adjust.methods[4], n = total.number.of.genes)
 
     pct.1 <- pct.1[rownames(dd)]
     pct.2 <- pct.2[rownames(dd)]

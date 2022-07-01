@@ -4,7 +4,7 @@
 #' @param group an assigment of metacells to any group (for ploting in different colors)
 #' @param color.use colros to use for groups, if \code{NULL}, an automatic palette of colors will be applied
 #' @param lay.method method to compute layout of the network (for the moment there several available: "nicely"
-#' for \link[igraph]{layout_licely} and "fr" for \link[igraph]{layout_with_fr}, "components" for \link[igraph]{layout_components},
+#' for \link[igraph]{layout_nicely} and "fr" for \link[igraph]{layout_with_fr}, "components" for \link[igraph]{layout_components},
 #' "drl" for \link[igraph]{layout_with_drl}, "graphopt" for \link[igraph]{layout_with_graphopt}). If your dataset has clear clusters, use "components"
 #' @param lay a particular layout of a graph to plot (in is not \code{NULL}, \code{lay.method} is ignored and new layout is not computed)
 #' @param alpha a rotation of the layout (either provided or computed)
@@ -32,8 +32,9 @@
 #'                 gamma = 20) # graining level
 #'
 #' # Assign metacell to a cell line
-#' SC2cellline  <- supercell_assign(clusters = cell.meta, # single-cell assigment to cell lines
-#'                                  supercell_membership = SC$membership) # single-cell assignment to metacells
+#' SC2cellline  <- supercell_assign(
+#'     clusters = cell.meta, # single-cell assignment to cell lines
+#'     supercell_membership = SC$membership) # single-cell assignment to metacells
 #'
 #' # Plot metacell network colored by cell line
 #' supercell_plot(SC$graph.supercells, # network
@@ -172,13 +173,17 @@ supercell_plot <- function(SC.nw,
 #' Plots 2d representation of metacells
 #'
 #' @param SC SuperCell computed metacell object (the output of \link{SCimplify})
-#' @param group an assigment of metacells to any group (for ploting in different colors)
+#' @param groups an assigment of metacells to any group (for ploting in different colors)
+#' @param dim.1 dimension to plot on X-axis
+#' @param dim.2 dimension to plot on Y-axis
 #' @param color.use colros to use for groups, if \code{NULL}, an automatic palette of colors will be applied
 #' @param dim.name name of the dimensionality reduction to plot (must be a field in \code{SC})
+#' @param asp aspect ratio
 #' @param alpha a rotation of the layout (either provided or computed)
-#' @param seed a random seed used to compute graph layout
 #' @param title a title of a plot
 #' @param do.sqtr.rescale  whether to sqrt-scale node size (to balance plot if some metacells are large and covers smaller metacells)
+#'
+#"
 #' @return \link[ggplot2]{ggplot}
 #'
 #' @examples
@@ -191,8 +196,9 @@ supercell_plot <- function(SC.nw,
 #'                 gamma = 20) # graining level
 #'
 #' # Assign metacell to a cell line
-#' SC2cellline  <- supercell_assign(clusters = cell.meta, # single-cell assigment to cell lines
-#'                                  supercell_membership = SC$membership) # single-cell assignment to metacells
+#' SC2cellline  <- supercell_assign(
+#'     clusters = cell.meta, # single-cell assigment to cell lines
+#'     supercell_membership = SC$membership) # single-cell assignment to metacells
 #'
 #'
 #' SC$PCA <- supercell_prcomp(SC)
@@ -213,8 +219,7 @@ supercell_DimPlot <- function(
   asp = 1,
   alpha = 0.7,
   title = NULL,
-  do.sqtr.rescale = FALSE,
-  ...
+  do.sqtr.rescale = FALSE
 ){
 
   N.SC <- SC$N.SC
@@ -263,7 +268,7 @@ supercell_DimPlot <- function(
 
   g <- ggplot2::ggplot(
     lay.df,
-    ggplot2::aes(x = X1, y = X2, color = groups, fill = groups, size = size)
+    ggplot2::aes(x = .data$X1, y = .data$X2, color = .data$groups, fill = .data$groups, size = .data$size)
   ) +
     ggplot2::scale_size_continuous(range = c(0.5, 0.5*max(log1p((SC$supercell_size))))) +
     ggplot2::labs(x = paste0(dim.name, "-", dim.1), y = paste0(dim.name, "-", dim.2),  title = title) +

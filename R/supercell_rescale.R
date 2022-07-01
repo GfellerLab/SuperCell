@@ -2,11 +2,11 @@
 #'
 #' This function recomputes super-cell structure at a different graining level (\code{gamma}) or
 #' for a specific number of super-cells (\code{N.SC})
-#' @param SC.object super-cell object (an output from \code{\link{SCimplify}} function)
+#' @param SC.object super-cell object (an output from \link{SCimplify} function)
 #' @param gamma new grainig level (provide either \code{gamma} or \code{N.SC})
 #' @param N.SC new number of super-cells (provide either \code{gamma} or \code{N.SC})
 #'
-#' @return the same object as \code{\link{SCimplify}} at a new graining level
+#' @return the same object as \link{SCimplify} at a new graining level
 #' @export
 
 

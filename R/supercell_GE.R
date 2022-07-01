@@ -26,7 +26,7 @@ supercell_GE <- function(ge, groups, mode = c("average", "sum"), weights = NULL,
   supercell_size <- as.vector(table(groups))
   j <- rep(1:N.SC, supercell_size) # column indices of matrix M.AV that, whene GE.SC <- ge %M.AV%
 
-  goups.idx  <- plyr:::split_indices(groups)
+  goups.idx  <- plyr::split_indices(groups)
   i <- unlist(goups.idx) # row indices of matrix M.AV that, whene GE.SC <- ge %M.AV%
 
   if(is.null(weights)){
@@ -54,7 +54,7 @@ supercell_GE <- function(ge, groups, mode = c("average", "sum"), weights = NULL,
   }
 
   if(do.median.norm){
-    GE.SC <- (GE.SC+0.01)/apply(GE.SC+0.01, 1, median)
+      GE.SC <- (GE.SC+0.01)/apply(GE.SC+0.01, 1, stats::median)
   }
 
   return(GE.SC)
@@ -94,7 +94,7 @@ supercell_GE_idx  <- function(ge, groups, weights = NULL, do.median.norm = FALSE
   print("N.blocks:")
   print(N.blocks)
 
-  goups.idx    <- plyr:::split_indices(groups)
+  goups.idx    <- plyr::split_indices(groups)
   supercell.GE <- c()
 
   if(N.blocks>0){
@@ -126,7 +126,7 @@ supercell_GE_idx  <- function(ge, groups, weights = NULL, do.median.norm = FALSE
 
   }
   if(do.median.norm){
-    supercell.GE <- (supercell.GE+0.01)/apply(supercell.GE+0.01, 1, median)
+      supercell.GE <- (supercell.GE+0.01)/apply(supercell.GE+0.01, 1, stats::median)
   }
   return(supercell.GE)
 }

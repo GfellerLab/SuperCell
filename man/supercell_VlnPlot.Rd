@@ -42,6 +42,8 @@ supercell_VlnPlot(
 
 \item{y.max}{max of y axis}
 
+\item{y.min}{min of y axis}
+
 \item{same.y.lims}{same y axis for all plots}
 
 \item{adjust}{param of geom_violin}
@@ -49,6 +51,10 @@ supercell_VlnPlot(
 \item{ncol}{number of colums in combined plot}
 
 \item{combine}{combine plots into a single \link[patchwork]{patchwork}ed ggplot object. If FALSE, return a list of ggplot}
+
+\item{angle.text.y}{rotation of y text}
+
+\item{angle.text.x}{rotation of x text}
 }
 \value{
 combined ggplot or list of ggplots if \code{combine = TRUE}

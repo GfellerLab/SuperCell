@@ -14,26 +14,29 @@ supercell_DimPlot(
   asp = 1,
   alpha = 0.7,
   title = NULL,
-  do.sqtr.rescale = FALSE,
-  ...
+  do.sqtr.rescale = FALSE
 )
 }
 \arguments{
 \item{SC}{SuperCell computed metacell object (the output of \link{SCimplify})}
 
+\item{groups}{an assigment of metacells to any group (for ploting in different colors)}
+
 \item{dim.name}{name of the dimensionality reduction to plot (must be a field in \code{SC})}
 
+\item{dim.1}{dimension to plot on X-axis}
+
+\item{dim.2}{dimension to plot on Y-axis}
+
 \item{color.use}{colros to use for groups, if \code{NULL}, an automatic palette of colors will be applied}
+
+\item{asp}{aspect ratio}
 
 \item{alpha}{a rotation of the layout (either provided or computed)}
 
 \item{title}{a title of a plot}
 
 \item{do.sqtr.rescale}{whether to sqrt-scale node size (to balance plot if some metacells are large and covers smaller metacells)}
-
-\item{group}{an assigment of metacells to any group (for ploting in different colors)}
-
-\item{seed}{a random seed used to compute graph layout}
 }
 \value{
 \link[ggplot2]{ggplot}
@@ -51,8 +54,9 @@ SC <- SCimplify(GE,  # gene expression matrix
                 gamma = 20) # graining level
 
 # Assign metacell to a cell line
-SC2cellline  <- supercell_assign(clusters = cell.meta, # single-cell assigment to cell lines
-                                 supercell_membership = SC$membership) # single-cell assignment to metacells
+SC2cellline  <- supercell_assign(
+    clusters = cell.meta, # single-cell assigment to cell lines
+    supercell_membership = SC$membership) # single-cell assignment to metacells
 
 
 SC$PCA <- supercell_prcomp(SC)

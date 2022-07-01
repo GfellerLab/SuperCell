@@ -7,7 +7,7 @@
 sc_mixing_score(SC, clusters)
 }
 \arguments{
-\item{SC}{super-cell object (output of \code{\link{SCimplify}} function)}
+\item{SC}{super-cell object (output of \link{SCimplify} function)}
 
 \item{clusters}{vector of clustering assignment (reference assignment)}
 }

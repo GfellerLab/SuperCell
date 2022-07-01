@@ -13,8 +13,7 @@ supercell_plot_UMAP(
   color.use = NULL,
   asp = 1,
   alpha = 0.7,
-  title = NULL,
-  ...
+  title = NULL
 )
 }
 \arguments{
@@ -23,6 +22,14 @@ supercell_plot_UMAP(
 \item{groups}{coloring metacells by groups}
 
 \item{UMAP_name}{the mane of the field containing UMAP result}
+
+\item{color.use}{colors of groups}
+
+\item{asp}{plot aspect ratio}
+
+\item{alpha}{transparency of}
+
+\item{title}{title of the plot}
 }
 \value{
 \link[ggplot2]{ggplot}

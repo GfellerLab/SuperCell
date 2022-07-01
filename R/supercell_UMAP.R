@@ -4,6 +4,7 @@
 #' @param SC super-cell structure (output of \link{SCimplify}) with a field \code{PCA_name} containing PCA result
 #' @param PCA_name name of \code{SC} field containing result of \link{supercell_prcomp}
 #' @param n.comp number of vector of principal components to use for computing UMAP
+#' @param n_neighbors number of neighbors (parameter of  \link[umap]{umap})
 #' @param ... other parameters of \link[umap]{umap}
 #'
 #' @return \link[umap]{umap} result
@@ -44,8 +45,12 @@ supercell_UMAP <- function(
 #' Plots super-cell UMAP (result of \link{supercell_UMAP})
 #'
 #' @param SC super-cell structure (output of \link{SCimplify}) with a field \code{UMAP_name} containing UMAP result
-#' @param UMAP_name the mane of the field containing UMAP result
 #' @param groups coloring metacells by groups
+#' @param UMAP_name the mane of the field containing UMAP result
+#' @param color.use colors of groups
+#' @param asp plot aspect ratio
+#' @param alpha transparency of
+#' @param title title of the plot
 #'
 #' @return \link[ggplot2]{ggplot}
 #' @export
@@ -57,8 +62,7 @@ supercell_plot_UMAP <- function(
   color.use = NULL,
   asp = 1,
   alpha = 0.7,
-  title = NULL,
-  ...
+  title = NULL
 ){
 
   N.SC <- SC$N.SC

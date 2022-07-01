@@ -3,15 +3,13 @@
 #' This function transforms super-cell gene expression and super-cell partition into \link[SingleCellExperiment]{SingleCellExperiment} object
 #'
 #' @param SC.GE gene expression matrix with genes as rows and cells as columns
-#' @param SC super-cell (output of \code{\link{SCimplify}} function)
+#' @param SC super-cell (output of \link{SCimplify} function)
 #' @param fields which fields of \code{SC} to use as cell metadata
 #' @param var.genes set of genes used as a set of variable features of SingleCellExperiment (by default is the set of genes used to generate super-cells)
 #' @param is.log.normalized whether \code{SC.GE} is log-normalized counts. If yes, then SingleCellExperiment field \code{assay name = 'logcounts'} else \code{assay name = 'counts'}
 #' @param do.center whether to center gene expression matrix to compute PCA
 #' @param do.scale whether to scale gene expression matrix to compute PCA
 #' @param ncomponents number of principal components to compute
-#'
-#' @details
 #'
 #' @return \link[SingleCellExperiment]{SingleCellExperiment} object
 #'
@@ -105,8 +103,7 @@ supercell_2_sce <- function(SC.GE, SC, fields = c(),
                              fast.pca = TRUE,
                              supercell_size = meta$supercell_size,
                              k = ncomponents,
-                             do.scale = do.scale, do.center = do.center,
-                             double.centering = FALSE)
+                             do.scale = do.scale, do.center = do.center)
 
   colnames(my_pca$x) <- paste0('PC', 1:ncol(my_pca$x))
   rownames(my_pca$x) <- NULL

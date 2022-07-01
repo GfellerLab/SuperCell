@@ -1,6 +1,6 @@
 #' Compute mixing of single-cells within supercell
 #'
-#' @param SC super-cell object (output of \code{\link{SCimplify}} function)
+#' @param SC super-cell object (output of \link{SCimplify} function)
 #' @param clusters vector of clustering assignment (reference assignment)
 #'
 #'

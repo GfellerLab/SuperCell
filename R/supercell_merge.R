@@ -27,17 +27,21 @@
 #'
 #' SC.HCC827 <- SCimplify(GE[,cell.idx.HCC827],  # log-normalized gene expression matrix
 #'                 gamma = 20, # graining level
-#'                 n.var.genes = 1000, # number of top varible genes to use for the dimensionality reduction, the list of genes can be provided instead (with 'genes.use')
+#'                 n.var.genes = 1000,
 #'                 k.knn = 5, # k for kNN algorithm
-#'                 n.pc = 10) # number of proncipal components to use
-#' SC.HCC827$cell.line <- supercell_assign(cell.meta[cell.idx.HCC827], supercell_membership = SC.HCC827$membership)
+#'                 n.pc = 10) # number of principal components to use
+#' SC.HCC827$cell.line <- supercell_assign(
+#'     cell.meta[cell.idx.HCC827],
+#'     supercell_membership = SC.HCC827$membership)
 #'
 #' SC.H838 <- SCimplify(GE[,cell.idx.H838],  # log-normalized gene expression matrix
 #'                 gamma = 30, # graining level
-#'                 n.var.genes = 1000, # number of top varible genes to use for the dimensionality reduction, the list of genes can be provided instead (with 'genes.use')
+#'                 n.var.genes = 1000, # number of top var genes to use for the dim reduction
 #'                 k.knn = 5, # k for kNN algorithm
 #'                 n.pc = 15) # number of proncipal components to use
-#' SC.H838$cell.line <- supercell_assign(cell.meta[cell.idx.H838], supercell_membership = SC.H838$membership)
+#' SC.H838$cell.line <- supercell_assign(
+#'     cell.meta[cell.idx.H838],
+#'     supercell_membership = SC.H838$membership)
 #'
 #' SC.merged <- supercell_merge(list(SC.HCC827, SC.H838), fields = c("cell.line"))
 #'
@@ -118,8 +122,10 @@ supercell_merge <- function(
 #'
 #' @return a merged matrix of gene expression
 #'
-#' @examples see examples in \link{supercell_merge}
-#'
+#' @examples
+#' \dontrun{
+#' # see examples in \link{supercell_merge}
+#' }
 #' @export
 
 supercell_mergeGE <- function(

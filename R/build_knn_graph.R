@@ -5,17 +5,22 @@
 #' @param X either distance or matrix of coordinates (rows are samples and cols are coordinates)
 #' @param k kNN parameter
 #' @param from from which data type to build kNN network: "dist" if X is a distance (dissimilarity) or "coordinates" if X is a matrix with coordinates as cols and cells as rows
-#' @param use.nn2 whether use RANN::nn2 method to buid kNN network faster (avaivable only for "coordinates" option)
+#' @param use.nn2  whether use \link[RANN]{nn2} method to buid kNN network faster (available only for "coordinates" option)
 #' @param return_neighbors_order whether return order of neighbors (not available for nn2 option)
 #' @param dist_method method to compute dist (if X is a matrix of coordinates) available: c("cor", "euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski")
 #' @param cor_method if distance is computed as correlation (dist_method == "cor), which type of correlation to use (available: "pearson", "kendall", "spearman")
 #' @param p p param in \code{"dist"} function
 #' @param directed whether to build a directed graph
+#' @param DoSNN whether to apply shared nearest neighbors (default is \code{FALSE})
+#' @param which.snn whether to use \link[bluster]{neighborsToSNNGraph} or \link[dbscan]{sNN} for sNN graph construction
+#' @param pruning quantile to perform edge pruning (default is \code{NULL} - no pruning applied) based on PCA distance distribution
+#' @param kmin keep at least \code{kmin} edges in single-cell graph when pruning applied (idnored if \code{is.null(pruning)})
+#' @param ... other parameters of \link[bluster]{neighborsToSNNGraph} or \link[dbscan]{sNN}
 #'
 #' @return a list with components
 #' \itemize{
 #'   \item graph.knn - igraph object
-#'   \item order - Nxk matrix with indecies of k nearest neighbors ordered by relevance (from 1st to k-th)
+#'   \item order - Nxk matrix with indices of k nearest neighbors ordered by relevance (from 1st to k-th)
 #' }
 #'
 #' @export
@@ -41,7 +46,7 @@ build_knn_graph <- function(
   av.methods <- c("dist", "coordinates")
   method <-  pmatch(from[1], av.methods)
   if(is.na(method)){
-    stop(paste("Unlnown method", from, "Available methods are", paste(av.methods, collapse = ", ")))
+    stop(paste("Unknown method", from, "Available methods are", paste(av.methods, collapse = ", ")))
   }
 
 
@@ -54,7 +59,14 @@ build_knn_graph <- function(
                   If you want to use", dist_method, "distance, please set parameter use.nn2 to FALSE"))}
       mode <- ifelse(directed, 'out', 'all')
 
-      return(build_knn_graph_nn2(X = X, k = k, mode = mode, DoSNN = DoSNN, pruning = pruning, which.snn = which.snn, kmin = kmin, ...))
+      return(build_knn_graph_nn2(
+        X = X,
+        k = k,
+        mode = mode,
+        DoSNN = DoSNN,
+        pruning = pruning,
+        which.snn = which.snn,
+        kmin = kmin, ...))
 
     } else {
       av.dist      <- c("cor", "euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski")
@@ -70,9 +82,9 @@ build_knn_graph <- function(
         if(is.na(cor_method_)){
           stop(paste("Unknown cor method:", cor_method, "Available cor methods are", paste(av.cor_methods)))
         }
-        X <- as.dist(as.matrix(1 - cor(t(X), method = cor_method)))
+        X <- stats::as.dist(as.matrix(1 - stats::cor(t(X), method = cor_method)))
       } else {
-        X <- dist(X, method = dist_method)
+        X <- stats::dist(X, method = dist_method)
       }
     }
   } else {
@@ -95,10 +107,13 @@ build_knn_graph <- function(
 #'
 #' @param X matrix of coordinates (rows are samples and cols are coordinates)
 #' @param k kNN parameter
-#' @param return_neighbors_order whether return order of neighbors
 #' @param mode mode of \link[igraph]{graph_from_adj_list} ('all' -- undirected graph, 'out' -- directed graph)
+#' @param DoSNN whether to apply shared nearest neighbors (default is \code{FALSE})
+#' @param which.snn whether to use \link[bluster]{neighborsToSNNGraph} or \link[dbscan]{sNN} for sNN graph construction
+#' @param pruning quantile to perform edge pruning (default is \code{NULL} - no pruning applied) based on PCA distance distribution
+#' @param kmin keep at least \code{kmin} edges in single-cell graph when pruning applied (idnored if \code{is.null(pruning)})
+#' @param ... other parameters of \link[bluster]{neighborsToSNNGraph} or \link[dbscan]{sNN}
 #'
-
 #' @return a list with components
 #' \itemize{
 #'   \item graph.knn - igraph object
@@ -143,9 +158,9 @@ build_knn_graph_nn2 <- function(
       snn <- bluster::neighborsToSNNGraph(nn2.res$nn.idx, ...)
 
       if(!is.null(pruning)){
-        pca_edje_dist      <- apply(igraph::get.edgelist(snn), 1, function(i){dist(X[i,])})
+        pca_edje_dist      <- apply(igraph::get.edgelist(snn), 1, function(i){stats::dist(X[i,])})
         igraph::E(snn)$pca_edje_dist <- pca_edje_dist
-        pruning_cutoff     <- quantile(pca_edje_dist, pruning)
+        pruning_cutoff     <- stats::quantile(pca_edje_dist, pruning)
         edges_to_remove    <- which(pca_edje_dist > pruning_cutoff)
         snn <- igraph::delete_edges(snn, edges_to_remove)
       }
@@ -162,7 +177,7 @@ build_knn_graph_nn2 <- function(
 
       if(!is.null(pruning)){
         pca_edje_dist      <- as.vector(dbsnn$dist)
-        pruning_cutoff     <- quantile(pca_edje_dist, pruning)
+        pruning_cutoff     <- stats::quantile(pca_edje_dist, pruning)
 
         remove_edges       <- dbsnn$dist > pruning_cutoff
         # keep at least (kmin) edges
@@ -213,7 +228,7 @@ build_knn_graph_nn2 <- function(
     nn2.res$nn.idx   <- nn2.res$nn.idx[,-1]
 
     pca_edje_dist      <- as.vector(nn2.res$nn.dists)
-    pruning_cutoff     <- quantile(pca_edje_dist, pruning)
+    pruning_cutoff     <- stats::quantile(pca_edje_dist, pruning)
 
     remove_edges       <- nn2.res$nn.dists > pruning_cutoff
     # keep at least (kmin) edges
@@ -238,7 +253,7 @@ build_knn_graph_nn2 <- function(
   graph.knn     <- igraph::simplify(graph.knn, remove.multiple = T)
   igraph::E(graph.knn)$weight <- 1
 
-  pca_edje_dist      <- apply(igraph::get.edgelist(graph.knn), 1, function(i){dist(X[i,])})
+  pca_edje_dist      <- apply(igraph::get.edgelist(graph.knn), 1, function(i){stats::dist(X[i,])})
   igraph::E(graph.knn)$pca_edje_dist <- pca_edje_dist
 
   return(res <- list(graph.knn = graph.knn))
@@ -249,29 +264,28 @@ build_knn_graph_nn2 <- function(
 #' Build kNN graph from distance
 #' (used in \code{"build_knn_graph"})
 #'
-#' @param X dist matrix or dist object (preferentially)
+#' @param D dist matrix or dist object (preferentially)
 #' @param k kNN parameter
+#' @param return_neighbors_order whether return order of neighbors (not available for nn2 option)
 #' @param mode mode of \link[igraph]{graph_from_adj_list} ('all' -- undirected graph, 'out' -- directed graph)
 #'
 #' @return a list with components
 #' \itemize{
 #'   \item graph.knn - igraph object
-#'   \item order - Nxk matrix with indecies of k nearest neighbors ordered by relevance (from 1st to k-th)
+#'   \item order - Nxk matrix with indices of k nearest neighbors ordered by relevance (from 1st to k-th)
 #' }
 #'
 
 knn_graph_from_dist <- function(D, k = 5, return_neighbors_order = T, mode = 'all'){
 
   ##print("Start knn_graph_from_dist")
-  if(!is.matrix(D) & class(D) != "dist"){
-    stop("D (X) mast be a matrix or dist!")
+  if(!is.matrix(D) & !inherits(D, "dist")){
+    stop("D mast be a matrix or dist!")
   }
 
-  if(class(D) != "dist"){
-    D <- as.dist(D)
+  if(!inherits(D, "dist")){
+    D <- stats::as.dist(D)
   }
-
-
 
   N        <- (1 + sqrt(1+8*length(D)))/2 # number of cells
 

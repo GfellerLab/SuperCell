@@ -8,26 +8,39 @@ Description: Aggregates large single-cell data into metacell dataset by merging 
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
+LazyDataCompression: xz
 Imports: 
-	igraph, 
-	RANN,
-  WeightedCluster,
-	corpcor,
-	weights,
-	Hmisc,
-	Matrix,
-	matrixStats,
-	plyr,
-	irlba,
-	grDevices,
-	patchwork,
-	ggplot2
+    igraph,
+    RANN,
+    WeightedCluster,
+    corpcor,
+    weights,
+    Hmisc,
+    Matrix,
+    matrixStats,
+    plyr,
+    irlba,
+    grDevices,
+    patchwork,
+    gtools,
+    ggplot2,
+    umap,
+    entropy,
+    Rtsne,
+    bluster,
+    dbscan,
+    cowplot,
+    scales,
+    plotfunctions,
+    proxy,
+    scater
 RoxygenNote: 7.1.1
 Suggests:
     SingleCellExperiment,
     Seurat,
     knitr,
-    rmarkdown
+    rmarkdown,
+    remotes
 Depends: 
     R (>= 2.10)
 VignetteBuilder: knitr

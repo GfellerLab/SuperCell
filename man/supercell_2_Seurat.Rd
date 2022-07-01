@@ -18,7 +18,7 @@ supercell_2_Seurat(
 \arguments{
 \item{SC.GE}{gene expression matrix with genes as rows and cells as columns}
 
-\item{SC}{super-cell (output of \code{\link{SCimplify}} function)}
+\item{SC}{super-cell (output of \link{SCimplify} function)}
 
 \item{fields}{which fields of \code{SC} to use as cell metadata}
 
@@ -29,6 +29,8 @@ supercell_2_Seurat(
 \item{do.center}{whether to center gene expression matrix to compute PCA}
 
 \item{do.scale}{whether to scale gene expression matrix to compute PCA}
+
+\item{N.comp}{number of principal components to use for construction of single-cell kNN network}
 }
 \value{
 \link[Seurat]{Seurat} object
@@ -39,8 +41,8 @@ This function transforms super-cell gene expression and super-cell partition int
 \details{
 Since the input of \link[Seurat]{CreateSeuratObject} should be unnormalized count matrix (UMIs or TPMs, see \link[Seurat]{CreateSeuratObject}).
 Thus, we manually set field \code{`assays$RNA@data`} to \code{SC.GE} if \code{is.log.normalized == TRUE}.
-Avoid running \link[Seurat]{NormilizeData} for the obtained Seurat object, otherwise this will overwtite fieid \code{`assays$RNA@data`}.
-If you have run \link[Seurat]{NormilizeData}, then make sure to replace \code{`assays$RNA@data`} with correct matrix by running
+Avoid running \link[Seurat]{NormalizeData} for the obtained Seurat object, otherwise this will overwrite field \code{`assays$RNA@data`}.
+If you have run \link[Seurat]{NormalizeData}, then make sure to replace \code{`assays$RNA@data`} with correct matrix by running
 \code{`your_seurat@assays$RNA@data <- your_seurat@assays$RNA@counts`}.
 
 Since super-cells have different size (consist of different number of single cells), we use sample-weighted algorithms for all

@@ -4,7 +4,8 @@
 #' @param ge a gene expression vector (same length as number of super-cells)
 #' @param color.use colors of gradient
 #' @param n.color.gradient number of bins of the gradient, default is 10
-#' @param legend.side a side parameter of \link[plotfunctions]{gradientLegend} fucntion (default is 4)
+#' @param main plot title
+#' @param legend.side a side parameter of \link[plotfunctions]{gradientLegend} function (default is 4)
 #' @param gene.name name of gene of for which gene expression is plotted
 #' @param ... rest of the parameters of \link{supercell_plot} function
 
@@ -16,21 +17,10 @@ supercell_plot_GE <- function(SC.nw,
                               ge,
                               color.use = c("gray", "blue"),
                               n.color.gradient = 10,
-                              lay.method = c("nicely", "fr", "components", "drl", "graphopt", "dh"),
-                              lay = NULL,
-                              alpha = 0,
-                              seed = 12345,
                               main = NA,
-                              do.frames = TRUE,
-                              do.extra.log.rescale = FALSE,
-                              do.directed = FALSE,
-                              log.base = 2,
-                              do.extra.sqtr.rescale = FALSE,
-                              frame.color = "black",
-                              weights = NULL,
-                              min.cell.size = 0,
                               legend.side = 4,
-                              gene.name = NULL){
+                              gene.name = NULL,
+                              ...){
 
   if(length(ge) != igraph::vcount(SC.nw)){
     stop("ge must be the same length as number of super-cells")
@@ -42,7 +32,7 @@ supercell_plot_GE <- function(SC.nw,
 
   areColors <- function(x) {
     sapply(x, function(X) {
-      tryCatch(is.matrix(col2rgb(X)),
+        tryCatch(is.matrix(grDevices::col2rgb(X)),
                error = function(e) FALSE)
     })
   }
@@ -69,23 +59,13 @@ supercell_plot_GE <- function(SC.nw,
     group <- as.character(rep(1, length(ge)))
   }
 
-  p <- supercell_plot(SC.nw = SC.nw,
-                   group = group,
-                   color.use = color.gradient[unique(group)],
-                   lay.method = lay.method,
-                   lay = lay,
-                   alpha = alpha,
-                   seed = seed,
-                   main = paste(main, gene.name),
-                   do.frames = do.frames,
-                   do.extra.log.rescale = do.extra.log.rescale,
-                   do.directed = do.directed,
-                   log.base = log.base,
-                   do.extra.sqtr.rescale = do.extra.sqtr.rescale,
-                   frame.color = frame.color,
-                   weights = weights,
-                   min.cell.size = min.cell.size,
-                   return.meta = TRUE)
+  p <- supercell_plot(
+    SC.nw = SC.nw,
+    group = group,
+    color.use = color.gradient[unique(group)],
+    main = paste(main, gene.name),
+    return.meta = TRUE,
+    ...)
 
 
   p$p

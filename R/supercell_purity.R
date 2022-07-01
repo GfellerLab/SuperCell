@@ -2,7 +2,7 @@
 #'
 #'
 #' @param clusters vector of clustering assignment (reference assignment)
-#' @param supercell_membership vector of assignment of single-cell data to super-cells (membership field of \code{\link{SCimplify}} function output)
+#' @param supercell_membership vector of assignment of single-cell data to super-cells (membership field of \link{SCimplify} function output)
 #' @param method method to compute super-cell purity.
 #' \code{"max_proportion"} if the purity is defined as a proportion of the most abundant cluster (cell type) within super-cell or
 #' \code{"entropy"} if the purity is defined as the Shanon entropy of the cell types super-cell consists of.

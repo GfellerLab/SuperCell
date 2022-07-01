@@ -1,13 +1,16 @@
 #' Run RNAvelocity for super-cells (slightly modified from \link[velocyto.R]{gene.relative.velocity.estimates})
 #' Not yet adjusted for super-cell size (not sample-weighted)
 #'
-#' @param emat spliced (exonic) count matrix
-#' @param nmat unspliced (nascent) count matrix
+#' @param emat spliced (exonic) count matrix (see \link[velocyto.R]{gene.relative.velocity.estimates})
+#' @param nmat unspliced (nascent) count matrix (\link[velocyto.R]{gene.relative.velocity.estimates})
+#' @param smat optional spanning read matrix (used in offset calculations) (\link[velocyto.R]{gene.relative.velocity.estimates})
 #' @param membership supercell membership ('membership' field of \link{SCimplify})
 #' @param supercell_size a vector with supercell size (if emat and nmat provided at super-cell level)
+#' @param do.run.avegaring whether to run averaging of emat & nmat (if nmat provided at a single-cell level)
+#' @param kCells number of k nearest neighbors (NN) to use in slope calculation smoothing (see \link[velocyto.R]{gene.relative.velocity.estimates})
 #' @param ... other parameters from \link[velocyto.R]{gene.relative.velocity.estimates}
 #'
-#' @return reslts of \link[velocyto.R]{gene.relative.velocity.estimates} plus
+#' @return results of \link[velocyto.R]{gene.relative.velocity.estimates} plus metacell size vector
 #' @export
 
 
@@ -56,8 +59,14 @@ supercell_estimate_velocity <- function(emat,
     N.SC <- ncol(emat)
   }
 
-  rel.velocity <- velocyto.R::gene.relative.velocity.estimates(emat = emat, nmat = nmat, smat = smat, kCells = kCells,
-                                                                ...)
+  rel.velocity <- NA
+  if (requireNamespace("velocyto.R", quietly=TRUE)) {
+    rel.velocity <- velocyto.R::gene.relative.velocity.estimates(emat = emat, nmat = nmat, smat = smat, kCells = kCells,
+                                                                 ...)
+  } else {
+    warning("Would need velocyto.R for rel.velocity")  # message optional
+  }
+
 
   rel.velocity$is_weighted <- FALSE ## for the moment, the weighted version of rna-velocity is under development
   rel.velocity$supercell_size <- supercell_size

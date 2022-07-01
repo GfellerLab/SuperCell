@@ -3,10 +3,14 @@
 #' @param emat spliced (exonic) count matrix
 #' @param nmat unspliced (nascent) count matrix
 #' @param gamma graining level of data (proportion of number of single cells in the initial dataset to the number of super-cells in the final dataset)
-#' @param ... other parameters from Scimplify
+#' @param membership metacell membership vector (if provided, will be used for \code{emat}, \code{nmat} metacell matrices averaging)
+#' @param ... other parameters from \link{SCimplify}
 #'
 #' @return list containing vector of membership, spliced count and un-spliced count matrices
 #' @export
+
+
+
 SCimplify_for_velocity <- function(emat,
                                    nmat,
                                    gamma = NULL,
@@ -19,7 +23,7 @@ SCimplify_for_velocity <- function(emat,
                 } else {
 
                         #print("before: counts")
-                        mat <- as(Matrix::as.matrix(emat) + Matrix::as.matrix(nmat), 'sparseMatrix')
+                        mat <- methods::as(Matrix::as.matrix(emat) + Matrix::as.matrix(nmat), 'sparseMatrix')
 
                         #print("before: logp1")
                         ge <- scater::normalizeCounts(mat)
@@ -37,8 +41,8 @@ SCimplify_for_velocity <- function(emat,
 
         #print("before: Create spliced and unspliced counts")
         ## Create spliced and unspliced counts
-        SC.emat <- as(supercell_GE(emat, membership), "sparseMatrix")
-        SC.nmat <- as(supercell_GE(nmat, membership), "sparseMatrix")
+        SC.emat <- methods::as(supercell_GE(emat, membership), "sparseMatrix")
+        SC.nmat <- methods::as(supercell_GE(nmat, membership), "sparseMatrix")
         colnames(SC.emat) <- paste0(1:ncol(SC.emat))
         colnames(SC.nmat) <- paste0(1:ncol(SC.nmat))
         # output

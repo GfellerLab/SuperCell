@@ -13,7 +13,7 @@ supercell_assign(
 \arguments{
 \item{clusters}{a vector of clustering assignment}
 
-\item{supercell_membership}{a vector of assignment of single-cell data to super-cells (membership field of \code{\link{SCimplify}} function output)}
+\item{supercell_membership}{a vector of assignment of single-cell data to super-cells (membership field of \link{SCimplify} function output)}
 
 \item{method}{method to define the most abuldant cell cluster within super-cells. Available: "jaccard" (default), "relative", "absolute".
 \itemize{

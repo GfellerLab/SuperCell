@@ -6,21 +6,22 @@
 #' @param X log-normalized gene expression matrix with rows to be genes and cols to be cells
 #' @param genes.use a vector of genes used to compute PCA
 #' @param genes.exclude a vector of genes to be excluded when computing PCA
-#' @param cell.annotation a vector of cell type anotation, if provided, metacells that contain single cells of different cell type annotation will be split in multiple pure metacell (may result in slightly larger numbe of metacells than expected with a given gamma)
+#' @param cell.annotation a vector of cell type annotation, if provided, metacells that contain single cells of different cell type annotation will be split in multiple pure metacell (may result in slightly larger numbe of metacells than expected with a given gamma)
 #' @param cell.split.condition a vector of cell conditions that must not be mixed in one metacell. If provided, metacells will be split in condition-pure metacell (may result in significantly(!) larger number of metacells than expected)
 #' @param n.var.genes if \code{"genes.use"} is not provided, \code{"n.var.genes"} genes with the largest variation are used
 #' @param gamma graining level of data (proportion of number of single cells in the initial dataset to the number of metacells in the final dataset)
 #' @param k.knn parameter to compute single-cell kNN network
 #' @param do.scale whether to scale gene expression matrix when computing PCA
 #' @param n.pc number of principal components to use for construction of single-cell kNN network
-#' @param fast.pca use irlba::irlba as a faster version of prcomp (one used in Seurat package)
+#' @param fast.pca use \link[irlba]{irlba} as a faster version of prcomp (one used in Seurat package)
 #' @param do.approx compute approximate kNN in case of a large dataset (>50'000)
-#' @param directed whether to build a directed graph
 #' @param approx.N number of cells to subsample for an approximate approach
+#' @param block.size number of cells to map to the nearest metacell at the time (for approx coarse-graining)
 #' @param seed seed to use to subsample cells for an approximate approach
 #' @param igraph.clustering clustering method to identify metacells (available methods "walktrap" (default) and "louvain" (not recommended, gamma is ignored)).
 #' @param return.singlecell.NW whether return single-cell network (which consists of approx.N if \code{"do.approx"} or all cells otherwise)
 #' @param return.hierarchical.structure whether return hierarchical structure of metacell
+#' @param ... other parameters of \link{build_knn_graph} function
 #'
 #' @return a list with components
 #' \itemize{
@@ -48,10 +49,10 @@
 #'
 #' SC <- SCimplify(GE,  # log-normalized gene expression matrix
 #'                 gamma = 20, # graining level
-#'                 n.var.genes = 1000, # number of top varible genes to use for the dimensionality reduction, the list of genes can be provided instead (with 'genes.use')
+#'                 n.var.genes = 1000,
 #'                 k.knn = 5, # k for kNN algorithm
-#'                 n.pc = 10, # number of proncipal components to use
-#'                 do.approx) # whether to run an approxiate coarse-graining (for large daatasets with N_cells > 50'000)
+#'                 n.pc = 10, # number of principal components to use
+#'                 do.approx) #
 #'
 #' }
 #' @export
@@ -73,17 +74,11 @@ SCimplify <- function(X,
                       fast.pca = TRUE,
                       do.approx = FALSE,
                       approx.N = 20000,
-                      directed = FALSE,
-                      DoSNN = FALSE,
-                      pruning = NULL,
-                      kmin = 0,
-                      use.nn2 = TRUE,
+                      block.size = 10000,
                       seed = 12345,
                       igraph.clustering = c("walktrap", "louvain"),
                       return.singlecell.NW = TRUE,
                       return.hierarchical.structure = TRUE,
-                      block.size = 10000,
-                      which.snn = c("bluster", "dbscan"),
                       ...){
 
   N.c <- ncol(X)
@@ -115,9 +110,9 @@ SCimplify <- function(X,
     if(N.c > 50000){
       set.seed(seed)
       idx         <- sample(N.c, 50000)
-      gene.var    <- apply(X[,idx], 1, var)
+      gene.var    <- apply(X[,idx], 1, stats::var)
     } else {
-      gene.var    <- apply(X, 1, var)
+      gene.var    <- apply(X, 1, stats::var)
     }
 
     genes.use   <- names(sort(gene.var, decreasing = TRUE))[1:n.var.genes]
@@ -168,7 +163,7 @@ SCimplify <- function(X,
   }
 
   if(!fast.pca){
-    PCA.presampled          <- prcomp(X.for.pca, rank. = max(n.pc), scale. = F, center = F)
+      PCA.presampled          <- stats::prcomp(X.for.pca, rank. = max(n.pc), scale. = F, center = F)
   } else {
     set.seed(seed)
     PCA.presampled          <- irlba::irlba(X.for.pca, nv = max(n.pc, 25))
@@ -180,13 +175,13 @@ SCimplify <- function(X,
   sc.nw <- build_knn_graph(
     X = PCA.presampled$x[,n.pc],
     k = k.knn, from = "coordinates",
-    use.nn2 = use.nn2,
+    #use.nn2 = use.nn2,
     dist_method = "euclidean",
-    directed = directed,
-    DoSNN = DoSNN,
-    pruning = pruning,
-    which.snn = which.snn,
-    kmin = kmin,
+    #directed = directed,
+    #DoSNN = DoSNN,
+    #pruning = pruning,
+    #which.snn = which.snn,
+    #kmin = kmin,
     ...
   )
 

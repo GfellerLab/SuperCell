@@ -20,6 +20,10 @@ supercell_tSNE(
 
 \item{n.comp}{number of vector of principal components to use for computing tSNE}
 
+\item{perplexity}{perplexity parameter (parameter of \link[Rtsne]{Rtsne})}
+
+\item{seed}{random seed}
+
 \item{...}{other parameters of \link[Rtsne]{Rtsne}}
 }
 \value{

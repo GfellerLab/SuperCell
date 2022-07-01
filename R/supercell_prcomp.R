@@ -23,7 +23,6 @@ supercell_prcomp <- function(X,
                              k = 20,
                              do.scale = TRUE,
                              do.center = TRUE,
-                             double.centering = FALSE, # depricated
                              fast.pca = TRUE, #
                              seed = 12345) {
   if(is.null(supercell_size)){
@@ -46,7 +45,7 @@ supercell_prcomp <- function(X,
 
   set.seed(seed)
   if(!fast.pca){
-    pca                   <- prcomp(x = X.for.PCA, center = FALSE, scale. = FALSE, rank. = k)
+    pca                   <- stats::prcomp(x = X.for.PCA, center = FALSE, scale. = FALSE, rank. = k)
     pca$center            <- do.center
     pca$scale             <- do.scale
   } else {
@@ -69,41 +68,3 @@ supercell_prcomp <- function(X,
 ## thus, in all my cases, irlba is an approximartion of prcomp, because I usualy do scaling in advance
 ## irlba has less memory allocation and is faster
 
-test_irlba_and_prcomp <- function(){
-  if(0){
-    set.seed(12345)
-    X <- readRDS("./data/5cancer_cell_lines_10x_GE.Rds")
-
-    var.genes <- apply(X, 1, var)
-    var.genes <- order(var.genes, decreasing = T)[1:500]
-
-    Xt <- t(X[var.genes,])
-    #Xt <- scale(Xt, center = T, scale = T)
-
-
-    t.pr <- bench::mark(pr <- prcomp(Xt, rank. = 10, center = F, scale. = F))
-    d.pr <- dist(pr$x)
-    plot(x = pr$x[,1], y = pr$x[,2])
-
-    t.sv <- bench::mark("svd" = {sv <- svd(Xt, nu = 10)
-    sv$x <- sv$u %*% diag(sv$d[1:10])})
-    d.sv <- dist(sv$x)
-    plot(x = sv$x[,1], y = sv$x[,2])
-
-    summary(abs(d.sv - d.pr))
-
-    t.ir.pr <- bench::mark(ir.pr <- irlba::prcomp_irlba(Xt, n = 10))
-    t.ir.svd <- bench::mark(ir.svd <- irlba::irlba(Xt, nv = 10))
-
-    ir <- irlba::irlba(Xt, nv = 10)
-    ir$x <- ir$u %*% diag(ir$d)
-    d.ir <- dist(ir$x)
-
-    plot(x = ir$x[,1], y = ir$x[,2])
-
-    summary(abs(d.ir - d.pr))
-
-    pca <- supercell_prcomp(t(X[1:100,]), supercell_size = sample(1:10, ncol(X), replace = T), double.centering = F)
-    pca.dc <- supercell_prcomp(t(X[1:1000,]), supercell_size = sample(1:10, ncol(X), replace = T))
-  }
-}

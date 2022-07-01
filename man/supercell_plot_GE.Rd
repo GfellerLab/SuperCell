@@ -9,21 +9,10 @@ supercell_plot_GE(
   ge,
   color.use = c("gray", "blue"),
   n.color.gradient = 10,
-  lay.method = c("nicely", "fr", "components", "drl", "graphopt", "dh"),
-  lay = NULL,
-  alpha = 0,
-  seed = 12345,
   main = NA,
-  do.frames = TRUE,
-  do.extra.log.rescale = FALSE,
-  do.directed = FALSE,
-  log.base = 2,
-  do.extra.sqtr.rescale = FALSE,
-  frame.color = "black",
-  weights = NULL,
-  min.cell.size = 0,
   legend.side = 4,
-  gene.name = NULL
+  gene.name = NULL,
+  ...
 )
 }
 \arguments{
@@ -35,7 +24,9 @@ supercell_plot_GE(
 
 \item{n.color.gradient}{number of bins of the gradient, default is 10}
 
-\item{legend.side}{a side parameter of \link[plotfunctions]{gradientLegend} fucntion (default is 4)}
+\item{main}{plot title}
+
+\item{legend.side}{a side parameter of \link[plotfunctions]{gradientLegend} function (default is 4)}
 
 \item{gene.name}{name of gene of for which gene expression is plotted}
 

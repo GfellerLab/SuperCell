@@ -13,7 +13,9 @@ SCimplify_for_velocity(emat, nmat, gamma = NULL, membership = NULL, ...)
 
 \item{gamma}{graining level of data (proportion of number of single cells in the initial dataset to the number of super-cells in the final dataset)}
 
-\item{...}{other parameters from Scimplify}
+\item{membership}{metacell membership vector (if provided, will be used for \code{emat}, \code{nmat} metacell matrices averaging)}
+
+\item{...}{other parameters from \link{SCimplify}}
 }
 \value{
 list containing vector of membership, spliced count and un-spliced count matrices

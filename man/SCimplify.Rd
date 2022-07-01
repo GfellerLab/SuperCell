@@ -18,17 +18,11 @@ SCimplify(
   fast.pca = TRUE,
   do.approx = FALSE,
   approx.N = 20000,
-  directed = FALSE,
-  DoSNN = FALSE,
-  pruning = NULL,
-  kmin = 0,
-  use.nn2 = TRUE,
+  block.size = 10000,
   seed = 12345,
   igraph.clustering = c("walktrap", "louvain"),
   return.singlecell.NW = TRUE,
   return.hierarchical.structure = TRUE,
-  block.size = 10000,
-  which.snn = c("bluster", "dbscan"),
   ...
 )
 }
@@ -39,7 +33,7 @@ SCimplify(
 
 \item{genes.exclude}{a vector of genes to be excluded when computing PCA}
 
-\item{cell.annotation}{a vector of cell type anotation, if provided, metacells that contain single cells of different cell type annotation will be split in multiple pure metacell (may result in slightly larger numbe of metacells than expected with a given gamma)}
+\item{cell.annotation}{a vector of cell type annotation, if provided, metacells that contain single cells of different cell type annotation will be split in multiple pure metacell (may result in slightly larger numbe of metacells than expected with a given gamma)}
 
 \item{cell.split.condition}{a vector of cell conditions that must not be mixed in one metacell. If provided, metacells will be split in condition-pure metacell (may result in significantly(!) larger number of metacells than expected)}
 
@@ -53,13 +47,13 @@ SCimplify(
 
 \item{n.pc}{number of principal components to use for construction of single-cell kNN network}
 
-\item{fast.pca}{use irlba::irlba as a faster version of prcomp (one used in Seurat package)}
+\item{fast.pca}{use \link[irlba]{irlba} as a faster version of prcomp (one used in Seurat package)}
 
 \item{do.approx}{compute approximate kNN in case of a large dataset (>50'000)}
 
 \item{approx.N}{number of cells to subsample for an approximate approach}
 
-\item{directed}{whether to build a directed graph}
+\item{block.size}{number of cells to map to the nearest metacell at the time (for approx coarse-graining)}
 
 \item{seed}{seed to use to subsample cells for an approximate approach}
 
@@ -68,6 +62,8 @@ SCimplify(
 \item{return.singlecell.NW}{whether return single-cell network (which consists of approx.N if \code{"do.approx"} or all cells otherwise)}
 
 \item{return.hierarchical.structure}{whether return hierarchical structure of metacell}
+
+\item{...}{other parameters of \link{build_knn_graph} function}
 }
 \value{
 a list with components
@@ -99,10 +95,10 @@ GE <- cell_lines$GE
 
 SC <- SCimplify(GE,  # log-normalized gene expression matrix
                 gamma = 20, # graining level
-                n.var.genes = 1000, # number of top varible genes to use for the dimensionality reduction, the list of genes can be provided instead (with 'genes.use')
+                n.var.genes = 1000,
                 k.knn = 5, # k for kNN algorithm
-                n.pc = 10, # number of proncipal components to use
-                do.approx) # whether to run an approxiate coarse-graining (for large daatasets with N_cells > 50'000)
+                n.pc = 10, # number of principal components to use
+                do.approx) #
 
 }
 }

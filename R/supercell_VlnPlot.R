@@ -11,10 +11,13 @@
 #' @param pt.size point size (0 by default)
 #' @param pch shape of jitter dots
 #' @param y.max max of y axis
+#' @param y.min min of y axis
 #' @param same.y.lims same y axis for all plots
 #' @param adjust param of geom_violin
 #' @param ncol number of colums in combined plot
 #' @param combine combine plots into a single \link[patchwork]{patchwork}ed ggplot object. If FALSE, return a list of ggplot
+#' @param angle.text.x rotation of x text
+#' @param angle.text.y rotation of y text
 #'
 #' @return combined ggplot or list of ggplots if \code{combine = TRUE}
 #' @export
@@ -109,11 +112,15 @@ supercell_VlnPlot <- function(ge,
 #' @param ge1 a gene expression vector (same length as number of super-cells)
 #' @param supercell_size a vector with supercell size (ordered the same way as in \code{ge})
 #' @param clusters a vector with clustering information (ordered the same way as in \code{ge})
+#' @param feature gene to plot
 #' @param color.use colors for idents
 #' @param pt.size point size (0 by default)
 #' @param pch shape of jitter dots
 #' @param y.max max of y axis
+#' @param y.min min of y axis
 #' @param adjust param of geom_violin
+#' @param angle.text.x rotation of x text
+#' @param angle.text.y rotation of y text
 #'
 #' @importFrom ggplot2 ggplot aes_string geom_point scale_size scale_radius geom_violin scale_color_manual
 #' theme element_blank labs scale_color_identity scale_color_distiller geom_jitter aes

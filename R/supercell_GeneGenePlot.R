@@ -195,7 +195,7 @@ supercell_GeneGenePlot_single <- function(ge_x,
 
   membership <- rep(1:N.SC, plot.df$size)
 
-  crt               <- cor.test(plot.df$x[membership], plot.df$y[membership])
+  crt               <- stats::cor.test(plot.df$x[membership], plot.df$y[membership])
   w.cor             <- unname(crt$estimate)
   w.pval            <- unname(crt$p.value)
 

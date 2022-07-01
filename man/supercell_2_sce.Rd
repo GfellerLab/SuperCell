@@ -18,7 +18,7 @@ supercell_2_sce(
 \arguments{
 \item{SC.GE}{gene expression matrix with genes as rows and cells as columns}
 
-\item{SC}{super-cell (output of \code{\link{SCimplify}} function)}
+\item{SC}{super-cell (output of \link{SCimplify} function)}
 
 \item{fields}{which fields of \code{SC} to use as cell metadata}
 
@@ -37,9 +37,6 @@ supercell_2_sce(
 }
 \description{
 This function transforms super-cell gene expression and super-cell partition into \link[SingleCellExperiment]{SingleCellExperiment} object
-}
-\details{
-
 }
 \examples{
 \dontrun{
