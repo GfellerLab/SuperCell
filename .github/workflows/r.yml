@@ -10,7 +10,7 @@ name: R
 
 on:
   push:
-    branches: [ "master", "r-inst" ]
+    branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 
