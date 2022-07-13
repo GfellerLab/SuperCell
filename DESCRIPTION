@@ -5,7 +5,7 @@ Version: 1.0
 Author: Mariia Bilous
 Maintainer: The package maintainer <mariia.bilous@unil.ch>
 Description: Aggregates large single-cell data into metacell dataset by merging together gene expression of very similar cells. 
-License: What license is it under?
+License: file LICENSE
 Encoding: UTF-8
 LazyData: true
 LazyDataCompression: xz
@@ -33,14 +33,18 @@ Imports:
     scales,
     plotfunctions,
     proxy,
-    scater
+    methods,
+    rlang,
 RoxygenNote: 7.1.1
 Suggests:
     SingleCellExperiment,
+    SummarizedExperiment,
+    scater,
     Seurat,
     knitr,
     rmarkdown,
-    remotes
+    remotes,
+    velocyto.R
 Depends: 
-    R (>= 2.10)
+    R (>= 3.5.0)
 VignetteBuilder: knitr

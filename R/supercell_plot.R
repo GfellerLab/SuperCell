@@ -154,7 +154,6 @@ supercell_plot <- function(SC.nw,
   if(return.meta){
     p <- grDevices::recordPlot()
     res <- list(p = p,
-                edgelist = edgelist,
                 lay = lay,
                 lay.rotated = lay.rotated,
                 alpha = alpha,
@@ -208,6 +207,8 @@ supercell_plot <- function(SC.nw,
 #' }
 #'
 #' @export
+#'
+#' @importFrom rlang .data
 
 supercell_DimPlot <- function(
   SC,

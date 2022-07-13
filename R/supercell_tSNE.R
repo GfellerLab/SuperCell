@@ -11,6 +11,8 @@
 #' @return \link[Rtsne]{Rtsne} result
 #'
 #' @export
+#'
+#' @importFrom rlang .data
 supercell_tSNE <- function(
   SC,
   PCA_name = "SC_PCA",
@@ -91,7 +93,7 @@ supercell_plot_tSNE <- function(
 
   g <- ggplot2::ggplot(
     lay.df,
-    ggplot2::aes(x = X1, y = X2, color = groups, fill = groups, size = sqrt(supercell_size))
+    ggplot2::aes(x = .data$X1, y = .data$X2, color = .data$groups, fill = .data$groups, size = sqrt(.data$supercell_size))
   ) +
     ggplot2::scale_size_continuous(range = c(0.5, 0.5*max(log1p((SC$supercell_size))))) +
     ggplot2::labs(x = "tSNE-1", y = "tSNE-2",  title = title) +

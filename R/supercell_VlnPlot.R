@@ -122,10 +122,7 @@ supercell_VlnPlot <- function(ge,
 #' @param angle.text.x rotation of x text
 #' @param angle.text.y rotation of y text
 #'
-#' @importFrom ggplot2 ggplot aes_string geom_point scale_size scale_radius geom_violin scale_color_manual
-#' theme element_blank labs scale_color_identity scale_color_distiller geom_jitter aes
-#' scale_color_gradient guides guide_legend guide_colorbar scale_y_continuous scale_x_continuous element_text
-#' geom_text margin
+#' @importFrom rlang .data
 #'
 
 supercell_VlnPlot_single <- function(ge1,
@@ -157,16 +154,16 @@ supercell_VlnPlot_single <- function(ge1,
 
   if(is.null(y.max)) y.max <- max(ge1)
 
-  g <- ggplot(data = plot.df, aes(x = x, y = y, fill = factor(group))) +
-    geom_violin(scale="width", trim = TRUE, adjust = adjust) +
-    scale_y_continuous(limits = c(y.min, y.max)) +
-    labs(x = "Ident", y = "Expression Level", title = feature) +
+  g <- ggplot2::ggplot(data = plot.df, ggplot2::aes(x = .data$x, y = .data$y, fill = factor(.data$group))) +
+    ggplot2::geom_violin(scale="width", trim = TRUE, adjust = adjust) +
+    ggplot2::scale_y_continuous(limits = c(y.min, y.max)) +
+    ggplot2::labs(x = "Ident", y = "Expression Level", title = feature) +
     cowplot::theme_cowplot()
 
   if(pt.size > 0){
-    g <- g + geom_jitter(data = plot.df.sc, mapping = aes(x = x, y = y, size = pt.size*size),
+    g <- g + ggplot2::geom_jitter(data = plot.df.sc, mapping = ggplot2::aes(x = .data$x, y = .data$y, size = pt.size*.data$size),
                          pch = pch,
-                         position = position_jitterdodge(jitter.width = 1., dodge.width = 0.25))
+                         position = ggplot2::position_jitterdodge(jitter.width = 1., dodge.width = 0.25))
   }
 
   if(!is.null(color.use)){

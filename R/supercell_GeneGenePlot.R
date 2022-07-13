@@ -166,10 +166,7 @@ supercell_GeneGenePlot <- function(ge,
 #' @param pt.size point size (0 by default)
 #' @param alpha transparency of dots
 #'
-#' @importFrom ggplot2 ggplot aes_string geom_point scale_size scale_radius geom_violin scale_color_manual
-#' theme element_blank labs scale_color_identity scale_color_distiller geom_jitter aes
-#' scale_color_gradient guides guide_legend guide_colorbar scale_y_continuous scale_x_continuous element_text
-#' geom_text margin theme_classic
+#' @importFrom rlang .data
 
 supercell_GeneGenePlot_single <- function(ge_x,
                                           ge_y,
@@ -205,24 +202,24 @@ supercell_GeneGenePlot_single <- function(ge_x,
 
   if(length(unique(plot.df$size)) == 1){
 
-     g <- ggplot(plot.df, aes(x = x, y = y, color = identity)) +
-       geom_point(alpha = alpha, size = pt.size)
+     g <- ggplot2::ggplot(plot.df, ggplot2::aes(x = .data$x, y = .data$y, color = .data$identity)) +
+       ggplot2::geom_point(alpha = alpha, size = pt.size)
   } else {
-    g <- ggplot(plot.df, aes(x = x, y = y, color = identity, size = size)) +
-      geom_point(alpha = alpha)
+    g <- ggplot2::ggplot(plot.df, ggplot2::aes(x = .data$x, y = .data$y, color = .data$identity, size = .data$size)) +
+      ggplot2::geom_point(alpha = alpha)
   }
 
   g <- g +
-    scale_x_continuous(limits = c(0, x.max)) +
-    scale_y_continuous(limits = c(0, y.max)) +
-    theme_classic() + theme(asp = 1) + #, legend.position = "none"
-    labs(x = gene_x_name,
-         y = gene_y_name,
-         title = paste0("w_cor = ", signif(w.cor, 2), ", \npval = ", signif(w.pval)))
+    ggplot2::scale_x_continuous(limits = c(0, x.max)) +
+    ggplot2::scale_y_continuous(limits = c(0, y.max)) +
+    ggplot2::theme_classic() + ggplot2::theme(aspect.ratio = 1) + #, legend.position = "none"
+    ggplot2::labs(x = gene_x_name,
+                  y = gene_y_name,
+                  title = paste0("w_cor = ", signif(w.cor, 2), ", \npval = ", signif(w.pval)))
 
 
   if(!is.null(color.use)){
-    g <- g + scale_color_manual(values = color.use)
+    g <- g + ggplot2::scale_color_manual(values = color.use)
   }
 
   res <- list(g = g, w.cor = w.cor, w.pval = w.pval)
