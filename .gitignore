@@ -17,6 +17,5 @@
 /Meta/
 /plots_test/
 /test_GE/
-data/*
+#data/*
 
-/doc/
