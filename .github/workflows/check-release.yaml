@@ -24,7 +24,7 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           dependencies: '"hard"'
-          extra-packages: rcmdcheck
+          extra-packages: rcmdcheck, rmarkdown, knitr, Seurat
 
       - uses: r-lib/actions/check-r-package@v1
         with:
