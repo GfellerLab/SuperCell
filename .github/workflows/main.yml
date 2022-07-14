@@ -1,0 +1,23 @@
+name: Render and Deploy RMarkdown Website
+'on': push
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@master
+      - name: Install Package Dependencies
+        run: |-
+          Rscript -e "install.packages('remotes', repos = 'https://demo.rstudiopm.com/all/__linux__/bionic/latest')"
+          Rscript -e "remotes::install_deps(dependencies = TRUE, repos = 'https://demo.rstudiopm.com/all/__linux__/bionic/latest')"
+      - name: Render Site
+        run: |-
+          Rscript -e "rmarkdown::render_site(encoding = 'UTF-8')"
+          echo "::set-env name=DEPLOY_PATH::$(Rscript -e "cat(rmarkdown::site_config()[['output_dir']])")"
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/master'
+        uses: maxheld83/ghpages@v0.2.0
+        env:
+          BUILD_DIR: $DEPLOY_PATH
+          GH_PAT: ${{ secrets.GH_PAT }}
+    container: rocker/verse:latest
