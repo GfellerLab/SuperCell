@@ -13,6 +13,11 @@ knitr::opts_chunk$set(
 )
 ```
 
+
+[![DOI](https://img.shields.io/badge/DOI%3A-bioRxiv-brightgreen)](https://doi.org/10.1101/2021.06.07.447430)
+[![License](https://img.shields.io/badge/License-LICENSE-green)](./LICENSE)
+[![R-CMD-check](https://github.com/GfellerLab/SuperCell/workflows/R-CMD-check/badge.svg)](https://github.com/GfellerLab/SuperCell/actions)
+
 # Coarse-graining of large single-cell RNA-seq data into metacells
 SuperCell is an R package fpr coarse-grainng large single-cell RNA-seq data into metacells and performing downstream analysis at the metacell level. 
 

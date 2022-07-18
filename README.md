@@ -1,3 +1,7 @@
+[![DOI](https://img.shields.io/badge/DOI%3A-bioRxiv-brightgreen)](https://doi.org/10.1101/2021.06.07.447430)
+[![License](https://img.shields.io/badge/License-LICENSE-green)](./LICENSE)
+[![R-CMD-check](https://github.com/GfellerLab/SuperCell/workflows/R-CMD-check/badge.svg)](https://github.com/GfellerLab/SuperCell/actions)
+
 # Coarse-graining of large single-cell RNA-seq data into metacells
 
 SuperCell is an R package fpr coarse-grainng large single-cell RNA-seq
@@ -103,16 +107,15 @@ library(SuperCell)
 4.  [Data integration of metacells built with
     SuperCell](https://github.com/GfellerLab/SIB_workshop/blob/main/workbooks/Workbook_2__COVID19_integration.md)
 
-## [License](https://github.com/GfellerLab/SuperCell/blob/master/License.pdf)
+## [License](./LICENSE)
 
 SuperCell is developed by the group of David Gfeller at University of
 Lausanne.
 
 SuperCell can be used freely by academic groups for non-commercial
-purposes (see
-[license](https://github.com/GfellerLab/SuperCell/blob/master/License.pdf)).
-The product is provided free of charge, and, therefore, on an “as is”
-basis, without warranty of any kind.
+purposes (see [license](./LICENSE)). The product is provided free of
+charge, and, therefore, on an “as is” basis, without warranty of any
+kind.
 
 FOR-PROFIT USERS
 
