@@ -44,7 +44,9 @@ Suggests:
     knitr,
     rmarkdown,
     remotes,
-    velocyto.R
+    velocyto.R,
+    testthat (>= 3.0.0)
 Depends: 
     R (>= 3.5.0)
 VignetteBuilder: knitr
+Config/testthat/edition: 3

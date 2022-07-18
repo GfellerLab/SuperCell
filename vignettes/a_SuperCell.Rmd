@@ -111,6 +111,7 @@ The quality of assignment can be evaluated with metacell purity (function `super
 purity <- supercell_purity(clusters = cell.meta, 
                            supercell_membership = SC$membership, method = 'entropy')
 hist(purity, main = "Purity of metacells \nin terms of cell line composition")
+SC$purity <- purity
 ```
 
 Some options to plot networks of metacells
