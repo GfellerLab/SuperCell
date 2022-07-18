@@ -4,6 +4,7 @@
 #' @param SC super-cell structure (output of \link{SCimplify}) with a field \code{PCA_name} containing PCA result
 #' @param PCA_name name of \code{SC} field containing result of \link{supercell_prcomp}
 #' @param n.comp number of vector of principal components to use for computing UMAP
+#' @param n_neighbors number of neighbors (parameter of  \link[umap]{umap})
 #' @param ... other parameters of \link[umap]{umap}
 #'
 #' @return \link[umap]{umap} result
@@ -44,11 +45,17 @@ supercell_UMAP <- function(
 #' Plots super-cell UMAP (result of \link{supercell_UMAP})
 #'
 #' @param SC super-cell structure (output of \link{SCimplify}) with a field \code{UMAP_name} containing UMAP result
-#' @param UMAP_name the mane of the field containing UMAP result
 #' @param groups coloring metacells by groups
+#' @param UMAP_name the mane of the field containing UMAP result
+#' @param color.use colors of groups
+#' @param asp plot aspect ratio
+#' @param alpha transparency of
+#' @param title title of the plot
 #'
 #' @return \link[ggplot2]{ggplot}
 #' @export
+#'
+#' @importFrom rlang .data
 
 supercell_plot_UMAP <- function(
   SC,
@@ -57,8 +64,7 @@ supercell_plot_UMAP <- function(
   color.use = NULL,
   asp = 1,
   alpha = 0.7,
-  title = NULL,
-  ...
+  title = NULL
 ){
 
   N.SC <- SC$N.SC
@@ -87,7 +93,7 @@ supercell_plot_UMAP <- function(
 
   g <- ggplot2::ggplot(
     lay.df,
-    ggplot2::aes(x = X1, y = X2, color = groups, fill = groups, size = sqrt(supercell_size))
+    ggplot2::aes(x = .data$X1, y = .data$X2, color = .data$groups, fill = .data$groups, size = sqrt(.data$supercell_size))
   ) +
     ggplot2::scale_size_continuous(range = c(0.5, 0.5*max(log1p((SC$supercell_size))))) +
     ggplot2::labs(x = "UMAP-1", y = "UMAP-2",  title = title) +

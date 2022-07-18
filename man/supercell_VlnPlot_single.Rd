@@ -26,6 +26,8 @@ supercell_VlnPlot_single(
 
 \item{clusters}{a vector with clustering information (ordered the same way as in \code{ge})}
 
+\item{feature}{gene to plot}
+
 \item{color.use}{colors for idents}
 
 \item{pt.size}{point size (0 by default)}
@@ -34,7 +36,13 @@ supercell_VlnPlot_single(
 
 \item{y.max}{max of y axis}
 
+\item{y.min}{min of y axis}
+
 \item{adjust}{param of geom_violin}
+
+\item{angle.text.y}{rotation of y text}
+
+\item{angle.text.x}{rotation of x text}
 }
 \description{
 Used for supercell_VlnPlot

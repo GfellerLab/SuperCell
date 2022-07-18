@@ -11,10 +11,11 @@
 *.docx
 
 
-!License.pdf
+License.pdf
 #inst/doc
 #/doc/
 /Meta/
 /plots_test/
 /test_GE/
-data/*
+#data/*
+

@@ -5,31 +5,48 @@ Version: 1.0
 Author: Mariia Bilous
 Maintainer: The package maintainer <mariia.bilous@unil.ch>
 Description: Aggregates large single-cell data into metacell dataset by merging together gene expression of very similar cells. 
-License: What license is it under?
+License: file LICENSE
 Encoding: UTF-8
 LazyData: true
+LazyDataCompression: xz
 Imports: 
-	igraph, 
-	RANN,
-        WeightedCluster,
-	corpcor,
-	weights,
-	Hmisc,
-	Matrix,
-	matrixStats,
-	plyr,
-	irlba,
-	grDevices,
-	patchwork,
-	ggplot2
+    igraph,
+    RANN,
+    WeightedCluster,
+    corpcor,
+    weights,
+    Hmisc,
+    Matrix,
+    matrixStats,
+    plyr,
+    irlba,
+    grDevices,
+    patchwork,
+    gtools,
+    ggplot2,
+    umap,
+    entropy,
+    Rtsne,
+    bluster,
+    dbscan,
+    cowplot,
+    scales,
+    plotfunctions,
+    proxy,
+    methods,
+    rlang,
 RoxygenNote: 7.1.1
 Suggests:
     SingleCellExperiment,
+    SummarizedExperiment,
+    scater,
     Seurat,
-    Velocyto.R,
-    MAGIC,
     knitr,
-    rmarkdown
+    rmarkdown,
+    remotes,
+    velocyto.R,
+    testthat (>= 3.0.0)
 Depends: 
-    R (>= 2.10)
+    R (>= 3.5.0)
 VignetteBuilder: knitr
+Config/testthat/edition: 3

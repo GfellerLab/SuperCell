@@ -3,15 +3,13 @@
 #' This function transforms super-cell gene expression and super-cell partition into \link[SingleCellExperiment]{SingleCellExperiment} object
 #'
 #' @param SC.GE gene expression matrix with genes as rows and cells as columns
-#' @param SC super-cell (output of \code{\link{SCimplify}} function)
+#' @param SC super-cell (output of \link{SCimplify} function)
 #' @param fields which fields of \code{SC} to use as cell metadata
 #' @param var.genes set of genes used as a set of variable features of SingleCellExperiment (by default is the set of genes used to generate super-cells)
 #' @param is.log.normalized whether \code{SC.GE} is log-normalized counts. If yes, then SingleCellExperiment field \code{assay name = 'logcounts'} else \code{assay name = 'counts'}
 #' @param do.center whether to center gene expression matrix to compute PCA
 #' @param do.scale whether to scale gene expression matrix to compute PCA
 #' @param ncomponents number of principal components to compute
-#'
-#' @details
 #'
 #' @return \link[SingleCellExperiment]{SingleCellExperiment} object
 #'
@@ -75,43 +73,56 @@ supercell_2_sce <- function(SC.GE, SC, fields = c(),
     meta <- cbind(meta, SC.fields)
   }
 
-
-  ## If SC.GE is log-normalized gene expression, than field data has to be rewritten
-  if(is.log.normalized){
-    sce <- SingleCellExperiment::SingleCellExperiment(assays = list(logcounts=SC.GE), # load as normalized data
-                                                      colData = meta,
-                                                      rowData = data.frame(gene_names = SC.GE@Dimnames[[1]]))
-  } else {
-    sce <- SingleCellExperiment::SingleCellExperiment(assays = list(counts=SC.GE),
-                                                      colData = meta,
-                                                      rowData = data.frame(gene_names = SC.GE@Dimnames[[1]]))
-  }
-
-  ## Sample-weighted scaling
-  assay(sce, "scale.data") <- t(as.matrix(corpcor::wt.scale(Matrix::t(SC.GE),
-                                                            w = meta$size,
-                                                            center = do.center,
-                                                            scale = do.scale)))
-
-
+  ## Sort highly variable genes by name
   if(is.null(var.genes)){
     var.genes <- sort(SC$genes.use)
   }
 
-  metadata(sce) <- list(var.genes = var.genes)
+  sce <- NA
+  if(requireNamespace("SingleCellExperiment", quietly=TRUE)){
+    ## If SC.GE is log-normalized gene expression, than field data has to be rewritten
+    if(is.log.normalized){
+      sce <- SingleCellExperiment::SingleCellExperiment(assays = list(logcounts=SC.GE), # load as normalized data
+                                                        colData = meta,
+                                                        rowData = data.frame(gene_names = SC.GE@Dimnames[[1]]))
+    } else {
+      sce <- SingleCellExperiment::SingleCellExperiment(assays = list(counts=SC.GE),
+                                                        colData = meta,
+                                                        rowData = data.frame(gene_names = SC.GE@Dimnames[[1]]))
+    }
+  } else {
+    warning("`supercell_2_sce()` requires `SingleCellExperiment` library to create SingleCellExperiment object")
+  }
+
+  if(requireNamespace("SingleCellExperiment", quietly=TRUE) & requireNamespace("SummarizedExperiment", quietly=TRUE)){
+    ## Sample-weighted scaling
+    SummarizedExperiment::assay(sce, "scale.data") <- t(as.matrix(corpcor::wt.scale(Matrix::t(SC.GE),
+                                                                                    w = meta$size,
+                                                                                    center = do.center,
+                                                                                    scale = do.scale)))
 
 
-  my_pca <- supercell_prcomp(X = Matrix::t(SC.GE), genes.use = var.genes,
-                             fast.pca = TRUE,
-                             supercell_size = meta$supercell_size,
-                             k = ncomponents,
-                             do.scale = do.scale, do.center = do.center,
-                             double.centering = FALSE)
+    ## Storing pre-computed set of HVG
+    SummarizedExperiment::metadata(sce) <- list(var.genes = var.genes)
+  } else {
+    warning("`supercell_2_sce()` requires `SummarizedExperiment` library to create store additional asseys and metadata")
+  }
 
-  colnames(my_pca$x) <- paste0('PC', 1:ncol(my_pca$x))
-  rownames(my_pca$x) <- NULL
-  SingleCellExperiment::reducedDim(sce, "PCA") <- my_pca$x
-  SingleCellExperiment::reducedDim(sce, "PCA_weighted") <- my_pca$x
+  if(requireNamespace("SingleCellExperiment", quietly=TRUE)){
+    my_pca <- supercell_prcomp(X = Matrix::t(SC.GE), genes.use = var.genes,
+                               fast.pca = TRUE,
+                               supercell_size = meta$supercell_size,
+                               k = ncomponents,
+                               do.scale = do.scale, do.center = do.center)
 
+    colnames(my_pca$x) <- paste0('PC', 1:ncol(my_pca$x))
+    rownames(my_pca$x) <- NULL
+    SingleCellExperiment::reducedDim(sce, "PCA") <- my_pca$x
+    SingleCellExperiment::reducedDim(sce, "PCA_weighted") <- my_pca$x
+  } else {
+    warning("`supercell_2_sce()` requires `SingleCellExperiment` library to manipulate SingleCellExperiment objects")
+  }
   return(sce)
 }
+
+

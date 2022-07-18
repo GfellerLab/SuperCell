@@ -13,7 +13,7 @@ supercell_purity(
 \arguments{
 \item{clusters}{vector of clustering assignment (reference assignment)}
 
-\item{supercell_membership}{vector of assignment of single-cell data to super-cells (membership field of \code{\link{SCimplify}} function output)}
+\item{supercell_membership}{vector of assignment of single-cell data to super-cells (membership field of \link{SCimplify} function output)}
 
 \item{method}{method to compute super-cell purity.
 \code{"max_proportion"} if the purity is defined as a proportion of the most abundant cluster (cell type) within super-cell or

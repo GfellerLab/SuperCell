@@ -92,7 +92,7 @@ supercell_silhouette <- function(x, dist, supercell_size = NULL){
 
   result <- list(s = s.matrix,
                  clus.avg.widths = clus.avg.widths,
-                 avg.width = weighted.mean(s, supercell_size))
+                 avg.width = stats::weighted.mean(s, supercell_size))
   return(result)
 
 }

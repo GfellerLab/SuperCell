@@ -13,6 +13,8 @@ supercell_UMAP(SC, PCA_name = "SC_PCA", n.comp = NULL, n_neighbors = 15, ...)
 
 \item{n.comp}{number of vector of principal components to use for computing UMAP}
 
+\item{n_neighbors}{number of neighbors (parameter of  \link[umap]{umap})}
+
 \item{...}{other parameters of \link[umap]{umap}}
 }
 \value{

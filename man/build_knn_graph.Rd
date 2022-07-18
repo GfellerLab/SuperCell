@@ -28,7 +28,7 @@ build_knn_graph(
 
 \item{from}{from which data type to build kNN network: "dist" if X is a distance (dissimilarity) or "coordinates" if X is a matrix with coordinates as cols and cells as rows}
 
-\item{use.nn2}{whether use RANN::nn2 method to buid kNN network faster (avaivable only for "coordinates" option)}
+\item{use.nn2}{whether use \link[RANN]{nn2} method to buid kNN network faster (available only for "coordinates" option)}
 
 \item{return_neighbors_order}{whether return order of neighbors (not available for nn2 option)}
 
@@ -39,12 +39,22 @@ build_knn_graph(
 \item{p}{p param in \code{"dist"} function}
 
 \item{directed}{whether to build a directed graph}
+
+\item{DoSNN}{whether to apply shared nearest neighbors (default is \code{FALSE})}
+
+\item{which.snn}{whether to use \link[bluster]{neighborsToSNNGraph} or \link[dbscan]{sNN} for sNN graph construction}
+
+\item{pruning}{quantile to perform edge pruning (default is \code{NULL} - no pruning applied) based on PCA distance distribution}
+
+\item{kmin}{keep at least \code{kmin} edges in single-cell graph when pruning applied (idnored if \code{is.null(pruning)})}
+
+\item{...}{other parameters of \link[bluster]{neighborsToSNNGraph} or \link[dbscan]{sNN}}
 }
 \value{
 a list with components
 \itemize{
   \item graph.knn - igraph object
-  \item order - Nxk matrix with indecies of k nearest neighbors ordered by relevance (from 1st to k-th)
+  \item order - Nxk matrix with indices of k nearest neighbors ordered by relevance (from 1st to k-th)
 }
 }
 \description{

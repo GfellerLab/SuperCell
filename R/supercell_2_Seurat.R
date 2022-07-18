@@ -4,19 +4,20 @@
 #'
 #'
 #' @param SC.GE gene expression matrix with genes as rows and cells as columns
-#' @param SC super-cell (output of \code{\link{SCimplify}} function)
+#' @param SC super-cell (output of \link{SCimplify} function)
 #' @param fields which fields of \code{SC} to use as cell metadata
 #' @param var.genes set of genes used as a set of variable features of Seurat (by default is the set of genes used to generate super-cells)
 #' @param is.log.normalized whether \code{SC.GE} is log-normalized counts. If yes, then Seurat field \code{data} is replaced with \code{counts} after normalization (see 'Details' section)
 #' @param do.center whether to center gene expression matrix to compute PCA
 #' @param do.scale whether to scale gene expression matrix to compute PCA
+#' @param N.comp number of principal components to use for construction of single-cell kNN network
 #'
 #'
 #' @details
 #' Since the input of \link[Seurat]{CreateSeuratObject} should be unnormalized count matrix (UMIs or TPMs, see \link[Seurat]{CreateSeuratObject}).
 #' Thus, we manually set field \code{`assays$RNA@data`} to \code{SC.GE} if \code{is.log.normalized == TRUE}.
-#' Avoid running \link[Seurat]{NormilizeData} for the obtained Seurat object, otherwise this will overwtite fieid \code{`assays$RNA@data`}.
-#' If you have run \link[Seurat]{NormilizeData}, then make sure to replace \code{`assays$RNA@data`} with correct matrix by running
+#' Avoid running \link[Seurat]{NormalizeData} for the obtained Seurat object, otherwise this will overwrite field \code{`assays$RNA@data`}.
+#' If you have run \link[Seurat]{NormalizeData}, then make sure to replace \code{`assays$RNA@data`} with correct matrix by running
 #' \code{`your_seurat@assays$RNA@data <- your_seurat@assays$RNA@counts`}.
 #'
 #' Since super-cells have different size (consist of different number of single cells), we use sample-weighted algorithms for all
@@ -112,6 +113,7 @@ supercell_2_Seurat <- function(SC.GE, SC, fields = c(),
     m.seurat <- Seurat::ScaleData(m.seurat)
     print("Done: unweighted scaling")
   }
+
   m.seurat@assays$RNA@misc[["scale.data.weighted"]] <- m.seurat@assays$RNA@scale.data
 
   if(is.null(var.genes)){
@@ -125,15 +127,11 @@ supercell_2_Seurat <- function(SC.GE, SC, fields = c(),
   m.seurat <- Seurat::RunPCA(m.seurat, verbose = F, npcs = max(N.comp))
   m.seurat@reductions$pca_seurat <- m.seurat@reductions$pca
 
-
-
   my_pca <- supercell_prcomp(X = Matrix::t(SC.GE[var.genes, ]), genes.use = var.genes,
                              fast.pca = TRUE,
                              supercell_size = meta$supercell_size,
                              k = dim(m.seurat@reductions$pca_seurat)[2],
-                             do.scale = do.scale, do.center = do.center,
-                             double.centering = FALSE)
-
+                             do.scale = do.scale, do.center = do.center)
 
   dimnames(my_pca$x) <- dimnames(m.seurat@reductions$pca_seurat)
   m.seurat@reductions$pca@cell.embeddings  <- my_pca$x
@@ -142,11 +140,12 @@ supercell_2_Seurat <- function(SC.GE, SC, fields = c(),
 
   m.seurat@reductions$pca_weighted         <- m.seurat@reductions$pca
 
-  ## Super-cell netwok:
+  ## Super-cell network:
   ## 1) create graph field
-  m.seurat            <- Seurat::FindNeighbors(m.seurat, compute.SNN = TRUE, verbose = FALSE)
+  m.seurat            <- Seurat::FindNeighbors(m.seurat, compute.SNN = TRUE, verbose = TRUE)
 
   ## 2) add self-loops to our super-cell graph to indicate super-cell size (does not work, as Seurat removes loops...)
+
   if(!is.null(SC$graph.supercells)){
     # SC$graph.supercells <- igraph::add_edges(SC$graph.supercells, edges = rep(1:N.c, each = 2), weight = supercell_size)
     adj.mtx             <- igraph::get.adjacency(SC$graph.supercells, attr = "weight")

@@ -4,11 +4,15 @@
 #' @param SC super-cell structure (output of \link{SCimplify}) with a field \code{PCA_name} containig PCA result
 #' @param PCA_name name of \code{SC} field containing result of \link{supercell_prcomp}
 #' @param n.comp number of vector of principal components to use for computing tSNE
+#' @param perplexity perplexity parameter (parameter of \link[Rtsne]{Rtsne})
+#' @param seed random seed
 #' @param ... other parameters of \link[Rtsne]{Rtsne}
 #'
 #' @return \link[Rtsne]{Rtsne} result
 #'
 #' @export
+#'
+#' @importFrom rlang .data
 supercell_tSNE <- function(
   SC,
   PCA_name = "SC_PCA",
@@ -44,8 +48,12 @@ supercell_tSNE <- function(
 #' Plots super-cell tSNE (result of \link{supercell_tSNE})
 #'
 #' @param SC super-cell structure (output of \link{SCimplify}) with a field \code{tSNE_name} containing tSNE result
-#' @param UMAP_name the mane of the field containing UMAP result
+#' @param tSNE_name the mane of the field containing tSNE result
 #' @param groups coloring metacells by groups
+#' @param color.use colors of groups
+#' @param asp plot aspect ratio
+#' @param alpha transparency of
+#' @param title title of the plot
 #'
 #' @return \link[ggplot2]{ggplot}
 #' @export
@@ -57,8 +65,7 @@ supercell_plot_tSNE <- function(
   color.use = NULL,
   asp = 1,
   alpha = 0.7,
-  title = NULL,
-  ...
+  title = NULL
 ){
 
   N.SC <- SC$N.SC
@@ -86,7 +93,7 @@ supercell_plot_tSNE <- function(
 
   g <- ggplot2::ggplot(
     lay.df,
-    ggplot2::aes(x = X1, y = X2, color = groups, fill = groups, size = sqrt(supercell_size))
+    ggplot2::aes(x = .data$X1, y = .data$X2, color = .data$groups, fill = .data$groups, size = sqrt(.data$supercell_size))
   ) +
     ggplot2::scale_size_continuous(range = c(0.5, 0.5*max(log1p((SC$supercell_size))))) +
     ggplot2::labs(x = "tSNE-1", y = "tSNE-2",  title = title) +

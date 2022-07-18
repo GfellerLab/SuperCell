@@ -17,18 +17,24 @@ supercell_estimate_velocity(
 )
 }
 \arguments{
-\item{emat}{spliced (exonic) count matrix}
+\item{emat}{spliced (exonic) count matrix (see \link[velocyto.R]{gene.relative.velocity.estimates})}
 
-\item{nmat}{unspliced (nascent) count matrix}
+\item{nmat}{unspliced (nascent) count matrix (\link[velocyto.R]{gene.relative.velocity.estimates})}
+
+\item{smat}{optional spanning read matrix (used in offset calculations) (\link[velocyto.R]{gene.relative.velocity.estimates})}
 
 \item{membership}{supercell membership ('membership' field of \link{SCimplify})}
 
 \item{supercell_size}{a vector with supercell size (if emat and nmat provided at super-cell level)}
 
+\item{do.run.avegaring}{whether to run averaging of emat & nmat (if nmat provided at a single-cell level)}
+
+\item{kCells}{number of k nearest neighbors (NN) to use in slope calculation smoothing (see \link[velocyto.R]{gene.relative.velocity.estimates})}
+
 \item{...}{other parameters from \link[velocyto.R]{gene.relative.velocity.estimates}}
 }
 \value{
-reslts of \link[velocyto.R]{gene.relative.velocity.estimates} plus
+results of \link[velocyto.R]{gene.relative.velocity.estimates} plus metacell size vector
 }
 \description{
 Run RNAvelocity for super-cells (slightly modified from \link[velocyto.R]{gene.relative.velocity.estimates})

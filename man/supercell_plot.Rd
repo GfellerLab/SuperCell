@@ -32,7 +32,7 @@ supercell_plot(
 \item{color.use}{colros to use for groups, if \code{NULL}, an automatic palette of colors will be applied}
 
 \item{lay.method}{method to compute layout of the network (for the moment there several available: "nicely"
-for \link[igraph]{layout_licely} and "fr" for \link[igraph]{layout_with_fr}, "components" for \link[igraph]{layout_components},
+for \link[igraph]{layout_nicely} and "fr" for \link[igraph]{layout_with_fr}, "components" for \link[igraph]{layout_components},
 "drl" for \link[igraph]{layout_with_drl}, "graphopt" for \link[igraph]{layout_with_graphopt}). If your dataset has clear clusters, use "components"}
 
 \item{lay}{a particular layout of a graph to plot (in is not \code{NULL}, \code{lay.method} is ignored and new layout is not computed)}
@@ -77,8 +77,9 @@ SC <- SCimplify(GE,  # gene expression matrix
                 gamma = 20) # graining level
 
 # Assign metacell to a cell line
-SC2cellline  <- supercell_assign(clusters = cell.meta, # single-cell assigment to cell lines
-                                 supercell_membership = SC$membership) # single-cell assignment to metacells
+SC2cellline  <- supercell_assign(
+    clusters = cell.meta, # single-cell assignment to cell lines
+    supercell_membership = SC$membership) # single-cell assignment to metacells
 
 # Plot metacell network colored by cell line
 supercell_plot(SC$graph.supercells, # network

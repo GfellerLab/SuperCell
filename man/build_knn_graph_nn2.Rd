@@ -23,7 +23,15 @@ build_knn_graph_nn2(
 
 \item{mode}{mode of \link[igraph]{graph_from_adj_list} ('all' -- undirected graph, 'out' -- directed graph)}
 
-\item{return_neighbors_order}{whether return order of neighbors}
+\item{DoSNN}{whether to apply shared nearest neighbors (default is \code{FALSE})}
+
+\item{which.snn}{whether to use \link[bluster]{neighborsToSNNGraph} or \link[dbscan]{sNN} for sNN graph construction}
+
+\item{pruning}{quantile to perform edge pruning (default is \code{NULL} - no pruning applied) based on PCA distance distribution}
+
+\item{kmin}{keep at least \code{kmin} edges in single-cell graph when pruning applied (idnored if \code{is.null(pruning)})}
+
+\item{...}{other parameters of \link[bluster]{neighborsToSNNGraph} or \link[dbscan]{sNN}}
 }
 \value{
 a list with components

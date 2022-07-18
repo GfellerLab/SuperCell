@@ -16,6 +16,7 @@ a merged matrix of gene expression
 This function merges independent SuperCell objects
 }
 \examples{
-see examples in \link{supercell_merge}
-
+\dontrun{
+# see examples in \link{supercell_merge}
+}
 }

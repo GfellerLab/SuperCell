@@ -8,17 +8,19 @@
 knn_graph_from_dist(D, k = 5, return_neighbors_order = T, mode = "all")
 }
 \arguments{
+\item{D}{dist matrix or dist object (preferentially)}
+
 \item{k}{kNN parameter}
 
-\item{mode}{mode of \link[igraph]{graph_from_adj_list} ('all' -- undirected graph, 'out' -- directed graph)}
+\item{return_neighbors_order}{whether return order of neighbors (not available for nn2 option)}
 
-\item{X}{dist matrix or dist object (preferentially)}
+\item{mode}{mode of \link[igraph]{graph_from_adj_list} ('all' -- undirected graph, 'out' -- directed graph)}
 }
 \value{
 a list with components
 \itemize{
   \item graph.knn - igraph object
-  \item order - Nxk matrix with indecies of k nearest neighbors ordered by relevance (from 1st to k-th)
+  \item order - Nxk matrix with indices of k nearest neighbors ordered by relevance (from 1st to k-th)
 }
 }
 \description{
