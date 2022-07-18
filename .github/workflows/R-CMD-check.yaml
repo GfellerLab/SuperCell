@@ -1,8 +1,14 @@
 # Workflow derived from https://github.com/r-lib/actions/tree/master/examples
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+#
+#  <!-- badges: start -->
+#  [![R-CMD-check](https://github.com/GfellerLab/SuperCell/workflows/R-CMD-check/badge.svg)](https://github.com/GfellerLab/SuperCell/actions)
+#  <!-- badges: end -->
+#
+
 on:
   push:
-    branches: [main, master, 'r-inst']
+    branches: [main, master]
   pull_request:
     branches: [main, master]
 
