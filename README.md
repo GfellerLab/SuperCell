@@ -136,5 +136,5 @@ For scientific questions, please contact Mariia Bilous
 
 If you use SuperCell in a publication, please cite: [Bilous et
 al. Metacells untangle large and complex single-cell transcriptome
-networks, BioRxiv
-(2022).](https://www.biorxiv.org/content/10.1101/2021.06.07.447430v2)
+networks, BMC Bioinformatics
+(2022).](https://doi.org/10.1186/s12859-022-04861-1)
