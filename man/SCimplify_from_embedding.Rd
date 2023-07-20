@@ -6,14 +6,10 @@
 \usage{
 SCimplify_from_embedding(
   X,
-  genes.use = NULL,
-  genes.exclude = NULL,
   cell.annotation = NULL,
   cell.split.condition = NULL,
-  n.var.genes = min(1000, nrow(X)),
   gamma = 10,
   k.knn = 5,
-  do.scale = TRUE,
   n.pc = 10,
   fast.pca = TRUE,
   do.approx = FALSE,
