@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 ```
 
 [![R-CMD-check](https://github.com/GfellerLab/SuperCell/workflows/R-CMD-check/badge.svg)](https://github.com/GfellerLab/SuperCell/actions)
-[![DOI](https://img.shields.io/badge/DOI%3A-bioRxiv-brightgreen)](https://doi.org/10.1101/2021.06.07.447430)
+[![DOI](https://img.shields.io/badge/DOI%3A-10.1186/s12859--022--04861--1-brightgreen)](https://doi.org/10.1186/s12859-022-04861-1)
 [![License](https://img.shields.io/badge/License-LICENSE-green)](./LICENSE)
 
 

@@ -1,5 +1,5 @@
 [![R-CMD-check](https://github.com/GfellerLab/SuperCell/workflows/R-CMD-check/badge.svg)](https://github.com/GfellerLab/SuperCell/actions)
-[![DOI](https://img.shields.io/badge/DOI%3A-bioRxiv-brightgreen)](https://doi.org/10.1101/2021.06.07.447430)
+[![DOI](https://img.shields.io/badge/DOI%3A-10.1186/s12859--022--04861--1-brightgreen)](https://doi.org/10.1186/s12859-022-04861-1)
 [![License](https://img.shields.io/badge/License-LICENSE-green)](./LICENSE)
 
 # Coarse-graining of large single-cell RNA-seq data into metacells
@@ -98,9 +98,9 @@ library(SuperCell)
 ## Examples
 
 1.  [Building and analyzing metacells with
-    SuperCell](./vignettes/a_SuperCell.Rmd)
+    SuperCell](./vignettes/10-SuperCell.Rmd)
 2.  [RNA velocity applied to SuperCell
-    object](./vignettes/c_RNAvelocity_for_SuperCell.Rmd)
+    object](./vignettes/20-RNAvelocity_for_SuperCell.Rmd)
 3.  [Building metacells with SuperCell and alayzing them with a standard
     Seurat
     pipeline](https://github.com/GfellerLab/SIB_workshop/blob/main/workbooks/Workbook_1__cancer_cell_lines.md)
@@ -136,5 +136,5 @@ For scientific questions, please contact Mariia Bilous
 
 If you use SuperCell in a publication, please cite: [Bilous et
 al. Metacells untangle large and complex single-cell transcriptome
-networks, BMC Bioinformatics
-(2022).](https://doi.org/10.1186/s12859-022-04861-1)
+networks, BioRxiv
+(2022).](https://www.biorxiv.org/content/10.1101/2021.06.07.447430v2)
