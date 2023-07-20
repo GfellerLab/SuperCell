@@ -101,6 +101,8 @@ SCimplify <- function(X,
     colnames(X) <- paste("cell", 1:N.c, sep = "_")
   }
 
+  cell.ids <- colnames(X)
+
   keep.genes    <- setdiff(rownames(X), genes.exclude)
   X             <- X[keep.genes,]
 
@@ -127,26 +129,26 @@ SCimplify <- function(X,
 
   if(do.approx & approx.N >= N.c){
     do.approx <- FALSE
-    warning("N.approx is larger or equal to the number of single cells, thus, an exact simplification will be performed")
+    warning("approx.N is larger or equal to the number of single cells, thus, an exact simplification will be performed")
   }
 
   if(do.approx & (approx.N < round(N.c/gamma))){
     approx.N <- round(N.c/gamma)
-    warning(paste("N.approx is set to N.SC", approx.N))
+    warning(paste("approx.N is set to N.SC", approx.N))
   }
 
   if(do.approx & ((N.c/gamma) > (approx.N/3))){
-    warning("N.approx is not much larger than desired number of super-cells, so an approximate simplification may take londer than an exact one!")
+    warning("approx.N is not much larger than desired number of super-cells, so an approximate simplification may take londer than an exact one!")
   }
 
   if(do.approx){
     set.seed(seed)
     approx.N            <- min(approx.N, N.c)
     presample           <- sample(1:N.c, size = approx.N, replace = FALSE)
-    presampled.cell.ids <- colnames(X)[sort(presample)]
-    rest.cell.ids       <- setdiff(colnames(X), presampled.cell.ids)
+    presampled.cell.ids <- cell.ids[sort(presample)]
+    rest.cell.ids       <- setdiff(cell.ids, presampled.cell.ids)
   } else {
-    presampled.cell.ids <- colnames(X)
+    presampled.cell.ids <- cell.ids
     rest.cell.ids       <- c()
   }
 
@@ -209,16 +211,12 @@ SCimplify <- function(X,
   if(!is.null(cell.annotation) | !is.null(cell.split.condition)){
     if(is.null(cell.annotation)) cell.annotation <- rep("a", N.c)
     if(is.null(cell.split.condition)) cell.split.condition <- rep("s", N.c)
-    names(cell.annotation) <- names(cell.split.condition) <- colnames(X)
+    names(cell.annotation) <- names(cell.split.condition) <- cell.ids
 
     split.cells <- interaction(cell.annotation[presampled.cell.ids], cell.split.condition[presampled.cell.ids], drop = TRUE)
 
     membership.presampled.intr <- interaction(membership.presampled, split.cells, drop = TRUE)
     membership.presampled <- as.numeric(membership.presampled.intr)
-
-    map.membership <- unique(membership.presampled)
-    names(map.membership) <- unique(as.vector(membership.presampled.intr))
-
     names(membership.presampled) <- presampled.cell.ids
   }
 
@@ -266,11 +264,11 @@ SCimplify <- function(X,
       }
     }
 
-    membership.all       <- c(membership.presampled, membership.omitted)
-    #membership.all       <- membership.all[colnames(X)]
+    membership.all_       <- c(membership.presampled, membership.omitted)
+    #membership.all       <- membership.all[cell.ids]
 
 
-    names_membership.all <- names(membership.all)
+    names_membership.all <- names(membership.all_)
     ## again split super-cells containing cells from different annotation or split conditions
     if(!is.null(cell.annotation) | !is.null(cell.split.condition)){
 
@@ -278,63 +276,36 @@ SCimplify <- function(X,
                                  cell.split.condition[names_membership.all], drop = TRUE)
 
 
-      membership.all.intr <- interaction(membership.all, split.cells, drop = TRUE)
+      membership.all.intr <- interaction(membership.all_, split.cells, drop = TRUE)
 
-      membership.all.intr.v <- as.vector(membership.all.intr)
-      membership.all.intr.v.u <- unique(membership.all.intr.v)
-
-      ## add new nodes to SC.NW
-      adj <- igraph::get.adjlist(SC.NW, mode = "all")
-
-      add.node.id <- igraph::vcount(SC.NW) + 1
-      membership.all.const <- membership.all
-
-      for(i in sort(unique(membership.all.const))){
-
-        cur.sc <- which(membership.all == i)
-        cur.main.node <- membership.all.intr.v[cur.sc[1]]
-        n.add.nodes <- length(unique(membership.all.intr.v[cur.sc])) - 1
-
-        additional.nodes <- setdiff(unique(membership.all.intr.v[cur.sc]), cur.main.node)
-
-        a.n <- 1
-        if(n.add.nodes > 0){
-          f.node.id <- add.node.id
-          l.node.id <- add.node.id + n.add.nodes -1
-
-          for(j in f.node.id:l.node.id){
-
-
-            membership.all[membership.all.intr.v == additional.nodes[a.n]] <- j
-            a.n <- a.n+1
-            adj[[j]] <- c(as.numeric(adj[[i]]), i, f.node.id:l.node.id) # split super-cell node by adding additional node and connecting it to the same neighbours
-            add.node.id <- add.node.id + 1
-          }
-
-          adj[[i]] <- c(as.numeric(adj[[i]]), f.node.id:l.node.id)
-        }
-      }
-
-
-      SC.NW                        <- igraph::graph_from_adj_list(adj, duplicate = F)
-      SC.NW                        <- igraph::as.undirected(SC.NW)
-
+      membership.all      <- as.numeric(membership.all.intr)
 
     }
+
+
     SC.NW                        <- igraph::simplify(SC.NW, remove.loops = T, edge.attr.comb="sum")
     names(membership.all) <- names_membership.all
-    membership.all <- membership.all[colnames(X)]
+    membership.all <- membership.all[cell.ids]
 
   } else {
-    membership.all       <- membership.presampled[colnames(X)]
+    membership.all       <- membership.presampled[cell.ids]
   }
   membership       <- membership.all
 
   supercell_size   <- as.vector(table(membership))
 
   igraph::E(SC.NW)$width         <- sqrt(igraph::E(SC.NW)$weight/10)
-  igraph::V(SC.NW)$size          <- supercell_size
-  igraph::V(SC.NW)$sizesqrt      <- sqrt(igraph::V(SC.NW)$size)
+
+  if(igraph::vcount(SC.NW) == length(supercell_size)){
+    igraph::V(SC.NW)$size          <- supercell_size
+    igraph::V(SC.NW)$sizesqrt      <- sqrt(igraph::V(SC.NW)$size)
+  } else {
+    igraph::V(SC.NW)$size          <- as.vector(table(membership.all_))
+    igraph::V(SC.NW)$sizesqrt      <- sqrt(igraph::V(SC.NW)$size)
+    warning("Supercell graph was not splitted")
+  }
+
+
 
   res <- list(graph.supercells = SC.NW,
               gamma = gamma,
@@ -438,7 +409,7 @@ SCimplify_from_embedding <- function(X,
 
 
   if(is.null(rownames(X))){
-    warning("colnames(X) is Null, \nGene expression matrix X is expected to have cellIDs as colnames! \nCellIDs will be created automatically in a form 'cell_i' ")
+    warning("rownames(X) is Null, \nAn embedding maxtrix X is expected to have cellIDs as colnames! \nCellIDs will be created automatically in a form 'cell_i' ")
     rownames(X) <- paste("cell", 1:N.c, sep = "_")
   }
 
@@ -532,8 +503,7 @@ SCimplify_from_embedding <- function(X,
 
   if(do.approx){
 
-    PCA.averaged.SC      <- as.matrix(Matrix::t(supercell_GE(t(PCA.presampled), groups = membership.presampled)))
-
+    PCA.averaged.SC      <- as.matrix(Matrix::t(supercell_GE(t(PCA.presampled[,n.pc]), groups = membership.presampled)))
 
 
     membership.omitted   <- c()
@@ -550,7 +520,7 @@ SCimplify_from_embedding <- function(X,
 
         cur.rest.cell.ids    <- rest.cell.ids[idx.begin:idx.end]
 
-        PCA.ommited          <- X[cur.rest.cell.ids,]
+        PCA.ommited          <- X[cur.rest.cell.ids,n.pc]
 
         D.omitted.subsampled <- proxy::dist(PCA.ommited, PCA.averaged.SC) ###
 
@@ -561,11 +531,11 @@ SCimplify_from_embedding <- function(X,
       }
     }
 
-    membership.all       <- c(membership.presampled, membership.omitted)
+    membership.all_       <- c(membership.presampled, membership.omitted)
     #membership.all       <- membership.all[cell.ids]
 
 
-    names_membership.all <- names(membership.all)
+    names_membership.all <- names(membership.all_)
     ## again split super-cells containing cells from different annotation or split conditions
     if(!is.null(cell.annotation) | !is.null(cell.split.condition)){
 
@@ -573,49 +543,13 @@ SCimplify_from_embedding <- function(X,
                                  cell.split.condition[names_membership.all], drop = TRUE)
 
 
-      membership.all.intr <- interaction(membership.all, split.cells, drop = TRUE)
+      membership.all.intr <- interaction(membership.all_, split.cells, drop = TRUE)
 
-      membership.all.intr.v <- as.vector(membership.all.intr)
-      membership.all.intr.v.u <- unique(membership.all.intr.v)
-
-      ## add new nodes to SC.NW
-      adj <- igraph::get.adjlist(SC.NW, mode = "all")
-
-      add.node.id <- igraph::vcount(SC.NW) + 1
-      membership.all.const <- membership.all
-
-      for(i in sort(unique(membership.all.const))){
-
-        cur.sc <- which(membership.all == i)
-        cur.main.node <- membership.all.intr.v[cur.sc[1]]
-        n.add.nodes <- length(unique(membership.all.intr.v[cur.sc])) - 1
-
-        additional.nodes <- setdiff(unique(membership.all.intr.v[cur.sc]), cur.main.node)
-
-        a.n <- 1
-        if(n.add.nodes > 0){
-          f.node.id <- add.node.id
-          l.node.id <- add.node.id + n.add.nodes -1
-
-          for(j in f.node.id:l.node.id){
-
-
-            membership.all[membership.all.intr.v == additional.nodes[a.n]] <- j
-            a.n <- a.n+1
-            adj[[j]] <- c(as.numeric(adj[[i]]), i, f.node.id:l.node.id) # split super-cell node by adding additional node and connecting it to the same neighbours
-            add.node.id <- add.node.id + 1
-          }
-
-          adj[[i]] <- c(as.numeric(adj[[i]]), f.node.id:l.node.id)
-        }
-      }
-
-
-      SC.NW                        <- igraph::graph_from_adj_list(adj, duplicate = F)
-      SC.NW                        <- igraph::as.undirected(SC.NW)
-
+      membership.all      <- as.numeric(membership.all.intr)
 
     }
+
+
     SC.NW                        <- igraph::simplify(SC.NW, remove.loops = T, edge.attr.comb="sum")
     names(membership.all) <- names_membership.all
     membership.all <- membership.all[cell.ids]
@@ -628,8 +562,16 @@ SCimplify_from_embedding <- function(X,
   supercell_size   <- as.vector(table(membership))
 
   igraph::E(SC.NW)$width         <- sqrt(igraph::E(SC.NW)$weight/10)
-  igraph::V(SC.NW)$size          <- supercell_size
-  igraph::V(SC.NW)$sizesqrt      <- sqrt(igraph::V(SC.NW)$size)
+
+  if(igraph::vcount(SC.NW) == length(supercell_size)){
+    igraph::V(SC.NW)$size          <- supercell_size
+    igraph::V(SC.NW)$sizesqrt      <- sqrt(igraph::V(SC.NW)$size)
+  } else {
+    igraph::V(SC.NW)$size          <- as.vector(table(membership.all_))
+    igraph::V(SC.NW)$sizesqrt      <- sqrt(igraph::V(SC.NW)$size)
+    warning("Supercell graph was not splitted")
+  }
+
 
   res <- list(graph.supercells = SC.NW,
               gamma = gamma,
@@ -647,6 +589,9 @@ SCimplify_from_embedding <- function(X,
 
   if(return.singlecell.NW){res$graph.singlecell <- sc.nw$graph.knn}
   if(!is.null(cell.annotation) | !is.null(cell.split.condition)){
+    print(paste("length(cell.split.condition)", length(cell.split.condition)))
+    print(paste("length(cell.annotation)", length(cell.annotation)))
+    print(paste("length(res$membership)", length(res$membership)))
     res$SC.cell.annotation. <- supercell_assign(cell.annotation, res$membership)
     res$SC.cell.split.condition. <- supercell_assign(cell.split.condition, res$membership)
   }
