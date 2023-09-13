@@ -6,11 +6,12 @@
 #' @param SC.GE gene expression matrix with genes as rows and cells as columns
 #' @param SC super-cell (output of \link{SCimplify} function)
 #' @param fields which fields of \code{SC} to use as cell metadata
-#' @param var.genes set of genes used as a set of variable features of Seurat (by default is the set of genes used to generate super-cells)
-#' @param is.log.normalized whether \code{SC.GE} is log-normalized counts. If yes, then Seurat field \code{data} is replaced with \code{counts} after normalization (see 'Details' section)
-#' @param do.center whether to center gene expression matrix to compute PCA
-#' @param do.scale whether to scale gene expression matrix to compute PCA
-#' @param N.comp number of principal components to use for construction of single-cell kNN network
+#' @param do.preproc whether to do prepocessing, including data normalization, scaling, HVG, PCA, nearest neighbors, \code{TRUE} by default, change to \code{FALSE} to speed up conversion
+#' @param var.genes set of genes used as a set of variable features of Seurat (by default is the set of genes used to generate super-cells), ignored if \code{!do.preproc}
+#' @param is.log.normalized whether \code{SC.GE} is log-normalized counts. If yes, then Seurat field \code{data} is replaced with \code{counts} after normalization (see 'Details' section), ignored if \code{!do.preproc}
+#' @param do.center whether to center gene expression matrix to compute PCA, ignored if \code{!do.preproc}
+#' @param do.scale whether to scale gene expression matrix to compute PCA, ignored if \code{!do.preproc}
+#' @param N.comp number of principal components to use for construction of single-cell kNN network, ignored if \code{!do.preproc}
 #'
 #'
 #' @details
@@ -43,6 +44,7 @@
 
 supercell_2_Seurat <- function(SC.GE, SC, fields = c(),
                                var.genes = NULL,
+                               do.preproc = TRUE,
                                is.log.normalized = TRUE,
                                do.center = TRUE,
                                do.scale = TRUE,
@@ -90,6 +92,9 @@ supercell_2_Seurat <- function(SC.GE, SC, fields = c(),
   }
   m.seurat <- Seurat::CreateSeuratObject(counts = SC.GE, meta.data = meta)
 
+  if(!do.preproc) return(m.seurat)
+
+  ## Data preprocessing (optional, but recommended)
   ## Normalize data, so Seurat does not generate warning
   m.seurat <- Seurat::NormalizeData(m.seurat)
   print("Done: NormalizeData")

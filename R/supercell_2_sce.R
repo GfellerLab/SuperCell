@@ -5,6 +5,7 @@
 #' @param SC.GE gene expression matrix with genes as rows and cells as columns
 #' @param SC super-cell (output of \link{SCimplify} function)
 #' @param fields which fields of \code{SC} to use as cell metadata
+#' @param do.preproc whether to do prepocessing, including data normalization, scaling, HVG, PCA, nearest neighbors, \code{TRUE} by default, change to \code{FALSE} to speed up conversion
 #' @param var.genes set of genes used as a set of variable features of SingleCellExperiment (by default is the set of genes used to generate super-cells)
 #' @param is.log.normalized whether \code{SC.GE} is log-normalized counts. If yes, then SingleCellExperiment field \code{assay name = 'logcounts'} else \code{assay name = 'counts'}
 #' @param do.center whether to center gene expression matrix to compute PCA
@@ -25,6 +26,7 @@
 
 supercell_2_sce <- function(SC.GE, SC, fields = c(),
                             var.genes = NULL,
+                            do.preproc = TRUE,
                             is.log.normalized = TRUE,
                             do.center = TRUE,
                             do.scale = TRUE,
@@ -93,6 +95,8 @@ supercell_2_sce <- function(SC.GE, SC, fields = c(),
   } else {
     warning("`supercell_2_sce()` requires `SingleCellExperiment` library to create SingleCellExperiment object")
   }
+
+  if(!do.preproc) return(sce)
 
   if(requireNamespace("SingleCellExperiment", quietly=TRUE) & requireNamespace("SummarizedExperiment", quietly=TRUE)){
     ## Sample-weighted scaling

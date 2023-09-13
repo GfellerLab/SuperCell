@@ -1,5 +1,5 @@
 [![R-CMD-check](https://github.com/GfellerLab/SuperCell/workflows/R-CMD-check/badge.svg)](https://github.com/GfellerLab/SuperCell/actions)
-[![DOI](https://img.shields.io/badge/DOI%3A-bioRxiv-brightgreen)](https://doi.org/10.1101/2021.06.07.447430)
+[![DOI](https://img.shields.io/badge/DOI%3A-10.1186/s12859--022--04861--1-brightgreen)](https://doi.org/10.1186/s12859-022-04861-1)
 [![License](https://img.shields.io/badge/License-LICENSE-green)](./LICENSE)
 
 # Coarse-graining of large single-cell RNA-seq data into metacells
@@ -17,12 +17,11 @@ by [*Baran et al., 2019*](https://doi.org/10.1186/s13059-019-1812-2)
 2018*](https://doi:10.1101/gr.230771.117) (bigSCale). More recent
 methods to build *metacells* have been described in [*Ben-Kiki et
 al. 2022*](https://doi.org/10.1186/s13059-022-02667-1) (MetaCell2),
-[*Bilous et al.,
-2022*](https://www.biorxiv.org/content/10.1101/2021.06.07.447430v2)
+[*Bilous et al., 2022*](https://doi.org/10.1186/s12859-022-04861-1)
 (SuperCell) and [*Persad et al.,
-2022*](https://www.biorxiv.org/content/10.1101/2022.04.02.486748v1)
-(SEACells). Despite some differences in the implementation, all the
-methods are network-based and can be summarized as follows:
+2022*](https://doi.org/10.1038/s41587-023-01716-9) (SEACells). Despite
+some differences in the implementation, all the methods are
+network-based and can be summarized as follows:
 
 **1.** A single-cell network is computed based on cell-to-cell
 similarity (in transcriptomic space)

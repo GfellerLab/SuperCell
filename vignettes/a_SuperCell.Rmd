@@ -50,12 +50,23 @@ cell.meta <- cell_lines$meta
 gamma <- 20 # graining level
 k.knn <- 5
 
+# Building metacells from gene expressio (GE)
 SC <- SCimplify(GE,  # gene expression matrix 
                 k.knn = k.knn, # number of nearest neighbors to build kNN network
                 gamma = gamma, # graining level
                 n.var.genes = 1000 # number of the top variable genes to use for dimentionality reduction 
 )
 
+
+# Alternative, metacells can be build from low-dimensional embedding.
+# For this, first compute low-dim embedding and pass it into `SCimplify_from_embedding()`
+if(0){
+  SC_alt <- SCimplify_from_embedding(
+    X = stats::prcomp(Matrix::t(GE[SC$genes.use,]), rank. = 10)$x, # PCA embedding
+    k.knn = k.knn, # number of nearest neighbors to build kNN network
+    gamma = gamma # graining level)
+  )
+}
 
 # plot network of metacells
 
@@ -85,7 +96,7 @@ dim(SC.GE)
 ## Map each metacell to a particular cell line
 
 We now assign each metcell to a particular cell line based on the cell line data, for this, we use function `supercell_assign()`. 
-By default, this function assign each metacell to a cluster with the largest Jaccard coefficient to avoid biases towards very rare or very abundant clusters. Alternatively, assigmnent can be performed using relative (may cause biase towards very small populations) or absolute (may cause biase towards large populations) abundance with `method = "relative"` or `method = "absolute"`, respectively. 
+By default, this function assign each metacell to a cluster with the largest Jaccard coefficient to avoid biases towards very rare or very abundant clusters. Alternatively, assigmnent can be performed using relative (may cause biase towards very small populations) or absolute (may cause bias towards large populations) abundance with `method = "relative"` or `method = "absolute"`, respectively. 
 
 
 ```{r assign metacells to cell line infromation}

@@ -2,6 +2,7 @@
 
 export(SCimplify)
 export(SCimplify_for_velocity)
+export(SCimplify_from_embedding)
 export(anndata_2_supercell)
 export(build_knn_graph)
 export(metacell2_anndata_2_supercell)

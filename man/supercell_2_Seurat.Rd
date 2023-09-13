@@ -9,6 +9,7 @@ supercell_2_Seurat(
   SC,
   fields = c(),
   var.genes = NULL,
+  do.preproc = TRUE,
   is.log.normalized = TRUE,
   do.center = TRUE,
   do.scale = TRUE,
@@ -22,15 +23,17 @@ supercell_2_Seurat(
 
 \item{fields}{which fields of \code{SC} to use as cell metadata}
 
-\item{var.genes}{set of genes used as a set of variable features of Seurat (by default is the set of genes used to generate super-cells)}
+\item{var.genes}{set of genes used as a set of variable features of Seurat (by default is the set of genes used to generate super-cells), ignored if \code{!do.preproc}}
 
-\item{is.log.normalized}{whether \code{SC.GE} is log-normalized counts. If yes, then Seurat field \code{data} is replaced with \code{counts} after normalization (see 'Details' section)}
+\item{do.preproc}{whether to do prepocessing, including data normalization, scaling, HVG, PCA, nearest neighbors, \code{TRUE} by default, change to \code{FALSE} to speed up conversion}
 
-\item{do.center}{whether to center gene expression matrix to compute PCA}
+\item{is.log.normalized}{whether \code{SC.GE} is log-normalized counts. If yes, then Seurat field \code{data} is replaced with \code{counts} after normalization (see 'Details' section), ignored if \code{!do.preproc}}
 
-\item{do.scale}{whether to scale gene expression matrix to compute PCA}
+\item{do.center}{whether to center gene expression matrix to compute PCA, ignored if \code{!do.preproc}}
 
-\item{N.comp}{number of principal components to use for construction of single-cell kNN network}
+\item{do.scale}{whether to scale gene expression matrix to compute PCA, ignored if \code{!do.preproc}}
+
+\item{N.comp}{number of principal components to use for construction of single-cell kNN network, ignored if \code{!do.preproc}}
 }
 \value{
 \link[Seurat]{Seurat} object
