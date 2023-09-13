@@ -43,6 +43,84 @@ test_that("SCimplify of demo data (cell_lines) work correctly (as before)", {
   expect_equal(SC_test$membership, SC$membership, info = "Metacell membweship vector is not preserved")
 })
 
+# Test metacell construction with `SCimplify_from_embedding()`
+# first get embedding used in `SCimplify()`
+X <- cell_lines$GE
+colnames(X) <- colnames(cell_lines$GE)
+rownames(X) <- rownames(cell_lines$GE)
+gamma <- true_gamma
+k.knn <- true_k.knn
+n.var.genes <- 1000
+genes.use <- genes.exclude <- NULL
+fast.pca <- TRUE
+n.pc <- 10
+do.scale <- TRUE
+seed <- 12345
+
+N.c <- ncol(X)
+
+
+if(is.null(rownames(X))){
+  if(!(is.null(genes.use) | is.null(genes.exclude))){
+    stop("rownames(X) is Null \nGene expression matrix X is expected to have genes as rownames")
+  } else {
+    warning("colnames(X) is Null, \nGene expression matrix X is expected to have genes as rownames! \ngenes will be created automatically in a form 'gene_i' ")
+    rownames(X) <- paste("gene", 1:nrow(X), sep = "_")
+  }
+}
+
+if(is.null(colnames(X))){
+  warning("colnames(X) is Null, \nGene expression matrix X is expected to have cellIDs as colnames! \nCellIDs will be created automatically in a form 'cell_i' ")
+  colnames(X) <- paste("cell", 1:N.c, sep = "_")
+}
+
+cell.ids <- colnames(X)
+
+genes.use <- SC_test$genes.use
+X <- X[genes.use,]
+
+
+presampled.cell.ids <- cell.ids
+rest.cell.ids       <- c()
+
+
+X.for.pca            <- Matrix::t(X[genes.use, presampled.cell.ids])
+if(do.scale){ X.for.pca            <- scale(X.for.pca) }
+X.for.pca[is.na(X.for.pca)] <- 0
+
+if(is.null(n.pc[1]) | min(n.pc) < 1){stop("Please, provide a range or a number of components to use: n.pc")}
+if(length(n.pc)==1) n.pc <- 1:n.pc
+
+if(fast.pca & (N.c < 1000)){
+  warning("Normal pca is computed because number of cell is low for irlba::irlba()")
+  fast.pca <- FALSE
+}
+
+if(!fast.pca){
+  PCA.presampled          <- stats::prcomp(X.for.pca, rank. = max(n.pc), scale. = F, center = F)
+} else {
+  set.seed(seed)
+  PCA.presampled          <- irlba::irlba(X.for.pca, nv = max(n.pc, 25))
+  PCA.presampled$x        <- PCA.presampled$u %*% diag(PCA.presampled$d)
+}
+
+rownames(PCA.presampled$x) <- cell.ids
+
+# build metacells using the same PCA as one used in `SCimplify`
+SC_test_from_emb <- SCimplify_from_embedding(
+  X = PCA.presampled$x[,n.pc],
+  gamma = true_gamma,
+  k.knn = true_k.knn
+)
+
+test_that("SCimplify_from_embedding of demo data (cell_lines) work correctly (as SCimplify)", {
+  expect_equal(names(SC_test_from_emb)[1:10], names(SC)[1:10], info = "SC names have been changed")
+  expect_equal(SC_test_from_emb$gamma, SC$gamma, info = "Inconsistent graning level")
+  expect_equal(SC_test_from_emb$do.approx, SC$do.approx, info = "Approximate or exact metacell construction is not preserved")
+  expect_equal(SC_test_from_emb$n.pc, SC$n.pc, info = "Inconsistent number of PC dimension used for metacell construction")
+  expect_equal(SC_test_from_emb$N.SC, SC$N.SC, info = "Inconsistent number of metacells")
+  expect_equal(SC_test_from_emb$membership, SC$membership, info = "Metacell membweship vector is not preserved")
+})
 
 # Test averaging gene expression
 
@@ -101,7 +179,4 @@ test_that("DEA results of demo data (cell_lines) are preserved", {
   expect_equal(markers_test.all.positive[["H838"]], markers.all.positive[["H838"]])
   expect_equal(markers_test.all.positive[["HCC827"]], markers.all.positive[["HCC827"]])
 })
-
-
-
 
