@@ -11,7 +11,6 @@ SCimplify_from_embedding(
   gamma = 10,
   k.knn = 5,
   n.pc = 10,
-  fast.pca = TRUE,
   do.approx = FALSE,
   approx.N = 20000,
   block.size = 10000,
