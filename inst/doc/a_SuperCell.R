@@ -3,7 +3,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "figures/",
-  fig.width = 6, fig.height = 6
+  fig.width = 6, fig.height = 6,
+  eval = TRUE
 )
 
 ## ----library, warning=FALSE, eval=FALSE---------------------------------------
@@ -23,12 +24,22 @@ cell.meta <- cell_lines$meta
 gamma <- 20 # graining level
 k.knn <- 5
 
+# Building metacells from gene expressio (GE)
 SC <- SCimplify(GE,  # gene expression matrix 
                 k.knn = k.knn, # number of nearest neighbors to build kNN network
                 gamma = gamma, # graining level
                 n.var.genes = 1000 # number of the top variable genes to use for dimentionality reduction 
 )
 
+
+# Alternative, metacells can be build from low-dimensional embedding. For this, first compute low-dim embedding and pass it into \code{SCimplify_from_embedding()}
+if(1){
+  SC_alt <- SCimplify_from_embedding(
+    X = stats::prcomp(Matrix::t(GE[SC$genes.use,]), rank. = 10)$x, # PCA embedding
+    k.knn = k.knn, # number of nearest neighbors to build kNN network
+    gamma = gamma # graining level)
+  )
+}
 
 # plot network of metacells
 
@@ -67,6 +78,7 @@ supercell_plot(SC$graph.supercells,
 purity <- supercell_purity(clusters = cell.meta, 
                            supercell_membership = SC$membership, method = 'entropy')
 hist(purity, main = "Purity of metacells \nin terms of cell line composition")
+SC$purity <- purity
 
 ## ----plotting options---------------------------------------------------------
 ## rotate network to be more consistent with the single-cell one
