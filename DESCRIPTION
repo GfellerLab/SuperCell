@@ -9,6 +9,8 @@ License: file LICENSE
 Encoding: UTF-8
 LazyData: true
 LazyDataCompression: xz
+biocViews:
+    Software
 Imports: 
     igraph,
     RANN,
