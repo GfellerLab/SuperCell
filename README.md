@@ -4,7 +4,7 @@
 
 # Coarse-graining of large single-cell RNA-seq data into metacells
 
-SuperCell is an R package fpr coarse-grainng large single-cell RNA-seq
+SuperCell is an R package for coarse-graining large single-cell RNA-seq
 data into metacells and performing downstream analysis at the metacell
 level.
 
