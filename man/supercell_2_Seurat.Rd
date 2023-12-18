@@ -13,7 +13,8 @@ supercell_2_Seurat(
   is.log.normalized = TRUE,
   do.center = TRUE,
   do.scale = TRUE,
-  N.comp = NULL
+  N.comp = NULL,
+  output.assay.version = "v4"
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ supercell_2_Seurat(
 \item{do.scale}{whether to scale gene expression matrix to compute PCA, ignored if \code{!do.preproc}}
 
 \item{N.comp}{number of principal components to use for construction of single-cell kNN network, ignored if \code{!do.preproc}}
+
+\item{output.assay.version}{version of the seurat assay in output, \code{`"v4"`} by default, \code{`"v5"`} requires \link[Seurat]{Seurat} v5 installed.}
 }
 \value{
 \link[Seurat]{Seurat} object
