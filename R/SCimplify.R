@@ -265,7 +265,7 @@ SCimplify <- function(X,
     }
 
     membership.all_       <- c(membership.presampled, membership.omitted)
-    #membership.all       <- membership.all[cell.ids]
+    membership.all        <- membership.all_
 
 
     names_membership.all <- names(membership.all_)
@@ -531,7 +531,7 @@ SCimplify_from_embedding <- function(X,
     }
 
     membership.all_       <- c(membership.presampled, membership.omitted)
-    #membership.all       <- membership.all[cell.ids]
+    membership.all        <- membership.all_
 
 
     names_membership.all <- names(membership.all_)
