@@ -49,7 +49,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -342,10 +342,10 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <div id="rna-velocity-combining-with-metacells-computed-with-supercell" class="section level2">
 <h2>RNA velocity combining with metacells computed with SuperCell</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;remotes&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;remotes&quot;</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;GfellerLab/SuperCell&quot;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SuperCell)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(velocyto.R)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;remotes&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;remotes&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;GfellerLab/SuperCell&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(SuperCell)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">library</span>(velocyto.R)</span></code></pre></div>
 <p>We show an example of how SuperCell can be used prior to velocyto.R
 to compute RNA velocity.</p>
 <div id="load-data-and-compute-metacells-spliced-and-un-spliced-counts" class="section level3">
@@ -353,45 +353,45 @@ to compute RNA velocity.</p>
 <p>We use a built-in <em>pancreas</em> dataset from <a href="https://journals.biologists.com/dev/article/146/12/dev173849/19483/Comprehensive-single-cell-mRNA-profiling-reveals-a">Bastidas-Ponce
 et al. (2019)</a> For RNA velocity, we need spliced and un-spliced count
 matrices.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;pancreas&quot;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>SC_pancreas <span class="ot">&lt;-</span> <span class="fu">SCimplify_for_velocity</span>(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  pancreas<span class="sc">$</span>emat, </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  pancreas<span class="sc">$</span>nmat, </span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">gamma =</span> <span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;pancreas&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>SC_pancreas <span class="ot">&lt;-</span> <span class="fu">SCimplify_for_velocity</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  pancreas<span class="sc">$</span>emat, </span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  pancreas<span class="sc">$</span>nmat, </span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="at">gamma =</span> <span class="dv">10</span>)</span></code></pre></div>
 </div>
 <div id="compute-rna-velocity" class="section level3">
 <h3>Compute RNA velocity</h3>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Vel <span class="ot">&lt;-</span> <span class="fu">supercell_estimate_velocity</span>(SC_pancreas<span class="sc">$</span>emat, SC_pancreas<span class="sc">$</span>nmat)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>Vel <span class="ot">&lt;-</span> <span class="fu">supercell_estimate_velocity</span>(SC_pancreas<span class="sc">$</span>emat, SC_pancreas<span class="sc">$</span>nmat)</span></code></pre></div>
 </div>
 <div id="plot-rna-velocity-on-a-tsnes-coordinates" class="section level3">
 <h3>Plot RNA velocity on a tSNE’s coordinates</h3>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign clusters to metacells based on the given single clustering</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>clusters <span class="ot">&lt;-</span> <span class="fu">supercell_assign</span>(pancreas<span class="sc">$</span>meta<span class="sc">$</span>clusters, SC_pancreas<span class="sc">$</span>membership)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># Assign clusters to metacells based on the given single clustering</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>clusters <span class="ot">&lt;-</span> <span class="fu">supercell_assign</span>(pancreas<span class="sc">$</span>meta<span class="sc">$</span>clusters, SC_pancreas<span class="sc">$</span>membership)</span></code></pre></div>
 <div id="set-up-the-color-scheme" class="section level4">
 <h4>Set up the color scheme</h4>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up the color scheme</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>N.clusters <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(clusters))</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>pal <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">colorRampPalette</span>(RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="dv">8</span>, <span class="at">name=</span> <span class="st">&quot;Set1&quot;</span>))(N.clusters), </span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                <span class="fu">as.character</span>(<span class="fu">unique</span>(clusters))) </span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>color <span class="ot">&lt;-</span> <span class="fu">setNames</span>(pal[<span class="fu">as.character</span>(clusters)], <span class="fu">names</span>(clusters))</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>map_cluster_to_cluster_name <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;Ngn3 low EP&#39;</span>, <span class="st">&#39;Alpha&#39;</span>, <span class="st">&#39;Delta&#39;</span>, <span class="st">&#39;Beta&#39;</span>, <span class="st">&#39;Pre-endocrine&#39;</span>, <span class="st">&#39;Ngn3 high EP&#39;</span>, <span class="st">&#39;Ductal&#39;</span>, <span class="st">&#39;Epsilon&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># Set up the color scheme</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>N.clusters <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(clusters))</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>pal <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">colorRampPalette</span>(RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="dv">8</span>, <span class="at">name=</span> <span class="st">&quot;Set1&quot;</span>))(N.clusters), </span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>                <span class="fu">as.character</span>(<span class="fu">unique</span>(clusters))) </span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>color <span class="ot">&lt;-</span> <span class="fu">setNames</span>(pal[<span class="fu">as.character</span>(clusters)], <span class="fu">names</span>(clusters))</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>map_cluster_to_cluster_name <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;Ngn3 low EP&#39;</span>, <span class="st">&#39;Alpha&#39;</span>, <span class="st">&#39;Delta&#39;</span>, <span class="st">&#39;Beta&#39;</span>, <span class="st">&#39;Pre-endocrine&#39;</span>, <span class="st">&#39;Ngn3 high EP&#39;</span>, <span class="st">&#39;Ductal&#39;</span>, <span class="st">&#39;Epsilon&#39;</span>)</span></code></pre></div>
 </div>
 <div id="plot-tsne" class="section level4">
 <h4>Plot tSNE</h4>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>size <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="dv">1</span><span class="sc">+</span><span class="fu">table</span>(SC_pancreas<span class="sc">$</span>membership))<span class="sc">/</span><span class="fu">sqrt</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">2</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">3</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>tsne10 <span class="ot">&lt;-</span> <span class="fu">tSNE.velocity.plot</span>(Vel, </span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">cell.colors =</span> <span class="fu">ac</span>(color, <span class="at">alpha =</span> <span class="fl">0.6</span>), </span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">scale =</span> <span class="st">&quot;log&quot;</span>, <span class="at">do.par =</span> T,</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                             <span class="at">delta.norm =</span> <span class="cn">FALSE</span>, <span class="at">nPcs =</span> <span class="dv">15</span>, <span class="at">norm.nPcs =</span> <span class="dv">15</span> <span class="sc">*</span> <span class="dv">10</span>, <span class="at">perplexity =</span> <span class="dv">50</span>,</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                             <span class="at">show.grid.flow =</span> <span class="cn">FALSE</span>, <span class="at">grid.n =</span> <span class="dv">20</span>, <span class="at">grid.sd =</span> <span class="cn">NULL</span>, <span class="at">min.grid.cell.mass =</span> <span class="dv">1</span>,</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                             <span class="at">pcount =</span> <span class="dv">1</span>, <span class="at">verbose =</span> <span class="cn">TRUE</span>, <span class="at">min.arrow.median.ratio =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">10</span>,</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>                             <span class="at">max.arrow.quantile =</span> <span class="fl">0.9</span>, <span class="at">arrow.scale =</span> <span class="dv">1</span>, <span class="at">arrow.lwd =</span> <span class="dv">1</span>,</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>                             <span class="at">xlab =</span> <span class="st">&quot;tSNE-x&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;tSNE-y&quot;</span>, <span class="at">size.norm =</span> <span class="cn">FALSE</span>, <span class="at">cex =</span> size</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="at">legend=</span>map_cluster_to_cluster_name,</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill=</span>pal,  <span class="at">cex=</span><span class="fl">0.8</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>size <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="dv">1</span><span class="sc">+</span><span class="fu">table</span>(SC_pancreas<span class="sc">$</span>membership))<span class="sc">/</span><span class="fu">sqrt</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">2</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">3</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>tsne10 <span class="ot">&lt;-</span> <span class="fu">tSNE.velocity.plot</span>(Vel, </span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>                             <span class="at">cell.colors =</span> <span class="fu">ac</span>(color, <span class="at">alpha =</span> <span class="fl">0.6</span>), </span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>                             <span class="at">scale =</span> <span class="st">&quot;log&quot;</span>, <span class="at">do.par =</span> T,</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>                             <span class="at">delta.norm =</span> <span class="cn">FALSE</span>, <span class="at">nPcs =</span> <span class="dv">15</span>, <span class="at">norm.nPcs =</span> <span class="dv">15</span> <span class="sc">*</span> <span class="dv">10</span>, <span class="at">perplexity =</span> <span class="dv">50</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>                             <span class="at">show.grid.flow =</span> <span class="cn">FALSE</span>, <span class="at">grid.n =</span> <span class="dv">20</span>, <span class="at">grid.sd =</span> <span class="cn">NULL</span>, <span class="at">min.grid.cell.mass =</span> <span class="dv">1</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>                             <span class="at">pcount =</span> <span class="dv">1</span>, <span class="at">verbose =</span> <span class="cn">TRUE</span>, <span class="at">min.arrow.median.ratio =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">10</span>,</span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>                             <span class="at">max.arrow.quantile =</span> <span class="fl">0.9</span>, <span class="at">arrow.scale =</span> <span class="dv">1</span>, <span class="at">arrow.lwd =</span> <span class="dv">1</span>,</span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>                             <span class="at">xlab =</span> <span class="st">&quot;tSNE-x&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;tSNE-y&quot;</span>, <span class="at">size.norm =</span> <span class="cn">FALSE</span>, <span class="at">cex =</span> size</span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>)</span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="at">legend=</span>map_cluster_to_cluster_name,</span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a>       <span class="at">fill=</span>pal,  <span class="at">cex=</span><span class="fl">0.8</span>)</span></code></pre></div>
 </div>
 </div>
 </div>

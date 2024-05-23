@@ -3,9 +3,10 @@ Type: Package
 Title: Simplification of scRNA-seq data by merging together similar cells
 Version: 1.0
 Author: Mariia Bilous
-Maintainer: The package maintainer <mariia.bilous@unil.ch>
+Maintainer: The package maintainer <leonard.herault@unil.ch>
 Description: Aggregates large single-cell data into metacell dataset by merging together gene expression of very similar cells. 
 License: file LICENSE
+BugReports: https://github.com/GfellerLab/SuperCell/issues
 Encoding: UTF-8
 LazyData: true
 LazyDataCompression: xz
@@ -24,12 +25,10 @@ Imports:
     irlba,
     grDevices,
     patchwork,
-    gtools,
     ggplot2,
     umap,
     entropy,
     Rtsne,
-    bluster,
     dbscan,
     cowplot,
     scales,
@@ -37,7 +36,7 @@ Imports:
     proxy,
     methods,
     rlang,
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Suggests:
     SingleCellExperiment,
     SummarizedExperiment,
@@ -46,9 +45,13 @@ Suggests:
     knitr,
     rmarkdown,
     remotes,
+    bluster,
     velocyto.R,
     testthat (>= 3.0.0)
+Remotes: 
+    bioc::bluster,
+    velocyto-team/velocyto.R
 Depends: 
-    R (>= 3.5.0)
+    R (>= 4.0.0)
 VignetteBuilder: knitr
 Config/testthat/edition: 3

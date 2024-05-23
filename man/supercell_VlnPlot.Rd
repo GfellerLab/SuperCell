@@ -30,7 +30,7 @@ supercell_VlnPlot(
 
 \item{clusters}{a vector with clustering information (ordered the same way as in \code{ge})}
 
-\item{features}{name of geneы of for which gene expression is plotted}
+\item{features}{name of genes of for which gene expression is plotted}
 
 \item{idents}{idents (clusters) to plot (default all)}
 
@@ -48,7 +48,7 @@ supercell_VlnPlot(
 
 \item{adjust}{param of geom_violin}
 
-\item{ncol}{number of colums in combined plot}
+\item{ncol}{number of columns in combined plot}
 
 \item{combine}{combine plots into a single \link[patchwork]{patchwork}ed ggplot object. If FALSE, return a list of ggplot}
 

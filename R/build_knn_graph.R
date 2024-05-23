@@ -158,7 +158,8 @@ build_knn_graph_nn2 <- function(
       snn <- bluster::neighborsToSNNGraph(nn2.res$nn.idx, ...)
 
       if(!is.null(pruning)){
-        pca_edje_dist      <- apply(igraph::get.edgelist(snn), 1, function(i){stats::dist(X[i,])})
+        #pca_edje_dist      <- apply(igraph::get.edgelist(snn), 1, function(i){stats::dist(X[i,])})
+        pca_edje_dist      <- apply(igraph::as_edgelist(snn), 1, function(i){stats::dist(X[i,])})
         igraph::E(snn)$pca_edje_dist <- pca_edje_dist
         pruning_cutoff     <- stats::quantile(pca_edje_dist, pruning)
         edges_to_remove    <- which(pca_edje_dist > pruning_cutoff)
@@ -253,7 +254,8 @@ build_knn_graph_nn2 <- function(
   graph.knn     <- igraph::simplify(graph.knn, remove.multiple = T)
   igraph::E(graph.knn)$weight <- 1
 
-  pca_edje_dist      <- apply(igraph::get.edgelist(graph.knn), 1, function(i){stats::dist(X[i,])})
+  #pca_edje_dist      <- apply(igraph::get.edgelist(graph.knn), 1, function(i){stats::dist(X[i,])})
+  pca_edje_dist      <- apply(igraph::as_edgelist(graph.knn), 1, function(i){stats::dist(X[i,])})
   igraph::E(graph.knn)$pca_edje_dist <- pca_edje_dist
 
   return(res <- list(graph.knn = graph.knn))

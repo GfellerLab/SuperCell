@@ -1,4 +1,13 @@
-## ---- include = FALSE---------------------------------------------------------
+---
+title: "Example of the SuperCell pipeline"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Example of the SuperCell pipeline}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -6,21 +15,38 @@ knitr::opts_chunk$set(
   fig.width = 6, fig.height = 6,
   eval = TRUE
 )
+```
 
-## ----library, warning=FALSE, eval=FALSE---------------------------------------
-#  if (!requireNamespace("remotes")) install.packages("remotes")
-#  remotes::install_github("GfellerLab/SuperCell")
+Installing SuperCell package from gitHub
 
-## ----load library, warning=FALSE----------------------------------------------
+```{r library, warning=FALSE, eval=FALSE}
+if (!requireNamespace("remotes")) install.packages("remotes")
+remotes::install_github("GfellerLab/SuperCell")
+```
+
+
+```{r load library, warning=FALSE}
 library(SuperCell)
+```
 
-## ----load data----------------------------------------------------------------
+# Analysis
+
+## Load scRNA-seq data of 5 cancer cell lines from [Tian et al., 2019](https://doi.org/10.1038/s41592-019-0425-8).
+
+Data available at authors' [GitHub](https://github.com/LuyiTian/sc_mixology/blob/master/data/) under file name *sincell_with_class_5cl.Rdata*.
+
+```{r load data}
 data(cell_lines) # list with GE - gene expression matrix (logcounts), meta - cell meta data
 GE <- cell_lines$GE
 dim(GE) # genes as rows and cells as columns
 cell.meta <- cell_lines$meta
+```
 
-## ----Simplification, warning=FALSE, paged.print=FALSE-------------------------
+## Simplify single-cell data at the graining level $gamma = 20$
+
+(i.e., `20` times less metacells (called 'supercells' in the package functions) than single cells) by first building a kNN ($k=5$) network using top $n.var.genes=1000$ most variable genes for dimentionality reduction. Function `SCimplify()` computes the partition into metacells, this information is available with the field `membership`.
+
+```{r Simplification, warning=FALSE, paged.print=FALSE}
 gamma <- 20 # graining level
 k.knn <- 5
 
@@ -32,8 +58,9 @@ SC <- SCimplify(GE,  # gene expression matrix
 )
 
 
-# Alternative, metacells can be build from low-dimensional embedding. For this, first compute low-dim embedding and pass it into \code{SCimplify_from_embedding()}
-if(1){
+# Alternative, metacells can be build from low-dimensional embedding.
+# For this, first compute low-dim embedding and pass it into `SCimplify_from_embedding()`
+if(0){
   SC_alt <- SCimplify_from_embedding(
     X = stats::prcomp(Matrix::t(GE[SC$genes.use,]), rank. = 10)$x, # PCA embedding
     k.knn = k.knn, # number of nearest neighbors to build kNN network
@@ -54,12 +81,25 @@ supercell_plot(SC$graph.singlecell, # network
                do.frames = F, # not drawing frames around each node 
                main = paste("Single-cell network, N =", dim(GE)[2]), 
                lay.method = "components") # method to compute the network 2D embedding 
+```
 
-## ----average gene expression--------------------------------------------------
+
+## Compute gene expression for simplified data
+
+To get a gene expression of metacells, we need to average gene expressions within each metacell with function `supercell_GE()`
+
+```{r average gene expression}
 SC.GE <- supercell_GE(GE, SC$membership)
 dim(SC.GE) 
+```
 
-## ----assign metacells to cell line infromation--------------------------------
+## Map each metacell to a particular cell line
+
+We now assign each metcell to a particular cell line based on the cell line data, for this, we use function `supercell_assign()`. 
+By default, this function assign each metacell to a cluster with the largest Jaccard coefficient to avoid biases towards very rare or very abundant clusters. Alternatively, assigmnent can be performed using relative (may cause biase towards very small populations) or absolute (may cause bias towards large populations) abundance with `method = "relative"` or `method = "absolute"`, respectively. 
+
+
+```{r assign metacells to cell line infromation}
 SC$cell_line <- supercell_assign(clusters = cell.meta, # single-cell assigment to cell lines (clusters)
                                  supercell_membership = SC$membership, # single-cell assignment to metacells
                                  method = "jaccard")
@@ -72,15 +112,22 @@ supercell_plot(SC$graph.supercells,
                group = SC$cell_line, 
                seed = seed, 
                main = "Metacells colored by cell line assignment")
+```
 
-## ----purity of supercell in terms of cell line composition--------------------
+The quality of assignment can be evaluated with metacell purity (function `supercell_purity()`) that returns the proportion of the most abundant cell type (in this case, cell line) in each metacell.
+
+
+```{r purity of supercell in terms of cell line composition}
 # compute purity of metacells in terms of cell line composition
 purity <- supercell_purity(clusters = cell.meta, 
-                           supercell_membership = SC$membership, method = 'entropy')
+                           supercell_membership = SC$membership, method = 'max_proportion')
 hist(purity, main = "Purity of metacells \nin terms of cell line composition")
 SC$purity <- purity
+```
 
-## ----plotting options---------------------------------------------------------
+Some options to plot networks of metacells
+
+```{r plotting options}
 ## rotate network to be more consistent with the single-cell one
 supercell_plot(SC$graph.supercells, 
                group = SC$cell_line, 
@@ -102,8 +149,11 @@ supercell_plot(SC$graph.supercells,
                group = SC$cell_line, 
                lay = my.lay.SC,
                main  = "Metacells colored by cell line assignment (averaged coordinates)")
+```
 
-## ----clustering---------------------------------------------------------------
+## Cluster metacell data
+
+```{r clustering}
 #dimensionality reduction 
 SC.PCA         <- supercell_prcomp(Matrix::t(SC.GE), # metacell gene expression matrix
                                    genes.use = SC$genes.use, # genes used for the coarse-graining, but any set can be provided
@@ -115,8 +165,11 @@ D              <- dist(SC.PCA$x)
 ## cluster metacells
 SC.clusters    <- supercell_cluster(D = D, k = 5, supercell_size = SC$supercell_size) 
 SC$clustering  <- SC.clusters$clustering
+```
 
-## ----assign metacell clustering results to cell line information--------------
+## Map clusters of metacells to cell lines
+
+```{r assign metacell clustering results to cell line information}
 ## mapping metacell cluster to cell line 
 map.cluster.to.cell.line    <- supercell_assign(supercell_membership = SC$clustering, clusters  = SC$cell_line)
 ## clustering as cell line
@@ -127,16 +180,22 @@ supercell_plot(SC$graph.supercells,
                seed = seed,
                alpha = -pi/2,
                main = "Metacells colored by cluster")
+```
 
-## ----differential expression analysis-----------------------------------------
+## Differential expression analysis of clustered metacell data
+
+```{r differential expression analysis}
 markers.all.positive <- supercell_FindAllMarkers(ge = SC.GE, # metacell gene expression matrix
                                                  supercell_size = SC$supercell_size, # size of metacell for sample-weighted method
                                                  clusters = SC$clustering_reordered, # clustering
                                                  logfc.threshold = 1, # mininum log fold-change
                                                  only.pos = T) # keep only upregulated genes
 markers.all.positive$H2228[1:20,]
+```
 
-## ----Violin plots-------------------------------------------------------------
+## Some additional plotting options
+
+```{r Violin plots}
 genes.to.plot <- c("DHRS2", "MT1P1", "TFF1", "G6PD", "CD74", "CXCL8")
 
 supercell_VlnPlot(ge = SC.GE, 
@@ -151,8 +210,12 @@ supercell_GeneGenePlot(ge = SC.GE,
                        gene_y = genes.to.plot[4:6],
                        supercell_size = SC$supercell_size, 
                        clusters = SC$clustering_reordered,)
+```
 
-## -----------------------------------------------------------------------------
+
+### SuperCell graining level can be quickly chaged with `supercell_rescale()` function
+
+```{r}
 SC10 <- supercell_rescale(SC, gamma = 10)
 
 SC10$cell_line <- supercell_assign(clusters = cell.meta, # single-cell assigment to cell lines (clusters)
@@ -167,15 +230,21 @@ supercell_plot(SC10$graph.supercells,
 ### don't forget to recompute metacell gene expression matrix for a new grainig level with 
 # GE10 <- supercell_GE(GE, SC10$membership)
 ### if you are going to perform downstream analyses at the new graining level
+```
 
-## ----Seurat-------------------------------------------------------------------
+### P.S.: SuperCell to [Seurat](https://cran.r-project.org/web/packages/Seurat/index.html) object
+
+In case you want to perform other analyses available with Seurat package, we can convert SuperCell to [Seurat](https://cran.r-project.org/web/packages/Seurat/index.html) object with function `supercell_2_Seurat()` or to [SingleCellExperiment](https://bioconductor.org/packages/release/bioc/html/SingleCellExperiment.html) object with function 'supercell_2_sce()'. Let consider a Seurat example. 
+
+```{r Seurat}
 #install.packages("Seurat")
 library(Seurat)
 
-m.seurat <- supercell_2_Seurat(SC.GE = as.matrix(SC.GE), SC = SC, fields = c("cell_line", "clustering", "clustering_reordered"))
+m.seurat <- supercell_2_Seurat(SC.GE = as.matrix(SC.GE), SC = SC, fields = c("cell_line", "clustering","clustering_reordered"))
+```
+Note: since metacells have different size (consist of different number of cells), we apply sample-weighted algorithms at most af the steps of the downstream analyses. Thus, when coercing SuperCell to Seurat, we replaced PCA, saling and kNN graph of Seurat object with those obtained applying sample-weighted version of PCA, scaling or SuperCell graph (i.e., metacell network), respectively. If you then again apply `RunPCA`, `ScaleData`, or `FindNeighbors`, the result will be rewritten, but you will be able to access them with `Embeddings(m.seurat, reduction = "pca_weigted")`, `m.seurat@assays$RNA@misc[["scale.data.weighted"]]`, or `m.seurat@graphs$RNA_super_cells`, respectively.
 
-
-## ----PCAplot------------------------------------------------------------------
+```{r PCAplot}
 PCAPlot(m.seurat)
 
 ### cluster SuperCell network (unweighted clustering)
@@ -183,4 +252,5 @@ m.seurat <- FindClusters(m.seurat, graph.name = "RNA_nn") # now RNA_nn is metace
 
 m.seurat <- FindNeighbors(m.seurat, verbose = FALSE)  # RNA_nn has been replaced with kNN graph of metacell (unweigted)
 m.seurat <- FindClusters(m.seurat, graph.name = "RNA_nn") 
+```
 

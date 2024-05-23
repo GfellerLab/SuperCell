@@ -120,7 +120,7 @@ The quality of assignment can be evaluated with metacell purity (function `super
 ```{r purity of supercell in terms of cell line composition}
 # compute purity of metacells in terms of cell line composition
 purity <- supercell_purity(clusters = cell.meta, 
-                           supercell_membership = SC$membership, method = 'entropy')
+                           supercell_membership = SC$membership, method = 'max_proportion')
 hist(purity, main = "Purity of metacells \nin terms of cell line composition")
 SC$purity <- purity
 ```
@@ -240,10 +240,8 @@ In case you want to perform other analyses available with Seurat package, we can
 #install.packages("Seurat")
 library(Seurat)
 
-m.seurat <- supercell_2_Seurat(SC.GE = as.matrix(SC.GE), SC = SC, fields = c("cell_line", "clustering", "clustering_reordered"))
-
+m.seurat <- supercell_2_Seurat(SC.GE = as.matrix(SC.GE), SC = SC, fields = c("cell_line", "clustering","clustering_reordered"))
 ```
-
 Note: since metacells have different size (consist of different number of cells), we apply sample-weighted algorithms at most af the steps of the downstream analyses. Thus, when coercing SuperCell to Seurat, we replaced PCA, saling and kNN graph of Seurat object with those obtained applying sample-weighted version of PCA, scaling or SuperCell graph (i.e., metacell network), respectively. If you then again apply `RunPCA`, `ScaleData`, or `FindNeighbors`, the result will be rewritten, but you will be able to access them with `Embeddings(m.seurat, reduction = "pca_weigted")`, `m.seurat@assays$RNA@misc[["scale.data.weighted"]]`, or `m.seurat@graphs$RNA_super_cells`, respectively.
 
 ```{r PCAplot}
