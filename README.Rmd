@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 
 [![R-CMD-check](https://github.com/GfellerLab/SuperCell/workflows/R-CMD-check/badge.svg)](https://github.com/GfellerLab/SuperCell/actions)
 [![DOI](https://img.shields.io/badge/DOI%3A-10.1186/s12859--022--04861--1-brightgreen)](https://doi.org/10.1186/s12859-022-04861-1)
-[![License](https://img.shields.io/badge/License-LICENSE-green)](./License_SuperCell_CC_BY-NC-ND_4.0)
+[![License](https://img.shields.io/badge/License-LICENSE-green)](./License_SuperCell_CC_BY-NC-ND_4.0.pdf)
 
 
 # Coarse-graining of large single-cell RNA-seq data into metacells
