@@ -112,7 +112,7 @@ SuperCell is developed by the group of David Gfeller at University of
 Lausanne.
 
 SuperCell can be used freely by academic groups for non-commercial
-purposes (see [license](./LICENSE)). The product is provided free of
+purposes under the Creative Commons Attribution-NonCommercial-NoDerivs 4.0 International License (CC BY-NC-ND 4.0) (see [license](./LICENSE)). The product is provided free of
 charge, and, therefore, on an “as is” basis, without warranty of any
 kind.
 
