@@ -106,31 +106,6 @@ library(SuperCell)
 4.  [Data integration of metacells built with
     SuperCell](https://github.com/GfellerLab/SIB_workshop/blob/main/workbooks/Workbook_2__COVID19_integration.md)
 
-## [License](./LICENSE)
-
-SuperCell is developed by the group of David Gfeller at University of
-Lausanne.
-
-SuperCell can be used freely by academic groups for non-commercial
-purposes under the Creative Commons Attribution-NonCommercial-NoDerivs 4.0 International License (CC BY-NC-ND 4.0) (see [license](./LICENSE)). The product is provided free of
-charge, and, therefore, on an “as is” basis, without warranty of any
-kind.
-
-FOR-PROFIT USERS
-
-If you plan to use SuperCell or any data provided with the script in any
-for-profit application, you are required to obtain a separate license.
-To do so, please contact Nadette Bulgin <nbulgin@licr.org> at the Ludwig Institute
-for Cancer Research Ltd.
-
-If required, FOR-PROFIT USERS are also expected to have proper licenses
-for the tools used in SuperCell, including the R packages igraph, RANN,
-WeightedCluster, corpora, weights, Hmisc, Matrix, ply, irlba, grDevices,
-patchwork, ggplot2 and velocyto.R
-
-For scientific questions, please contact Mariia Bilous
-(<mariia.bilous@unil.ch>) or David Gfeller (<David.Gfeller@unil.ch>).
-
 ## How to cite
 
 If you use SuperCell in a publication, please cite: [Bilous et
