@@ -1,11 +1,11 @@
 Package: SuperCell
 Type: Package
-Title: Simplification of scRNA-seq data by merging together similar cells
+Title: Simplification of scRNA-Seq Data by Merging Together Similar Cells
 Version: 1.0
 Author: Mariia Bilous
-Maintainer: The package maintainer <leonard.herault@unil.ch>
-Description: Aggregates large single-cell data into metacell dataset by merging together gene expression of very similar cells. 
-License: file LICENSE
+Maintainer: Leonard Herault <leonard.herault@unil.ch>
+Description: Aggregates large single-cell data into metacell dataset by merging together gene expression of very similar cells. 'SuperCell' uses 'velocyto.R' <https://github.com/velocyto-team/velocyto.R> for RNA velocity. We also recommend installig 'scater' Bioconductor package <https://bioconductor.org/packages/release/bioc/html/scater.html>.
+License: GPL + file LICENSE
 BugReports: https://github.com/GfellerLab/SuperCell/issues
 Encoding: UTF-8
 LazyData: true
@@ -30,16 +30,16 @@ Imports:
     entropy,
     Rtsne,
     dbscan,
-    cowplot,
     scales,
     plotfunctions,
     proxy,
     methods,
     rlang,
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Suggests:
     SingleCellExperiment,
     SummarizedExperiment,
+    cowplot,
     scater,
     Seurat,
     knitr,
@@ -48,9 +48,6 @@ Suggests:
     bluster,
     velocyto.R,
     testthat (>= 3.0.0)
-Remotes: 
-    bioc::bluster,
-    velocyto-team/velocyto.R
 Depends: 
     R (>= 4.0.0)
 VignetteBuilder: knitr

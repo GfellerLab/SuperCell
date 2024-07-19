@@ -89,7 +89,7 @@ a list with components
 This function detects metacells (former super-cells) from single-cell gene expression matrix
 }
 \examples{
-\dontrun{
+\donttest{
 data(cell_lines) # list with GE - gene expression matrix (logcounts), meta - cell meta data
 GE <- cell_lines$GE
 
@@ -98,7 +98,7 @@ SC <- SCimplify(GE,  # log-normalized gene expression matrix
                 n.var.genes = 1000,
                 k.knn = 5, # k for kNN algorithm
                 n.pc = 10, # number of principal components to use
-                do.approx) #
+                do.approx = TRUE) #
 
 }
 }

@@ -58,9 +58,9 @@ Since super-cells have different size (consist of different number of single cel
 \code{`your_seurat@reductions$pca`} or \code{`your_seurat@reductions$pca_weighted`} to reproduce if the first one has been overwritten).
 }
 \examples{
-\dontrun{
+\donttest{
 data(cell_lines)
-SC           <- SCimplify(cell_lines$GE, gamma = 20)
+SC           <- SCimplify(X=cell_lines$GE, gamma = 20)
 SC$ident     <- supercell_assign(clusters = cell_lines$meta, supercell_membership = SC$membership)
 SC.GE        <- supercell_GE(cell_lines$GE, SC$membership)
 m.seurat     <- supercell_2_Seurat(SC.GE = SC.GE, SC = SC, fields = c("ident"))

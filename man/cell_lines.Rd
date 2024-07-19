@@ -12,7 +12,7 @@ A list with gene expression (i.e., log-normalized counts) (GE), and metadata dat
 }
 }
 \source{
-\url{https://doi.org/10.1038/s41592-019-0425-8}
+\doi{https://doi.org/10.1038/s41592-019-0425-8}
 }
 \usage{
 cell_lines

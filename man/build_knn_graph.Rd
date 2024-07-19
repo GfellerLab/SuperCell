@@ -9,7 +9,7 @@ build_knn_graph(
   k = 5,
   from = c("dist", "coordinates"),
   use.nn2 = TRUE,
-  return_neighbors_order = F,
+  return_neighbors_order = FALSE,
   dist_method = "euclidean",
   cor_method = "pearson",
   p = 2,

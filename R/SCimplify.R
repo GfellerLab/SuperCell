@@ -43,7 +43,7 @@
 #' }
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' data(cell_lines) # list with GE - gene expression matrix (logcounts), meta - cell meta data
 #' GE <- cell_lines$GE
 #'
@@ -52,7 +52,7 @@
 #'                 n.var.genes = 1000,
 #'                 k.knn = 5, # k for kNN algorithm
 #'                 n.pc = 10, # number of principal components to use
-#'                 do.approx) #
+#'                 do.approx = TRUE) #
 #'
 #' }
 #' @export
@@ -82,6 +82,7 @@ SCimplify <- function(X,
                       ...){
 
   N.c <- ncol(X)
+  N.c <- dim(X)[2]
 
   if(gamma > 100 & N.c < 100000){
     warning(paste0("Graining level (gamma = ", gamma, ") seems to be very large! Please, consider using smaller gamma, the suggested range is 10-50."))

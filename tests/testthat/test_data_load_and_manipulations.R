@@ -2,12 +2,14 @@
 
 data("cell_lines")
 
-true_dims <- c(2000, 3918) # true dimension of GE matrix (i.e., 2000 genes and 3918 cells)
-true_cell_ids <- c("Lib90_00000", "Lib90_00001", "Lib90_00002", "Lib90_00003", "Lib90_00004",
-                   "Lib90_00005", "Lib90_00006", "Lib90_00007", "Lib90_00008","Lib90_00009")
+#true_dims <- c(2000, 3918) # true dimension of GE matrix (i.e., 2000 genes and 3918 cells)
+true_dims <- c(2000, 1959) # true dimension of GE matrix (i.e., 2000 genes and 3918 cells)
+#true_cell_ids <- c("Lib90_00000", "Lib90_00001", "Lib90_00002", "Lib90_00003", "Lib90_00004",
+#                   "Lib90_00005", "Lib90_00006", "Lib90_00007", "Lib90_00008","Lib90_00009")
+true_cell_ids <- c("Lib90_00134","Lib90_00097","Lib90_01660","Lib90_00156","Lib90_02385","Lib90_03940","Lib90_00776","Lib90_03538","Lib90_02349","Lib90_01962")
 true_gene_names <- c("PIGG", "KAT7", "CGB7", "CDS1", "POLR2M", "FH", "STAT5B", "COMMD10", "SERINC3", "LAMA3")
-
-true_meta <- c("HCC827", "HCC827", "H838",   "HCC827", "HCC827", "HCC827", "H1975",  "H1975",  "HCC827", "HCC827")
+#true_meta <- c("HCC827", "HCC827", "H838",   "HCC827", "HCC827", "HCC827", "H1975",  "H1975",  "HCC827", "HCC827")
+true_meta <- c("H838","H1975","H2228","H838","H838","A549","A549","H2228","H1975","H838")
 
 test_that("Demo data (cell_lines) loads correctly", {
   expect_equal(names(cell_lines), c("GE", "meta"))

@@ -31,7 +31,7 @@ build_knn_graph <- function(
   k = 5,
   from = c("dist", "coordinates"),
   use.nn2 = TRUE,
-  return_neighbors_order = F,
+  return_neighbors_order = FALSE,
   dist_method = "euclidean",
   cor_method = "pearson",
   p = 2,
@@ -166,7 +166,7 @@ build_knn_graph_nn2 <- function(
         snn <- igraph::delete_edges(snn, edges_to_remove)
       }
 
-      graph.knn     <- igraph::simplify(snn, remove.multiple = T)
+      graph.knn     <- igraph::simplify(snn, remove.multiple = TRUE)
       #igraph::E(snn)$weight <- 1
       return(res <- list(graph.knn = graph.knn))
 
@@ -248,10 +248,10 @@ build_knn_graph_nn2 <- function(
   adj.knn       <- split(nn.idx, rep(1:nrow(nn.idx), times = ncol(nn.idx))) # get adj list
   adj.knn       <- lapply(adj.knn, function(x){x[!is.na(x)]}) # remove NA
 
-  graph.knn     <- igraph::graph_from_adj_list(adj.knn, duplicate = F, mode = mode)
+  graph.knn     <- igraph::graph_from_adj_list(adj.knn, duplicate = FALSE, mode = mode)
 
 
-  graph.knn     <- igraph::simplify(graph.knn, remove.multiple = T)
+  graph.knn     <- igraph::simplify(graph.knn, remove.multiple = TRUE)
   igraph::E(graph.knn)$weight <- 1
 
   #pca_edje_dist      <- apply(igraph::get.edgelist(graph.knn), 1, function(i){stats::dist(X[i,])})
@@ -306,8 +306,8 @@ knn_graph_from_dist <- function(D, k = 5, return_neighbors_order = T, mode = 'al
   adj.knn <- split(neighbors, rep(1:nrow(neighbors), times = ncol(neighbors)))
 
 
-  graph.knn     <- igraph::graph_from_adj_list(adj.knn,  duplicate = F, mode = mode)
-  graph.knn     <- igraph::simplify(graph.knn, remove.multiple = T)
+  graph.knn     <- igraph::graph_from_adj_list(adj.knn,  duplicate = FALSE, mode = mode)
+  graph.knn     <- igraph::simplify(graph.knn, remove.multiple = TRUE)
   igraph::E(graph.knn)$weight <- 1
 
   if(return_neighbors_order){

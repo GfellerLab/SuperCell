@@ -2,7 +2,7 @@
 % Please edit documentation in R/supercell_estimate_velocity.R
 \name{supercell_estimate_velocity}
 \alias{supercell_estimate_velocity}
-\title{Run RNAvelocity for super-cells (slightly modified from \link[velocyto.R]{gene.relative.velocity.estimates})
+\title{Run RNAvelocity for super-cells (slightly modified from \url{https://github.com/velocyto-team/velocyto.R})
 Not yet adjusted for super-cell size (not sample-weighted)}
 \usage{
 supercell_estimate_velocity(
@@ -17,11 +17,11 @@ supercell_estimate_velocity(
 )
 }
 \arguments{
-\item{emat}{spliced (exonic) count matrix (see \link[velocyto.R]{gene.relative.velocity.estimates})}
+\item{emat}{spliced (exonic) count matrix (see \url{https://github.com/velocyto-team/velocyto.R})}
 
-\item{nmat}{unspliced (nascent) count matrix (\link[velocyto.R]{gene.relative.velocity.estimates})}
+\item{nmat}{unspliced (nascent) count matrix (\url{https://github.com/velocyto-team/velocyto.R})}
 
-\item{smat}{optional spanning read matrix (used in offset calculations) (\link[velocyto.R]{gene.relative.velocity.estimates})}
+\item{smat}{optional spanning read matrix (used in offset calculations) (\url{https://github.com/velocyto-team/velocyto.R})}
 
 \item{membership}{supercell membership ('membership' field of \link{SCimplify})}
 
@@ -29,14 +29,14 @@ supercell_estimate_velocity(
 
 \item{do.run.avegaring}{whether to run averaging of emat & nmat (if nmat provided at a single-cell level)}
 
-\item{kCells}{number of k nearest neighbors (NN) to use in slope calculation smoothing (see \link[velocyto.R]{gene.relative.velocity.estimates})}
+\item{kCells}{number of k nearest neighbors (NN) to use in slope calculation smoothing (see \url{https://github.com/velocyto-team/velocyto.R})}
 
-\item{...}{other parameters from \link[velocyto.R]{gene.relative.velocity.estimates}}
+\item{...}{other parameters from \url{https://github.com/velocyto-team/velocyto.R}}
 }
 \value{
-results of \link[velocyto.R]{gene.relative.velocity.estimates} plus metacell size vector
+results of \url{https://github.com/velocyto-team/velocyto.R} plus metacell size vector
 }
 \description{
-Run RNAvelocity for super-cells (slightly modified from \link[velocyto.R]{gene.relative.velocity.estimates})
+Run RNAvelocity for super-cells (slightly modified from \url{https://github.com/velocyto-team/velocyto.R})
 Not yet adjusted for super-cell size (not sample-weighted)
 }

@@ -3,6 +3,8 @@
 #' This function transforms super-cell gene expression and super-cell partition into \link[Seurat]{Seurat} object
 #'
 #'
+#' @importFrom methods as
+#' @importFrom utils packageVersion
 #' @param SC.GE gene expression matrix with genes as rows and cells as columns
 #' @param SC super-cell (output of \link{SCimplify} function)
 #' @param fields which fields of \code{SC} to use as cell metadata
@@ -33,9 +35,9 @@
 #' @return \link[Seurat]{Seurat} object
 #'
 #'@examples
-#'\dontrun{
+#'\donttest{
 #' data(cell_lines)
-#' SC           <- SCimplify(cell_lines$GE, gamma = 20)
+#' SC           <- SCimplify(X=cell_lines$GE, gamma = 20)
 #' SC$ident     <- supercell_assign(clusters = cell_lines$meta, supercell_membership = SC$membership)
 #' SC.GE        <- supercell_GE(cell_lines$GE, SC$membership)
 #' m.seurat     <- supercell_2_Seurat(SC.GE = SC.GE, SC = SC, fields = c("ident"))

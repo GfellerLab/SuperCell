@@ -1,16 +1,16 @@
-#' Run RNAvelocity for super-cells (slightly modified from \link[velocyto.R]{gene.relative.velocity.estimates})
+#' Run RNAvelocity for super-cells (slightly modified from \url{https://github.com/velocyto-team/velocyto.R})
 #' Not yet adjusted for super-cell size (not sample-weighted)
 #'
-#' @param emat spliced (exonic) count matrix (see \link[velocyto.R]{gene.relative.velocity.estimates})
-#' @param nmat unspliced (nascent) count matrix (\link[velocyto.R]{gene.relative.velocity.estimates})
-#' @param smat optional spanning read matrix (used in offset calculations) (\link[velocyto.R]{gene.relative.velocity.estimates})
+#' @param emat spliced (exonic) count matrix (see \url{https://github.com/velocyto-team/velocyto.R})
+#' @param nmat unspliced (nascent) count matrix (\url{https://github.com/velocyto-team/velocyto.R})
+#' @param smat optional spanning read matrix (used in offset calculations) (\url{https://github.com/velocyto-team/velocyto.R})
 #' @param membership supercell membership ('membership' field of \link{SCimplify})
 #' @param supercell_size a vector with supercell size (if emat and nmat provided at super-cell level)
 #' @param do.run.avegaring whether to run averaging of emat & nmat (if nmat provided at a single-cell level)
-#' @param kCells number of k nearest neighbors (NN) to use in slope calculation smoothing (see \link[velocyto.R]{gene.relative.velocity.estimates})
-#' @param ... other parameters from \link[velocyto.R]{gene.relative.velocity.estimates}
+#' @param kCells number of k nearest neighbors (NN) to use in slope calculation smoothing (see \url{https://github.com/velocyto-team/velocyto.R})
+#' @param ... other parameters from \url{https://github.com/velocyto-team/velocyto.R}
 #'
-#' @return results of \link[velocyto.R]{gene.relative.velocity.estimates} plus metacell size vector
+#' @return results of \url{https://github.com/velocyto-team/velocyto.R} plus metacell size vector
 #' @export
 
 

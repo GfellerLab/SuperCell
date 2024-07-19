@@ -1,5 +1,5 @@
 [![R-CMD-check](https://github.com/GfellerLab/SuperCell/workflows/R-CMD-check/badge.svg)](https://github.com/GfellerLab/SuperCell/actions)
-[![DOI](https://img.shields.io/badge/DOI%3A-10.1186/s12859--022--04861--1-brightgreen)](https://doi.org/10.1186/s12859-022-04861-1)
+[1E![DOI](https://img.shields.io/badge/DOI%3A-0.1186/s12859--022--04861--1-brightgreen)](https://doi.org/10.1186/s12859-022-04861-1)
 [![License](https://img.shields.io/badge/License-LICENSE-green)](./LICENSE)
 
 # Coarse-graining of large single-cell RNA-seq data into metacells
@@ -14,7 +14,7 @@ of large-scale and noisy scRNA-seq data is to merge transcriptionally
 highly similar cells into *metacells*. This concept was first introduced
 by [*Baran et al., 2019*](https://doi.org/10.1186/s13059-019-1812-2)
 (MetaCell) and by [*Iacono et al.,
-2018*](https://doi:10.1101/gr.230771.117) (bigSCale). More recent
+2018*](https://genome.cshlp.org/content/28/6/878) (bigSCale). More recent
 methods to build *metacells* have been described in [*Ben-Kiki et
 al. 2022*](https://doi.org/10.1186/s13059-022-02667-1) (MetaCell2),
 [*Bilous et al., 2022*](https://doi.org/10.1186/s12859-022-04861-1)
@@ -36,7 +36,6 @@ regions in the single-cell network and merged together into metacells
 **4.** Metacell data are used for the downstream analyses instead of
 large-scale single-cell data
 
-<img src="plots/Fig1A.png" width="4820" />
 
 Unlike clustering, the aim of metacells is not to identify large groups
 of cells that comprehensively capture biological concepts, like cell
@@ -56,19 +55,19 @@ most of the result of the initial (i.e., single-cell) analyses.
 ## Installation
 
 SuperCell requires
-[igraph](https://cran.r-project.org/web/packages/igraph/index.html),
-[RANN](https://cran.r-project.org/web/packages/RANN/index.html),
-[WeightedCluster](https://cran.r-project.org/web/packages/WeightedCluster/index.html),
-[corpcor](https://cran.r-project.org/web/packages/corpcor/index.html),
-[weights](https://cran.r-project.org/web/packages/weights/index.html),
-[Hmisc](https://cran.r-project.org/web/packages/Hmisc/index.html),
-[Matrix](https://cran.r-project.org/web/packages/Matrix/index.html),
-[matrixStats](https://cran.rstudio.com/web/packages/matrixStats/index.html),
-[plyr](https://cran.r-project.org/web/packages/plyr/index.html),
-[irlba](https://cran.r-project.org/web/packages/irlba/index.html),
+[igraph](https://CRAN.R-project.org/package=igraph),
+[RANN](https://CRAN.R-project.org/package=RANN),
+[WeightedCluster](https://CRAN.R-project.org/package=WeightedCluster),
+[corpcor](https://CRAN.R-project.org/package=corpcor),
+[weights](https://CRAN.R-project.org/package=weights),
+[Hmisc](https://CRAN.R-project.org/package=Hmisc),
+[Matrix](https://CRAN.R-project.org/package=Matrix),
+[matrixStats](https://CRAN.R-project.org/package=matrixStats),
+[plyr](https://CRAN.R-project.org/package=plyr),
+[irlba](https://CRAN.R-project.org/package=irlba),
 [grDevices](https://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/00Index.html),
-[patchwork](https://cran.r-project.org/web/packages/patchwork/index.html),
-[ggplot2](https://cloud.r-project.org/web/packages/ggplot2/index.html).
+[patchwork](https://CRAN.R-project.org/package=patchwork),
+[ggplot2](https://CRAN.R-project.org/package=ggplot2).
 SuperCell uses [velocyto.R](https://github.com/velocyto-team/velocyto.R)
 for RNA velocity.
 
@@ -98,12 +97,10 @@ library(SuperCell)
 
 1.  [Building and analyzing metacells with
     SuperCell](./vignettes/a_SuperCell.Rmd)
-2.  [RNA velocity applied to SuperCell
-    object](./vignettes/c_RNAvelocity_for_SuperCell.Rmd)
-3.  [Building metacells with SuperCell and alayzing them with a standard
+2.  [Building metacells with SuperCell and alayzing them with a standard
     Seurat
     pipeline](https://github.com/GfellerLab/SIB_workshop/blob/main/workbooks/Workbook_1__cancer_cell_lines.md)
-4.  [Data integration of metacells built with
+3.  [Data integration of metacells built with
     SuperCell](https://github.com/GfellerLab/SIB_workshop/blob/main/workbooks/Workbook_2__COVID19_integration.md)
 
 ## [License](./LICENSE)
@@ -112,7 +109,7 @@ SuperCell is developed by the group of David Gfeller at University of
 Lausanne.
 
 SuperCell can be used freely by academic groups for non-commercial
-purposes (see [license](./LICENSE)). The product is provided free of
+purposes under the Creative Commons Attribution-NonCommercial-NoDerivs 4.0 International License (CC BY-NC-ND 4.0) (see [license](./LICENSE)). The product is provided free of
 charge, and, therefore, on an “as is” basis, without warranty of any
 kind.
 
@@ -120,7 +117,7 @@ FOR-PROFIT USERS
 
 If you plan to use SuperCell or any data provided with the script in any
 for-profit application, you are required to obtain a separate license.
-To do so, please contact <eauffarth@licr.org> at the Ludwig Institute
+To do so, please contact Nadette Bulgin <nbulgin@licr.org> at the Ludwig Institute
 for Cancer Research Ltd.
 
 If required, FOR-PROFIT USERS are also expected to have proper licenses

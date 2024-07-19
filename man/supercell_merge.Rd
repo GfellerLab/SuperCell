@@ -26,7 +26,7 @@ a list with components
 This function merges independent SuperCell objects
 }
 \examples{
-\dontrun{
+\donttest{
 data(cell_lines) # list with GE - gene expression matrix (logcounts), meta - cell meta data
 GE <- cell_lines$GE
 cell.meta <- cell_lines$meta
