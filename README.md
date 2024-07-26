@@ -1,6 +1,5 @@
 [![R-CMD-check](https://github.com/GfellerLab/SuperCell/workflows/R-CMD-check/badge.svg)](https://github.com/GfellerLab/SuperCell/actions)
 [1E![DOI](https://img.shields.io/badge/DOI%3A-0.1186/s12859--022--04861--1-brightgreen)](https://doi.org/10.1186/s12859-022-04861-1)
-[![License](https://img.shields.io/badge/License-LICENSE-green)](./LICENSE)
 
 # Coarse-graining of large single-cell RNA-seq data into metacells
 
@@ -103,7 +102,7 @@ library(SuperCell)
 3.  [Data integration of metacells built with
     SuperCell](https://github.com/GfellerLab/SIB_workshop/blob/main/workbooks/Workbook_2__COVID19_integration.md)
 
-## [License](./LICENSE)
+## [License]
 
 SuperCell is developed by the group of David Gfeller at University of
 Lausanne.
