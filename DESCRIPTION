@@ -5,7 +5,7 @@ Version: 1.0
 Author: Mariia Bilous
 Maintainer: Leonard Herault <leonard.herault@unil.ch>
 Description: Aggregates large single-cell data into metacell dataset by merging together gene expression of very similar cells. 'SuperCell' uses 'velocyto.R' <https://github.com/velocyto-team/velocyto.R> for RNA velocity. We also recommend installig 'scater' Bioconductor package <https://bioconductor.org/packages/release/bioc/html/scater.html>.
-License: GPL + file LICENSE
+License: GPL-3
 BugReports: https://github.com/GfellerLab/SuperCell/issues
 Encoding: UTF-8
 LazyData: true
