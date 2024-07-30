@@ -278,7 +278,7 @@ build_knn_graph_nn2 <- function(
 #' }
 #'
 
-knn_graph_from_dist <- function(D, k = 5, return_neighbors_order = T, mode = 'all'){
+knn_graph_from_dist <- function(D, k = 5, return_neighbors_order = TRUE, mode = 'all'){
 
   ##print("Start knn_graph_from_dist")
   if(!is.matrix(D) & !inherits(D, "dist")){
