@@ -42,7 +42,7 @@ supercell_2_sce(
 This function transforms super-cell gene expression and super-cell partition into \link[SingleCellExperiment]{SingleCellExperiment} object
 }
 \examples{
-\dontrun{
+\donttest{
 data(cell_lines)
 SC           <- SCimplify(cell_lines$GE, gamma = 20)
 SC$ident     <- supercell_assign(clusters = cell_lines$meta, supercell_membership = SC$membership)

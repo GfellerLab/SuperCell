@@ -68,7 +68,7 @@ plot of a super-cell network
 Plot metacell NW
 }
 \examples{
-\dontrun{
+\donttest{
 data(cell_lines) # list with GE - gene expression matrix (logcounts), meta - cell meta data
 GE <- cell_lines$GE
 cell.meta <- cell_lines$meta

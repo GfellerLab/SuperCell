@@ -44,25 +44,3 @@ supercell_DimPlot(
 \description{
 Plots 2d representation of metacells
 }
-\examples{
-\dontrun{
-data(cell_lines) # list with GE - gene expression matrix (logcounts), meta - cell meta data
-GE <- cell_lines$GE
-cell.meta <- cell_lines$meta
-
-SC <- SCimplify(GE,  # gene expression matrix
-                gamma = 20) # graining level
-
-# Assign metacell to a cell line
-SC2cellline  <- supercell_assign(
-    clusters = cell.meta, # single-cell assigment to cell lines
-    supercell_membership = SC$membership) # single-cell assignment to metacells
-
-
-SC$PCA <- supercell_prcomp(SC)
-
-supercell_DimPlot(SC, groups = SC2cellline, dim.name = "PCA")
-
-}
-
-}
