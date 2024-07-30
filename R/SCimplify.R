@@ -589,9 +589,9 @@ SCimplify_from_embedding <- function(X,
 
   if(return.singlecell.NW){res$graph.singlecell <- sc.nw$graph.knn}
   if(!is.null(cell.annotation) | !is.null(cell.split.condition)){
-    print(paste("length(cell.split.condition)", length(cell.split.condition)))
-    print(paste("length(cell.annotation)", length(cell.annotation)))
-    print(paste("length(res$membership)", length(res$membership)))
+    message(paste("length(cell.split.condition)", length(cell.split.condition)))
+    message(paste("length(cell.annotation)", length(cell.annotation)))
+    message(paste("length(res$membership)", length(res$membership)))
     res$SC.cell.annotation. <- supercell_assign(cell.annotation, res$membership)
     res$SC.cell.split.condition. <- supercell_assign(cell.split.condition, res$membership)
   }

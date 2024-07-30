@@ -106,17 +106,17 @@ supercell_2_Seurat <- function(SC.GE, SC, fields = c(),
   ## Data preprocessing (optional, but recommended)
   ## Normalize data, so Seurat does not generate warning
   m.seurat <- Seurat::NormalizeData(m.seurat)
-  print("Done: NormalizeData")
+  message("Done: NormalizeData")
   ## If SC.GE is log-normalized gene expression, than field data has to be rewritten
   if(is.log.normalized){
-    print("Doing: data to normalized data")
+    message("Doing: data to normalized data")
     #m.seurat@assays$RNA@data <- m.seurat@assays$RNA@counts
     m.seurat<-Seurat::SetAssayData(m.seurat,new.data = Seurat::GetAssayData(m.seurat,assay = "RNA",layer = "counts"),assay = "RNA",layer = "data")
   }
  
   ## Sample-weighted scaling
   if(length(unique(meta$size)) > 1){
-    print("Doing: weighted scaling")
+    message("Doing: weighted scaling")
     #m.seurat@assays$RNA@scale.data <- t(as.matrix(corpcor::wt.scale(Matrix::t((m.seurat@assays$RNA@data)),
     #                                                                w = meta$size,
     #                                                                center = do.center,
@@ -125,12 +125,12 @@ supercell_2_Seurat <- function(SC.GE, SC, fields = c(),
                                                                              w = meta$size,
                                                                              center = do.center,
                                                                              scale = do.scale))),assay = "RNA",layer = "scale.data")
-    print("Done: weighted scaling")
+    message("Done: weighted scaling")
     
   } else {
-    print("Doing: unweighted scaling")
+    message("Doing: unweighted scaling")
     m.seurat <- Seurat::ScaleData(m.seurat)
-    print("Done: unweighted scaling")
+    message("Done: unweighted scaling")
   }
 
   #m.seurat@assays$RNA@misc[["scale.data.weighted"]] <- m.seurat@assays$RNA@scale.data

@@ -22,7 +22,7 @@
 
 
 
-supercell_cluster <- function(D, k = 5, supercell_size = NULL, algorithm = c("hclust", "PAM"), method = NULL, return.hcl = T){
+supercell_cluster <- function(D, k = 5, supercell_size = NULL, algorithm = c("hclust", "PAM"), method = NULL, return.hcl = TRUE){
   res <- list()
 
   if(!(inherits(D, "dist") | inherits(D, "matrix"))){

@@ -2,9 +2,8 @@ Package: SuperCell
 Type: Package
 Title: Simplification of scRNA-Seq Data by Merging Together Similar Cells
 Version: 1.0
-Author: Mariia Bilous
-Maintainer: Leonard Herault <leonard.herault@unil.ch>
-Description: Aggregates large single-cell data into metacell dataset by merging together gene expression of very similar cells. 'SuperCell' uses 'velocyto.R' <https://github.com/velocyto-team/velocyto.R> for RNA velocity. We also recommend installig 'scater' Bioconductor package <https://bioconductor.org/packages/release/bioc/html/scater.html>.
+Authors@R: c(person("Mariia","Bilous",role="aut",email = "mariia.bilous@unil.ch"),person("Leonard","Herault",role="cre",email = "leonard.herault@unil.ch"))
+Description: Aggregates large single-cell data into metacell dataset by merging together gene expression of very similar cells. 'SuperCell' uses 'velocyto.R' <doi:10.1038/s41586-018-0414-6> <https://github.com/velocyto-team/velocyto.R> for RNA velocity. We also recommend installing 'scater' Bioconductor package <doi:10.18129/B9.bioc.scater> <https://bioconductor.org/packages/release/bioc/html/scater.html>.
 License: GPL-3
 BugReports: https://github.com/GfellerLab/SuperCell/issues
 Encoding: UTF-8

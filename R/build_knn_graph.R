@@ -205,9 +205,9 @@ build_knn_graph_nn2 <- function(
 
 
       graph.knn                             <- igraph::graph_from_adj_list(adj.knn, duplicate = F, mode = mode)
-      print(paste("N edges =", igraph::ecount(graph.knn)))
-      print(paste("Length of edge.weight =", length(unlist(edge.weight))))
-      print(paste("Length of edge.weight =", length(unlist(edge.weight))))
+      message(paste("N edges =", igraph::ecount(graph.knn)))
+      message(paste("Length of edge.weight =", length(unlist(edge.weight))))
+      message(paste("Length of edge.weight =", length(unlist(edge.weight))))
 
       igraph::E(graph.knn)$weight           <- unlist(edge.weight)
       igraph::E(graph.knn)$pca_edje_dist    <- unlist(edge.dist)

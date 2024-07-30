@@ -10,7 +10,7 @@ supercell_cluster(
   supercell_size = NULL,
   algorithm = c("hclust", "PAM"),
   method = NULL,
-  return.hcl = T
+  return.hcl = TRUE
 )
 }
 \arguments{

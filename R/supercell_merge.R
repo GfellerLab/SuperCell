@@ -123,7 +123,7 @@ supercell_merge <- function(
 #' @return a merged matrix of gene expression
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # see examples in \link{supercell_merge}
 #' }
 #' @export
@@ -140,7 +140,7 @@ supercell_mergeGE <- function(
     common.genes <- intersect(common.genes, rownames(cur.GE))
   }
 
-  cat(paste(length(common.genes), "of common genes has been detected"))
+  message(paste(length(common.genes), "of common genes has been detected"))
 
   res <- SC.GEs[[1]][common.genes,]
   for(i in 2:N){

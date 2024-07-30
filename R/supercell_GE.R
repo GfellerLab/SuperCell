@@ -91,15 +91,15 @@ supercell_GE_idx  <- function(ge, groups, weights = NULL, do.median.norm = FALSE
     N.blocks <- 1
   }
 
-  print("N.blocks:")
-  print(N.blocks)
+  message("N.blocks:")
+  message(N.blocks)
 
   goups.idx    <- plyr::split_indices(groups)
   supercell.GE <- c()
 
   if(N.blocks>0){
     for(i in 1:N.blocks){
-      print(i)
+      message(i)
 
       idx.begin <- (i-1)*block.size + 1
       idx.end   <- min(i*block.size,  nrow(ge))
