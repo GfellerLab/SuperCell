@@ -8,6 +8,7 @@
 #' @export
 
 
+
 supercell_silhouette <- function(x, dist, supercell_size = NULL){
   a <- c()
   b <- c()
@@ -71,10 +72,14 @@ supercell_silhouette <- function(x, dist, supercell_size = NULL){
     }
 
   }
-
+    
   s.matrix <- cbind(x, s)
   colnames(s.matrix) <- c("cluster", "silhouette width")
-
+  #When supercell_sized is named the rownames of the s matrix are not unique and do not correspond to metacell names.
+  #it corresponds for a metacell `i` to the name of a metacell in the same cluster which is the first `j` in `Ci` when `a.cur` is computed.
+  #This can be misleading when inspecting the results of the function. I think `s` could be renamed with the named of the metacell to avoid any confusion.
+  if (!is.null(names(supercell_size))){rownames(s.matrix) <- names(supercell_size)}
+   
   #### cluster avg width
   clus.avg.widths        <- rep(-1, n.cl)
   names(clus.avg.widths) <- unique(x)

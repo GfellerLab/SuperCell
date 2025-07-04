@@ -1,9 +1,9 @@
 Package: SuperCell
 Type: Package
 Title: Simplification of scRNA-Seq Data by Merging Together Similar Cells
-Version: 1.0
-Authors@R: c(person("Mariia","Bilous",role="aut",email = "mariia.bilous@unil.ch"),person("Leonard","Herault",role="cre",email = "leonard.herault@unil.ch"))
-Description: Aggregates large single-cell data into metacell dataset by merging together gene expression of very similar cells. 'SuperCell' uses 'velocyto.R' <doi:10.1038/s41586-018-0414-6> <https://github.com/velocyto-team/velocyto.R> for RNA velocity. We also recommend installing 'scater' Bioconductor package <doi:10.18129/B9.bioc.scater> <https://bioconductor.org/packages/release/bioc/html/scater.html>.
+Version: 2.0
+Authors@R: c(person("Leonard","Herault",role="aut",email = "mariia.bilous@unil.ch"),person("Leonard","Herault",role="cre",email = "leonard.herault@unil.ch"))
+Description: Aggregates large single-cell data into metacell dataset by merging together gene expression of very similar cells.
 License: GPL-3
 BugReports: https://github.com/GfellerLab/SuperCell/issues
 Encoding: UTF-8
@@ -11,7 +11,6 @@ LazyData: true
 LazyDataCompression: xz
 biocViews:
     Software
-Additional_repositories: https://mteleman.github.io/drat
 Imports: 
     igraph,
     RANN,
@@ -25,30 +24,37 @@ Imports:
     irlba,
     grDevices,
     patchwork,
+    gtools,
     ggplot2,
     umap,
     entropy,
     Rtsne,
+    bluster,
     dbscan,
+    cowplot,
     scales,
     plotfunctions,
     proxy,
     methods,
     rlang,
+    Seurat,
+    Signac,
+    data.table,
+    foreach,
+    doParallel
 RoxygenNote: 7.3.2
 Suggests:
     SingleCellExperiment,
     SummarizedExperiment,
-    cowplot,
+    BSgenome.Hsapiens.UCSC.hg38,
+    BSgenome.Hsapiens.UCSC.hg19,
     scater,
-    Seurat,
     knitr,
     rmarkdown,
     remotes,
-    bluster,
     velocyto.R,
     testthat (>= 3.0.0)
 Depends: 
-    R (>= 4.0.0)
+    R (>= 4.0.4)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
