@@ -384,26 +384,18 @@ the label with the maximum absolute abundance within it.</p>
 #&gt;  1 layer present: counts
 #&gt;  1 other assay present: ADT
 head(FetchData(bm.mc.multi,c(&quot;celltype.l1&quot;,&quot;celltype.l1_purity&quot;,&quot;celltype.l2&quot;,&quot;celltype.l2_purity&quot;,&quot;size&quot;)))
-#&gt;            celltype.l1 celltype.l1_purity    celltype.l2 celltype.l2_purity
-#&gt; Metacell_1      B cell          1.0000000        Naive B          1.0000000
-#&gt; Metacell_2      B cell          1.0000000       Memory B          1.0000000
-#&gt; Metacell_3      T cell          0.9883721   CD8 Memory_1          0.5930233
-#&gt; Metacell_4      T cell          1.0000000      CD8 Naive          0.9964664
-#&gt; Metacell_5      T cell          0.9848485     CD4 Memory          0.9696970
-#&gt; Metacell_6      T cell          1.0000000 CD8 Effector_1          0.9761905
-#&gt;            size
-#&gt; Metacell_1  242
-#&gt; Metacell_2  102
-#&gt; Metacell_3   86
-#&gt; Metacell_4  283
-#&gt; Metacell_5   66
-#&gt; Metacell_6   84</code></pre>
+#&gt;            celltype.l1 celltype.l1_purity    celltype.l2 celltype.l2_purity size
+#&gt; Metacell_1      B cell          1.0000000        Naive B          1.0000000  242
+#&gt; Metacell_2      B cell          1.0000000       Memory B          1.0000000  102
+#&gt; Metacell_3      T cell          0.9883721   CD8 Memory_1          0.5930233   86
+#&gt; Metacell_4      T cell          1.0000000      CD8 Naive          0.9964664  283
+#&gt; Metacell_5      T cell          0.9848485     CD4 Memory          0.9696970   66
+#&gt; Metacell_6      T cell          1.0000000 CD8 Effector_1          0.9761905   84</code></pre>
 <p>The misc slot of the metacell seurat object contain information about
 SuperCell2.0 run that can be used for quality control such as coverage
 plot and direct rescaling (see below).</p>
 <pre class="r"><code>names(bm.mc.multi@misc)
-#&gt; [1] &quot;metacells_hierarchy&quot; &quot;walktrap_clusters&quot;   &quot;gamma&quot;              
-#&gt; [4] &quot;membership&quot;
+#&gt; [1] &quot;metacells_hierarchy&quot; &quot;walktrap_clusters&quot;   &quot;gamma&quot;               &quot;membership&quot;
 
 #graining level used
 head(bm.mc.multi@misc$gamma)
@@ -411,10 +403,8 @@ head(bm.mc.multi@misc$gamma)
 
 # membership vector linking single cells to metacells
 head(bm.mc.multi@misc$membership)
-#&gt; a_AAACCTGAGCTTATCG-1 a_AAACCTGAGGTGGGTT-1 a_AAACCTGAGTACATGA-1 
-#&gt;                  301                    5                  149 
-#&gt; a_AAACCTGCAAACCTAC-1 a_AAACCTGCAAGGTGTG-1 a_AAACCTGCACGGTAGA-1 
-#&gt;                  147                   15                   16
+#&gt; a_AAACCTGAGCTTATCG-1 a_AAACCTGAGGTGGGTT-1 a_AAACCTGAGTACATGA-1 a_AAACCTGCAAACCTAC-1 a_AAACCTGCAAGGTGTG-1 a_AAACCTGCACGGTAGA-1 
+#&gt;                  301                    5                  149                  147                   15                   16
 
 #metacells_hierarchy used for rescaling 
 head(bm.mc.multi@misc$metacells_hierarchy$merges)
