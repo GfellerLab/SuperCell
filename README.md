@@ -64,24 +64,25 @@ SuperCell2.0 requires [Seurat](https://github.com/satijalab/seurat) for
 standard single-cell assays, such as RNA and Protein assays, and
 [Signac](https://github.com/stuart-lab/signac) for chromatin assays as
 weel as other R packages (the full list of dependencies is available
-[here](DESCRIPTION)). You can install install Supercell2.0 in R like
-this:
-
-``` r
-if (!requireNamespace("remotes")) install.packages("remotes")
-remotes::install_github("GfellerLab/SuperCell")
-
-library(SuperCell)
-```
+[here](DESCRIPTION)). 
 
 To facilitate dependencies installation, we recommend to use the conda
 [environment](tutorials/supercell_tuto_env.yaml) we provide for tutorials. Then
 you can install everything using conda like this:
 
 ``` bash
-conda create -n supercell_tuto_env -f tutorials/supercell_tuto_env.yaml
+conda env create -n supercell_tuto_env -f tutorials/supercell_tuto_env.yaml
 conda activate supercell_tuto_env
-Rscript -e "devtools::remotes::install_github('GfellerLab/SuperCell@develop');library(SuperCell)"
+Rscript -e "remotes::install_github('GfellerLab/SuperCell@develop',upgrade = 'never');library(SuperCell)"
+```
+
+Otherwise, you can install install SuperCell2.0 in R like this:
+
+``` r
+if (!requireNamespace("remotes")) install.packages("remotes")
+remotes::install_github("GfellerLab/SuperCell")
+
+library(SuperCell)
 ```
 
 ## Tutorials

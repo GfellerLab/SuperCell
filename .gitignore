@@ -4,7 +4,6 @@
 .RData
 .RDs
 .Rds
-.Rbuildignore
 .DS_Store
 *.pdf
 #*.html
