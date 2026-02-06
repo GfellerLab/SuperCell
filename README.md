@@ -75,13 +75,13 @@ library(SuperCell)
 ```
 
 To facilitate dependencies installation, we recommend to use the conda
-[environment](supercell_tuto_env.yaml) we provide for tutorials. Then
+[environment](tutorials/supercell_tuto_env.yaml) we provide for tutorials. Then
 you can install everything using conda like this:
 
 ``` bash
-conda create -n supercell_tuto_env -f tutorials/supercell_tuto_env
+conda create -n supercell_tuto_env -f tutorials/supercell_tuto_env.yaml
 conda activate supercell_tuto_env
-Rscript -e "devtools::remotes::install_github("GfellerLab/SuperCell@develop"),library(SuperCell)"
+Rscript -e "devtools::remotes::install_github("GfellerLab/SuperCell@develop");library(SuperCell)"
 ```
 
 ## Tutorials
