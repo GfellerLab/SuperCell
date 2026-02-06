@@ -1,0 +1,393 @@
+---
+title: "SuperCell 2.0 Tutorial: Bone Marrow CITE-seq Analysis"
+author: "SuperCell2.0 developers"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    number_sections: true
+    code_folding: show
+    theme: readable
+    fig_retina: 2
+    self_contained: false
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "figures/",
+  fig.width = 10, fig.height = 6,
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+# Tutorial setup
+
+Installing SuperCell2.0 package from gitHub
+
+```{r library, warning=FALSE, eval=FALSE}
+  if (!requireNamespace("remotes")) install.packages("remotes")
+remotes::install_github("GfellerLab/SuperCell@develop")
+```
+
+## Load library
+
+```{r load library, warning=FALSE, message=FALSE}
+library(SuperCell)
+library(Seurat)
+library(dplyr)
+library(ggplot2)
+library(patchwork)
+```
+
+## Load Bone Marrow CITE-seq data
+
+Bone Marrow CITE-seq data were generated in [Stuart et al., 2019](https://doi.org/10.1016/j.cell.2019.05.031) and finely annotated in [Hao et al., 2021](https://doi.org/10.1016/j.cell.2021.04.048). Data are available through the SeuratData R package.
+
+```{r load data}
+options(timeout=200)
+SeuratData::InstallData("bmcite")
+bm <- SeuratData::LoadData(ds = "bmcite")
+bm
+```
+
+These data have already undergone quality control with the removal of poor-quality cells, and the cells are annotated on two levels.
+
+```{r}
+head(FetchData(bm,c("celltype.l1","celltype.l2")))
+```
+
+## Settings
+
+Lets define some settings for this tutorial.
+
+## Settings
+
+```{r}
+rna.comp <- c(1:30) # components used from the dimension redcution of the RNA modality
+adt.comp <- c(1:18) # components used from the dimension redcution of the Protein modality
+prop.annotated.cells <- 0.5 # proportion of cell label to keep to illsutrate the semi-superveised workflow  (see below) 
+
+graining.level = 75 
+
+```
+
+# Single cell preprocessing
+
+## Dimension reductions
+
+Before identifying metacells we have to preprocess the single cell data. This includes data normalization and dimension reduction of each modality. For this we can follow a standard Seurat workflow.
+
+```{r}
+DefaultAssay(bm) <- 'ADT'
+VariableFeatures(bm) <- rownames(bm[["ADT"]])
+bm <- NormalizeData(bm, normalization.method = 'CLR', margin = 2) %>% 
+  ScaleData() %>% RunPCA(reduction.name = 'apca')
+
+DefaultAssay(bm) <- "RNA"
+bm <- NormalizeData(bm,normalization.method = "LogNormalize",assay = "RNA") %>% FindVariableFeatures() %>% ScaleData() %>% RunPCA()
+```
+
+## Single-cell multimodal integration
+
+Based on this dimension reductions we can integrate protein and RNA modalities together using the WNN approach from Seurat. This step is not required for metacell identification but we will use the single-cell final UMAP embedding to visually assess metacell quality.
+
+```{r}
+
+bm <- FindMultiModalNeighbors(
+  bm, 
+  reduction.list = list("pca", "apca"), 
+  dims.list = list(rna.comp, adt.comp), 
+  modality.weight.name = "RNA.weight")
+
+bm <- RunUMAP(bm, nn.name = "weighted.nn", reduction.name = "wnn.umap", reduction.key = "wnnUMAP_")
+
+DimPlot(bm,reduction = "wnn.umap", group.by = 'celltype.l1')
+DimPlot(bm,reduction = "wnn.umap", group.by = 'celltype.l2')
+```
+
+# Metacell identification with SuperCell2.0
+
+## Unsupervised multimodal metacell identification
+
+We can identify metacells based on protein and RNA modalities.
+
+```{r}
+bm.mc.multi <- SCimplify_for_Seurat(
+  bm, 
+  assay = c("RNA","ADT"),
+  reduction = list("pca", "apca"), 
+  dims = list(rna.comp, adt.comp), 
+  gamma = graining.level
+)
+
+
+```
+
+`SCimply_for_Seurat` function gives a seurat metacell object with aggregated (summed) raw counts for each modality. All categorical metadata available in the single cell seurat object are also aggregated in the resulting metacell object by assigning the metacell to the label with the maximum absolute abundance within it.
+
+```{r}
+bm.mc.multi
+head(FetchData(bm.mc.multi,c("celltype.l1","celltype.l1_purity","celltype.l2","celltype.l2_purity","size")))
+
+```
+
+The misc slot of the metacell seurat object contain information about SuperCell2.0 run that can be used for quality control such as coverage plot and direct rescaling (see below).
+
+```{r}
+names(bm.mc.multi@misc)
+
+#graining level used
+head(bm.mc.multi@misc$gamma)
+
+# membership vector linking single cells to metacells
+head(bm.mc.multi@misc$membership)
+
+#metacells_hierarchy used for rescaling 
+head(bm.mc.multi@misc$metacells_hierarchy$merges)
+
+```
+
+After identifying the metacells, a coverage plot of the single-cell latent space (if available) can be used to quickly assessed metacell quality.
+
+```{r fig.height=7,fig.width=9}
+cov.multi.unsup <- DimPlotSC(bm,
+                             bm.mc.multi,
+                             reduction = "wnn.umap",
+                             sc.col = "celltype.l2",
+                             metacell.col = "celltype.l2")
+cov.multi.unsup
+```
+
+We can appreciate the reduction in dropout noise on the RNA modality by looking at UMI counts and detected genes per single-cells/metacells
+
+```{r}
+bm$graining_level <- "single_cells"
+bm.mc.multi$graining_level <- "metacells (g75)"
+
+coverage_results <- rbind(FetchData(bm,c("nCount_RNA","nFeature_RNA","graining_level")),
+                        FetchData(bm.mc.multi,c("nCount_RNA","nFeature_RNA","graining_level"))
+                        )
+
+
+
+p1 <- ggplot(coverage_results,aes(x= graining_level,y = nCount_RNA,fill = graining_level)) + 
+  geom_boxplot() + 
+  theme_bw()
+
+p2 <- ggplot(coverage_results,aes(x= graining_level,y = nFeature_RNA,fill = graining_level)) + 
+  geom_boxplot() + 
+  theme_bw()
+
+wrap_plots(p1 + NoLegend(), p2)
+```
+
+This can be further illustrated by improved correlations between RNA and protein measurements in metacells compared to single cells. To visualize these correlations we have to normalize metacell data first.
+
+```{r fig.height=3.5,fig.width=8}
+DefaultAssay(bm.mc.multi) <- 'ADT'
+VariableFeatures(bm.mc.multi) <- rownames(bm.mc.multi[["ADT"]])
+bm.mc.multi <- NormalizeData(bm.mc.multi, normalization.method = 'CLR', margin = 2) 
+
+DefaultAssay(bm.mc.multi) <- "RNA"
+bm.mc.multi <- NormalizeData(bm.mc.multi,normalization.method = "LogNormalize",assay = "RNA")
+
+wrap_plots(FeatureScatter(bm,feature1 = "rna_CD14",feature2 = "adt_CD14",group.by = "celltype.l1")+ NoLegend(), 
+           FeatureScatter.SuperCell(bm.mc.multi,feature1 = "adt_CD14",feature2 = "rna_CD14",group.by = "celltype.l1"))
+
+wrap_plots(FeatureScatter(bm,feature1 = "rna_CD19",feature2 = "adt_CD19",group.by = "celltype.l1")+ NoLegend(), FeatureScatter.SuperCell(bm.mc.multi,feature1 = "adt_CD19",feature2 = "rna_CD19",group.by = "celltype.l1"))
+```
+
+## Unsupervised unimodal metacell identification
+
+We can also identify metacells based only on one modallity (eg. RNA).
+
+```{r}
+bm.mc.rna<- SCimplify_for_Seurat(
+  bm, 
+  assay = c("RNA"),
+  reduction = list("pca"), 
+  dims = list(rna.comp), 
+  gamma = graining.level
+)
+
+bm.mc.rna
+
+cov.rna.unsup <- DimPlotSC(bm,
+                           bm.mc.rna,
+                           reduction = "wnn.umap",
+                           sc.col = "celltype.l2",
+                           metacell.col = "celltype.l2")
+cov.rna.unsup
+```
+
+## Semi-supervised metacell identifications
+
+SuperCell2.0 can leverage prior knowledge of the cell type in the form of a partial annotation in order to help metacell identification.
+
+To illustrate this feature we can create a new annotation by hiding a certain amount of cell type labels.
+
+```{r}
+prop.to.hide <- 0.5
+bm[["partial_annotation"]] <- bm[["celltype.l2"]]
+
+cells.to.hide <- sample(colnames(bm),
+                        size = as.integer(prop.to.hide * ncol(bm) ))
+
+bm[["partial_annotation"]][cells.to.hide,] <- NA
+
+```
+
+We can now use the semi-supervised multimodal workflow
+
+```{r  results = "hide", warning=FALSE,message=FALSE}
+bm.mc.multi.sup <- SCimplify_for_Seurat(
+  bm, 
+  assay = c("RNA","ADT"),
+  reduction = list("pca", "apca"), 
+  dims = list(rna.comp, adt.comp), 
+  gamma = graining.level,
+  label = "partial_annotation"
+)
+
+
+cov.multi.sup <- DimPlotSC(bm,
+                           bm.mc.multi,
+                           reduction = "wnn.umap",
+                           sc.col = "celltype.l2",
+                           metacell.col = "celltype.l2")
+cov.multi.sup
+
+```
+
+And same using only RNA.
+
+```{r  results = "hide", warning=FALSE,message=FALSE}
+bm.mc.rna.sup<- SCimplify_for_Seurat(
+  bm, 
+  assay = c("RNA"),
+  reduction = list("pca"), 
+  dims = list(rna.comp), 
+  gamma = graining.level,
+  label = "partial_annotation"
+)
+
+
+
+cov.rna.sup <- DimPlotSC(bm,
+                         bm.mc.rna.sup,
+                         reduction = "wnn.umap",
+                         sc.col = "celltype.l2",
+                         metacell.col = "celltype.l2")
+cov.rna.sup
+```
+
+## Comparison of metacell workflows
+
+We can evaluate the different metacells workflows based on metacell purities with respect to the original single-cell annotation.
+
+```{r}
+bm.mc.multi$workflow <- "unsup_multi"
+bm.mc.multi.sup$workflow <- "semisup_multi"
+bm.mc.rna$workflow <- "unsup_RNA"
+bm.mc.rna.sup$workflow <- "semisup_RNA"
+
+purity_results <- rbind(FetchData(bm.mc.multi,c("celltype.l2_purity","workflow")),
+                        FetchData(bm.mc.multi.sup,c("celltype.l2_purity","workflow")),
+                        FetchData(bm.mc.rna,c("celltype.l2_purity","workflow")),
+                        FetchData(bm.mc.rna.sup,c("celltype.l2_purity","workflow")))
+
+purity_results$workflow <- factor(purity_results$workflow,levels = c("semisup_multi",
+                                                                     "unsup_multi",
+                                                                     "semisup_RNA",
+                                                                     "unsup_RNA"))
+
+ggplot(purity_results,aes(x= workflow,y = celltype.l2_purity,fill = workflow)) + 
+  geom_boxplot() + 
+  theme_bw()
+```
+
+Multimodal workflow outperforms RNA-based workflow and semi-supervision using partial annotation improve metacell quality.
+
+## Rescaling
+
+A metacell object can be rescaled to another graining level, without re-identifying metacells.
+
+```{r}
+bm.mc.multi <- SCimplify_for_Seurat(seurat = bm,seurat.mc = bm.mc.multi,gamma = 20)
+bm.mc.multi
+DimPlotSC(bm,
+          bm.mc.multi,
+          reduction = "wnn.umap",
+          sc.col = "celltype.l2",
+          metacell.col = "celltype.l2")
+```
+
+# Metacell downstream analysis
+
+We can use the metacells for faster and lighter downstream analysis.
+
+## Dimention reduction and multimodal embeddings of metacells
+
+We use the same workflow as for single cells with first dimension reductions specific to each modality.
+
+```{r}
+DefaultAssay(bm.mc.multi) <- 'ADT'
+VariableFeatures(bm.mc.multi) <- rownames(bm.mc.multi[["ADT"]])
+bm.mc.multi <- NormalizeData(bm.mc.multi, normalization.method = 'CLR', margin = 2) %>% 
+  ScaleData() %>% RunPCA(reduction.name = 'apca')
+
+DefaultAssay(bm.mc.multi) <- "RNA"
+bm.mc.multi <- NormalizeData(bm.mc.multi,normalization.method = "LogNormalize",assay = "RNA") %>% FindVariableFeatures() %>% ScaleData() %>% RunPCA()
+```
+
+Then we perform a multimodal integration of the metacells thanks to the WNN approach.
+
+```{r}
+bm.mc.multi <- FindMultiModalNeighbors(
+  bm.mc.multi, 
+  reduction.list = list("pca", "apca"), 
+  dims.list = list(rna.comp, adt.comp), 
+  modality.weight.name = "RNA.weight")
+
+bm.mc.multi <- RunUMAP(bm.mc.multi, nn.name = "weighted.nn", reduction.name = "wnn.umap", reduction.key = "wnnUMAP_")
+
+DimPlot(bm.mc.multi,reduction = "wnn.umap", group.by = 'celltype.l1')
+DimPlot(bm.mc.multi,reduction = "wnn.umap", group.by = 'celltype.l2')
+```
+
+We can cluster metacells based on the WNN graph.
+
+```{r}
+bm.mc.multi <- FindClusters(bm.mc.multi,graph.name = "wsnn")
+
+DimPlot(bm.mc.multi,reduction = "wnn.umap")
+```
+
+## Visualization
+
+SuperCell2.0 provides a set of functions to visualize metacell data.
+
+`DimPlot.Supercell` function can be used to display metacell size in Seurat dimension plots.
+
+```{r}
+DimPlot.SuperCell(bm.mc.multi,reduction = "wnn.umap", group.by = 'celltype.l1')
+DimPlot.SuperCell(bm.mc.multi,reduction = "wnn.umap", group.by = 'celltype.l2')
+DimPlot.SuperCell(bm.mc.multi,reduction = "wnn.umap") + ggtitle("Metacell clusters")
+
+```
+
+`VlnPlot.Supercell` function can be used for plotting violin plot weighted by metacell sizes.
+
+```{r}
+VlnPlot.SuperCell(bm.mc.multi,features = c("CD19","CD14","GNLY","CD34","FLT3","CD3G"),group.by = "celltype.l1",
+                  ncol = 3)
+
+VlnPlot.SuperCell(bm.mc.multi,features = c("CD19","CD14","GNLY","CD34","FLT3","CD3G","CD4","CD8A"),ncol = 2,stack = T,fill.by = "ident",group.by = "wsnn_res.0.8",flip = T)
+
+```

@@ -30,7 +30,7 @@ FeatureFeaturePlot.SuperCell <- function (seurat.obj, feature.x, feature.y, clus
     seurat.obj <- Seurat::NormalizeData(seurat.obj, normalization.method = normalization.method.1,
                                         margin = norm.margin.1)
   }
-  fe1 <- Seurat::GetAssayData(seurat.obj, slot = "data", assay = assays[1])[feature.x, , drop= F ]
+  fe1 <- Seurat::GetAssayData(seurat.obj, layer = "data", assay = assays[1])[feature.x, , drop= F ]
   feature.x <- paste0(gsub("_", "", tolower(assays[1])), "_", feature.x)
   rownames(fe1) <- feature.x
 
@@ -39,7 +39,7 @@ FeatureFeaturePlot.SuperCell <- function (seurat.obj, feature.x, feature.y, clus
     seurat.obj <- Seurat::NormalizeData(seurat.obj, normalization.method = normalization.method.2,
                                         margin = norm.margin.2)
   }
-  fe2 <- Seurat::GetAssayData(seurat.obj, slot = "data", assay = assays[2])[feature.y, , drop= F]
+  fe2 <- Seurat::GetAssayData(seurat.obj, layer = "data", assay = assays[2])[feature.y, , drop= F]
   feature.y <- paste0(gsub("_", "", tolower(assays[2])), "_", feature.y)
   rownames(fe2) <- feature.y
   fe <- rbind(fe1, fe2)
@@ -114,7 +114,9 @@ FeatureFeaturePlot.SuperCell <- function (seurat.obj, feature.x, feature.y, clus
 FeatureScatter.SuperCell <- function (object, feature1, feature2, cells = NULL, shuffle = FALSE,
                                       seed = 1, group.by = NULL, split.by = NULL, cols = NULL,
                                       size.by = "size", pt.size = 0.5, shape.by = NULL, span = NULL,
-                                      smooth = FALSE, combine = TRUE, slot = "data", plot.cor = TRUE,
+                                      smooth = FALSE, combine = TRUE,
+                                      layer = "data", 
+                                      plot.cor = TRUE,
                                       ncol = NULL, raster = NULL, raster.dpi = c(512, 512), jitter = FALSE,
                                       log = FALSE)
 {
@@ -124,7 +126,9 @@ FeatureScatter.SuperCell <- function (object, feature1, feature2, cells = NULL, 
     cells <- sample(x = cells)
   }
   group.by <- group.by %||% "ident"
-  data <- Seurat::FetchData(object = object, vars = c(feature1, feature2, size.by, group.by), cells = cells, slot = slot)
+  data <- Seurat::FetchData(object = object, vars = c(feature1, feature2, size.by, group.by), 
+                            cells = cells, 
+                            layer = layer)
   if (!grepl(pattern = feature1, x = names(x = data)[1])) {
     rlang::abort(message = paste("Feature 1", sQuote(x = feature1),
                           "not found"))
@@ -554,7 +558,7 @@ SingleDimPlot.SuperCell <- function (data, dims, col.by = NULL, cols = NULL, pt.
 ExpandMetacellSeuratAssay5 <- function(object,
                                        features,
                                        assay = "RNA",
-                                       #slot = "data",
+                                       #layer = "data",
                                        meta.data.vars = NULL) {
   membership <- rep(1:ncol(object), object$size)
   DefaultAssay(object) <- assay

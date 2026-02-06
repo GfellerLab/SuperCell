@@ -40,7 +40,7 @@ DimPlotSC(
 
 \item{pt_size}{size the single-cell points}
 
-\item{continuous_metric}{bolean indicating if the metric variable is continuous or not. If TRUE a continuous color scale will be used}
+\item{continuous_metric}{boolean indicating if the metric variable is continuous or not. If TRUE a continuous color scale will be used}
 }
 \value{
 a plot of metacells in single cell space

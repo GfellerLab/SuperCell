@@ -20,7 +20,7 @@ FeatureScatter.SuperCell(
   span = NULL,
   smooth = FALSE,
   combine = TRUE,
-  slot = "data",
+  layer = "data",
   plot.cor = TRUE,
   ncol = NULL,
   raster = NULL,
@@ -61,8 +61,6 @@ to split by cell identity}
 \item{smooth}{Smooth the graph (similar to smoothScatter)}
 
 \item{combine}{Combine plots into a single \code{\link[patchwork]{patchwork}ed}}
-
-\item{slot}{Slot to pull data from, should be one of 'counts', 'data', or 'scale.data'}
 
 \item{plot.cor}{Display correlation in plot title}
 

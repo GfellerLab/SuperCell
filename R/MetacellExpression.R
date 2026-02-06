@@ -70,7 +70,7 @@ MetacellExpression <- function(object, pb.method = "aggregate", assays = NULL, f
   else {
     category.matrix <- Matrix::sparse.model.matrix(object = as.formula(object = paste0("~0+",
                                                                                        paste0("data[,", 1:length(x = group.by), "]", collapse = ":"))))
-    print(dim(category.matrix))
+    #print(dim(category.matrix))
     colsums <- Matrix::colSums(x = category.matrix)
     category.matrix <- category.matrix[, colsums > 0]
     colsums <- colsums[colsums > 0]

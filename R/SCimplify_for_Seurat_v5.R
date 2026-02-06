@@ -9,7 +9,7 @@
 #' @param reduction a list of corresponding reduction name in the seurat single cell object.
 #' @param dims a list of corresponding dimensions to use.
 #' @param membership a vector of metacell membership as in SuperCell v1 to use to directly aggregate the data (optionnal).
-#' @return  A Seurat metacell object with metacell_hierarchy and memebrships in the slot misc.
+#' @return  A Seurat metacell object with metacell_hierarchy and memberships in the slot misc.
 #' @examples
 #' sobj.mc <- SCimplify_for_Seurat(seurat = pbmc,
 #'                          gamma = 30)
@@ -56,7 +56,7 @@ SCimplify_for_Seurat <- function(seurat,
       else {
         if (length(which(is.na(seurat[[label]][, 1]))) > 
             0) {
-          print("using partial annotation")
+          message("using partial annotation")
           unknowns <- colnames(seurat)[which(is.na(seurat[[label]][, 
                                                                    1]))]
           graphUnknown <- ComputeUnimodalKnn(seurat = seurat, 
@@ -117,7 +117,7 @@ SCimplify_for_Seurat <- function(seurat,
       else {
         if (length(which(is.na(seurat[[label]][, 1]))) > 
             0) {
-          print("using partial annotation")
+          message("using partial annotation")
           unknowns <- colnames(seurat)[which(is.na(seurat[[label]][, 
                                                                    1]))]
           graphUnknown <- ComputeMultimodalKnn(seurat = seurat, 
@@ -177,7 +177,7 @@ SCimplify_for_Seurat <- function(seurat,
     seurat[[paste0("walktrap_clusters_", assay[[1]])]] <- walktrap$membership
     membership <- igraph::cut_at(walktrap, no = floor(ncol(seurat)/gamma))
     names(membership) <- colnames(seurat)
-    print("metacells identified")
+    message("metacells identified")
   }
   else {
     if (is.null(membership) & !is.null(seurat.mc)) {
@@ -248,7 +248,7 @@ SCimplify_for_Seurat <- function(seurat,
                                                                bgzip_path = bgzip_path,
                                                                tabix_path = tabix_path,
                                                                nb_cl = nb_cl)
-        print("Fragment file aggregated")
+        message("Fragment file aggregated")
         mcFragments <- CreateFragmentObject(mcfragmentFileName,
                                             cells = colnames(chrom.assay.list[[chromAssay]]))
         
@@ -324,7 +324,7 @@ SCimplify_for_Seurat <- function(seurat,
     is.character(seurat[[X]][, 1]) | is.factor(seurat[[X]][, 
                                                            1])
   })
-  print("metadata assignement")
+  message("metadata assignement")
   for (f in colnames(seurat@meta.data)[fields]) {
     assign_res <- supercell_assign(clusters = seurat[[f]][,1], 
                                    supercell_membership =  paste0("Metacell_",membership), method = "absolute")
@@ -361,7 +361,7 @@ SCimplify_for_Seurat <- function(seurat,
 #' @param reduction a list of corresponding reduction name in the seurat single cell object.
 #' @param dims a list of corresponding dimensions to use.
 #' @param membership a vector of metacell membership as in SuperCell v1 to use to directly aggregate the data (optionnal).
-#' @return  A Seurat metacell object with metacell_hierarchy and memebrships in the slot misc.
+#' @return  A Seurat metacell object with metacell_hierarchy and memberships in the slot misc.
 #' @examples
 #' sobj.mc <- SCimplify_for_Seurat_v5(seurat = pbmc,
 #'                          gamma = 30)

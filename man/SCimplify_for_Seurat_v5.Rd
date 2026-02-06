@@ -46,7 +46,7 @@ SCimplify_for_Seurat_v5(
 \item{sobj.mc}{A metacell seurat object that will be rescaled (optional) it requires a metacell_hierarchy object in the slot misc.}
 }
 \value{
-A Seurat metacell object with metacell_hierarchy and memebrships in the slot misc.
+A Seurat metacell object with metacell_hierarchy and memberships in the slot misc.
 }
 \description{
 \code{SCimplify_for_Seurat_v5} 

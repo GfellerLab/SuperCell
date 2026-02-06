@@ -21,6 +21,7 @@ Imports:
     Matrix,
     matrixStats,
     plyr,
+    dplyr,
     irlba,
     grDevices,
     patchwork,
@@ -33,7 +34,6 @@ Imports:
     dbscan,
     cowplot,
     scales,
-    plotfunctions,
     proxy,
     methods,
     rlang,
@@ -42,12 +42,13 @@ Imports:
     data.table,
     foreach,
     doParallel
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Suggests:
     SingleCellExperiment,
     SummarizedExperiment,
     BSgenome.Hsapiens.UCSC.hg38,
     BSgenome.Hsapiens.UCSC.hg19,
+    plotfunctions,
     scater,
     knitr,
     rmarkdown,

@@ -12,3 +12,16 @@
 #' @source \doi{https://doi.org/10.1038/s41592-019-0425-8}
 
 "cell_lines"
+
+
+#' Subset of the bone marrow CITE-seq dataset
+#'
+#' CITE-seq data of one tube (HumanHTO7) of BM cells from [Stuart T, Butler A, et al. 2019](https://doi.org/10.1016/j.cell.2019.05.031).
+#'
+#' Data available as a seurat object in the SeuratData package' [GitHub](https://github.com/satijalab/seurat-data).
+#' Data are derived from GEO: GSE128639
+#'
+#' @format Seurat object
+#' @source \doi{https://doi.org/10.1016/j.cell.2019.05.031
+
+"bmcite_HumanHTO7"

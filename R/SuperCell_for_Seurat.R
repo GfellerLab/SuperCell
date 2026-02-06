@@ -11,7 +11,7 @@ ComputeUnimodalKnn <- function(seurat,
 {
   if (!is.null(subsetLabel) & !is.null(label)) {
     seurat <- seurat[, seurat[[label]][, 1] == subsetLabel]
-    print(seurat)
+    # print(seurat)
     if (dim(seurat)[2] <= 2) {
       k.knn = dim(seurat)[2]
     }
@@ -19,7 +19,7 @@ ComputeUnimodalKnn <- function(seurat,
       k.knn <- dim(seurat)[2] - 1
     }
   }
-  print(k.knn)
+  # print(k.knn)
   if (k.knn == 1) {
     graph <- igraph::make_empty_graph(n = 1, directed = F)
   }
@@ -30,19 +30,19 @@ ComputeUnimodalKnn <- function(seurat,
                                     k.param = k.knn, 
                                     return.neighbor = T)
     if (kernel) {
-      print("computing kernel")
+      message("computing kernel")
       if (is.null(kith)) {
         kith = k.knn%/%2
       }
       if (kith == 1) {
         kith = kith + 1
       }
-      print("Using assay:")
-      print(assay[[1]])
+      message("Using assay:")
+      message(assay[[1]])
       graph.name = paste0(assay[[1]], ".", graph.name)
-      print(graph.name)
-      print(k.knn)
-      print(is(seurat))
+      # print(graph.name)
+      # print(k.knn)
+      # print(is(seurat))
       j <- as.numeric(x = t(x = seurat@neighbors[[graph.name]]@nn.idx))
       i <- ((1:length(x = j)) - 1)%/%k.knn + 1
       x <- as.numeric(x = t(x = seurat@neighbors[[graph.name]]@nn.dist))
@@ -68,8 +68,8 @@ ComputeUnimodalKnn <- function(seurat,
       seurat <- Seurat::FindNeighbors(seurat, reduction = reduction[[1]], 
                                       dims = dims[[1]], k.param = k.knn)
       graph.name = paste0(assay[[1]], "_", graph.name)
-      print(graph.name)
-      print("making graph symmetric")
+      # print(graph.name)
+      # print("making graph symmetric")
       graph.adj <- seurat@graphs[[graph.name]] + Matrix::t(seurat@graphs[[graph.name]])
       graph <- igraph::graph_from_adjacency_matrix(graph.adj, 
                                                    diag = F, mode = "undirected", weighted = T)
@@ -100,7 +100,6 @@ ComputeMultimodalKnn <- function(seurat,
   kernelOri <- kernel
   if (!is.null(subsetLabel) & !is.null(label)) {
     seurat <- seurat[,seurat[[label]][,1] == subsetLabel]
-    print(seurat)
     if (dim(seurat)[2] <= 2) {
       k.knn = dim(seurat)[2]
     }
@@ -108,7 +107,7 @@ ComputeMultimodalKnn <- function(seurat,
       k.knn <- dim(seurat)[2] -1
     }
   }
-  print(k.knn)
+  #print(k.knn)
   if (k.knn == 1) {
     graph <- igraph::make_empty_graph(n=1,directed = F)
   } else {
@@ -124,10 +123,10 @@ ComputeMultimodalKnn <- function(seurat,
     # sometimes knn.range need to be decrease by more than the number of cells 
     while (searchingMn) {
       
-      print("k.knn:")
-      print(k.knn)
-      print("knn.range:")
-      print(knn.range)
+      # print("k.knn:")
+      # print(k.knn)
+      # print("knn.range:")
+      # print(knn.range)
       searchingMn <- F
       tryCatch( { seurat <- Seurat::FindMultiModalNeighbors(seurat,
                                                             reduction = reduction,
@@ -142,7 +141,7 @@ ComputeMultimodalKnn <- function(seurat,
       
       #if we cannot compute multimodal neighbors with seurat we make a complete graph
       if (k.knn < 1) {
-        print(subsetLabel)
+        # print(subsetLabel)
         complete <- TRUE
         kernel <- FALSE
         kernelOri <- TRUE
@@ -155,22 +154,22 @@ ComputeMultimodalKnn <- function(seurat,
       
     }
     
-    print("multimodal neighbors found")
+    message("multimodal neighbors found")
     
     # FindMultiModalNeighbors Seurat function does not consider the cell itself as the first neighbor (contrary to FindNeighbors)
     
     
     if (kernel) {
-      print("computing kernel")
+      message("computing kernel")
       if (is.null(kith)) { # regarding previous comment on exact number of neighbors, this will differ a little bit from unimodal mode
         kith = k.knn%/%2
       }
       if(kith == 1) { #This is not needed regarding previous comment on exact number of neighbors contrary to the unimodal mode  
         kith = kith+1
       }
-      print("Using assay:")
-      print(assay)
-      print(k.knn)
+      message("Using assay:")
+      message(cat(assay))
+      # print(k.knn)
       graph.name <- "weighted.nn"
       j <- as.numeric(x = t(x = seurat@neighbors[[graph.name]]@nn.idx))
       i <- ((1:length(x = j)) - 1) %/% k.knn + 1
@@ -204,7 +203,7 @@ ComputeMultimodalKnn <- function(seurat,
     }
     else {
       graph.name = paste0("w", graph.name)
-      print(graph.name)
+      # print(graph.name)
       graph.adj <- seurat@graphs[[graph.name]] + Matrix::t(seurat@graphs[[graph.name]])
       # Should not be needed as seurat multimodal knn looks symmetrical
       graph <- igraph::graph_from_adjacency_matrix(graph.adj, 
@@ -242,7 +241,7 @@ ComputeMultimodalKnn <- function(seurat,
 #' @param sc.color colors for single-cell idents
 #' @param alpha transparency value for the single-cell points
 #' @param pt_size size the single-cell points
-#' @param continuous_metric bolean indicating if the metric variable is continuous or not. If TRUE a continuous color scale will be used
+#' @param continuous_metric boolean indicating if the metric variable is continuous or not. If TRUE a continuous color scale will be used
 #' 
 #'
 #'
@@ -293,7 +292,7 @@ DimPlotSC <- function (seurat,
   }
   else {
     centroids[[metacell.col]] <- seurat.mc[[metacell.col]][, 1]
-    print(head(centroids))
+    # print(head(centroids))
   }
   if (!is.null(sc.col)) {
     seuratCoord <- data.frame(seuratCoord)
@@ -404,8 +403,6 @@ supercell_FeatureFeaturePlot_Seurat <- function(seurat.mc,
   }
   
   fe2 <- Seurat::GetAssayData(seurat.mc,slot = "data",assay = assays[2])[feature_y,]
-  
-  #feature_y <- paste0(tolower(assays[2]),"_",feature_y)
   
   rownames(fe2) <- feature_y
   
