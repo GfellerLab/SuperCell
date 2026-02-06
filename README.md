@@ -1,12 +1,3 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
-
-[![R-CMD-check](https://github.com/GfellerLab/SuperCell/workflows/R-CMD-check/badge.svg)](https://github.com/GfellerLab/SuperCell/actions)
-[1E![DOI](https://img.shields.io/badge/DOI%3A-0.1186/s12859--022--04861--1-brightgreen)](https://doi.org/10.1186/s12859-022-04861-1)
-
 # SuperCell2.0 enables construction of semi-supervised multimodal metacell atlases
 
 SuperCell2.0 now handles single-cell multimodal data such as CITE-seq
@@ -70,8 +61,8 @@ most of the result of the initial (i.e., single-cell) analyses.
 ## Installation
 
 SuperCell2.0 requires [Seurat](https://github.com/satijalab/seurat) for
-standard single cell assay, such as RNA and Protein assays, and
-[Signac](https://github.com/stuart-lab/signac) for chromatine assays as
+standard single-cell assays, such as RNA and Protein assays, and
+[Signac](https://github.com/stuart-lab/signac) for chromatin assays as
 weel as other R packages (the full list of dependencies is available
 [here](DESCRIPTION)). You can install install Supercell2.0 in R like
 this:

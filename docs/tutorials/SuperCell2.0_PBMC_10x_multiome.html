@@ -9,11 +9,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="SuperCell2.0 developers" />
+<meta name="author" content="Léonard Hérault" />
 
 <meta name="date" content="2026-02-06" />
 
-<title>SuperCell 2.0 Tutorial: Bone Marrow PBMC 10X multiome Analysis</title>
+<title>SuperCell 2.0 Tutorial: PBMC 10X multiome Analysis</title>
 
 <script src="SuperCell2.0_PBMC_10x_multiome_files/header-attrs-2.30/header-attrs.js"></script>
 <script src="SuperCell2.0_PBMC_10x_multiome_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -250,9 +250,9 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">SuperCell 2.0 Tutorial: Bone Marrow PBMC
-10X multiome Analysis</h1>
-<h4 class="author">SuperCell2.0 developers</h4>
+<h1 class="title toc-ignore">SuperCell 2.0 Tutorial: PBMC 10X multiome
+Analysis</h1>
+<h4 class="author">Léonard Hérault</h4>
 <h4 class="date">2026-02-06</h4>
 
 </div>
@@ -343,9 +343,9 @@ pbmc[[&quot;RNA&quot;]] &lt;- CreateAssay5Object(counts = GetAssayData(SeuratDat
                                                           layer = &quot;counts&quot;)) 
 
 gc()
-#&gt;             used (Mb) gc trigger   (Mb)  max used   (Mb)
-#&gt; Ncells  14548795  777   26399170 1409.9  26399170 1409.9
-#&gt; Vcells 211542996 1614  703391290 5366.5 695999984 5310.1</code></pre>
+#&gt;             used   (Mb) gc trigger   (Mb)   max used   (Mb)
+#&gt; Ncells  15382899  821.6   26979587 1440.9   26979587 1440.9
+#&gt; Vcells 431324805 3290.8 1160585517 8854.6 1158406029 8838.0</code></pre>
 <p>These data have already undergone quality control an are annotated in
 <code>"seurat_annotations"</code> poor-quality cells as
 <code>"filtered"</code>. We discard these cells for the following og
@@ -361,9 +361,9 @@ this tutorial.</p>
 
 pbmc &lt;- subset(pbmc,seurat_annotations != &quot;filtered&quot;)
 gc(verbose = F)
-#&gt;             used   (Mb) gc trigger   (Mb)  max used   (Mb)
-#&gt; Ncells  14552271  777.2   26399170 1409.9  26399170 1409.9
-#&gt; Vcells 323635637 2469.2  703391290 5366.5 695999984 5310.1
+#&gt;             used   (Mb) gc trigger   (Mb)   max used   (Mb)
+#&gt; Ncells  15381085  821.5   26979587 1440.9   26979587 1440.9
+#&gt; Vcells 543405375 4145.9 1160585517 8854.6 1158406029 8838.0
 
 pbmc
 #&gt; An object of class Seurat 
@@ -388,9 +388,10 @@ preprocessing</h1>
 number="2.1">
 <h2><span class="header-section-number">2.1</span> Peak calling with
 MACS2 (optional)</h2>
-<p>Seurat object contain broad peaks. In this tutorial, as in
+<p>Seurat object contains broad peaks. In this tutorial, as in
 SuperCell2.0 manuscript we propose to call narrow peaks with MACS2.
-Narrow peaks are expected to be better for TF motif analysis.</p>
+Narrow peaks are expected to be better for certain downstream ATAC
+analyses (TF motifs, GRN).</p>
 <pre class="r"><code>DefaultAssay(pbmc) &lt;- &quot;ATAC&quot;
 pbmc[[&quot;ATAC&quot;]] &lt;- subset(pbmc[[&quot;ATAC&quot;]] , features = rownames(pbmc[[&quot;ATAC&quot;]] )[1:2]) #a trick to save memory as we are calling new peaks
 gc()
@@ -447,14 +448,14 @@ pbmc &lt;- FindTopFeatures(pbmc, min.cutoff = &quot;q0&quot;)
 pbmc &lt;- RunSVD(pbmc)
 
 gc()
-#&gt;             used   (Mb) gc trigger   (Mb)  max used   (Mb)
-#&gt; Ncells  14794435  790.2   26399170 1409.9  26399170 1409.9
-#&gt; Vcells 351608707 2682.6  690320171 5266.8 861083164 6569.6</code></pre>
+#&gt;             used   (Mb) gc trigger   (Mb)   max used   (Mb)
+#&gt; Ncells  15535105  829.7   26979587 1440.9   26979587 1440.9
+#&gt; Vcells 570129783 4349.8 1114242096 8501.0 1158406029 8838.0</code></pre>
 <p>The fist compenent of lsi dimension reduction is correlated with
 sequencing depth of the ATAC modality. Thus, we discard it for metacell
 identification and downstream analysis.</p>
 <pre class="r"><code>DepthCor(pbmc)</code></pre>
-<p><img src="/home/l_herault/Documents/SuperCell/tutorials/figures/unnamed-chunk-10-1.png" alt="" width="960" /></p>
+<p><img src="SuperCell2.0_PBMC_10x_multiome_files/figure-html/unnamed-chunk-8-1.png" alt="" width="960" /></p>
 <pre class="r"><code>
 rna.comp &lt;- c(1:40) # components used from the dimension redcution of the RNA modality
 atac.comp &lt;- c(2:40) # components used from the dimension reduction of the ATAC modality
@@ -480,7 +481,7 @@ pbmc &lt;- RunUMAP(pbmc, nn.name = &quot;weighted.nn&quot;,
                 reduction.key = &quot;wnnUMAP_&quot;)
 
 DimPlot(pbmc,group.by = &quot;seurat_annotations&quot;)</code></pre>
-<p><img src="/home/l_herault/Documents/SuperCell/tutorials/figures/unnamed-chunk-11-1.png" alt="" width="960" /></p>
+<p><img src="SuperCell2.0_PBMC_10x_multiome_files/figure-html/unnamed-chunk-9-1.png" alt="" width="960" /></p>
 </div>
 </div>
 <div id="metacell-identification-with-supercell2.0"
@@ -552,7 +553,7 @@ quality.</p>
                              sc.col = &quot;seurat_annotations&quot;,
                              metacell.col = &quot;seurat_annotations&quot;)
 cov.multi.unsup</code></pre>
-<p><img src="/home/l_herault/Documents/SuperCell/tutorials/figures/unnamed-chunk-15-1.png" alt="" width="864" /></p>
+<p><img src="SuperCell2.0_PBMC_10x_multiome_files/figure-html/unnamed-chunk-13-1.png" alt="" width="864" /></p>
 <p>We can appreciate the reduction in dropout noise on the RNA and ATAC
 modalities by looking at UMI counts and detected features per
 single-cells/metacells</p>
@@ -583,10 +584,10 @@ p4 &lt;- ggplot(coverage_results,aes(x= graining_level,y = nFeature_ATAC,fill = 
   geom_boxplot()+ theme_bw()
 
 wrap_plots(p1 + NoLegend(), p2, p3+ NoLegend(), p4 + NoLegend())   </code></pre>
-<p><img src="/home/l_herault/Documents/SuperCell/tutorials/figures/unnamed-chunk-16-1.png" alt="" width="960" /></p>
+<p><img src="SuperCell2.0_PBMC_10x_multiome_files/figure-html/unnamed-chunk-14-1.png" alt="" width="960" /></p>
 </div>
-<div id="metacells-purity" class="section level2" number="3.2">
-<h2><span class="header-section-number">3.2</span> Metacells purity</h2>
+<div id="metacell-purity" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> Metacell purity</h2>
 <p>We can evaluate the obtained metacells based on their purities with
 respect to the original single-cell annotation.</p>
 <pre class="r"><code>
@@ -594,14 +595,14 @@ ggplot(FetchData(pbmc.mc.multi,c(&quot;graining_level&quot;,&quot;seurat_annotat
        aes(x= graining_level, fill = graining_level,y = seurat_annotations_purity)) + 
   geom_boxplot() + 
   theme_bw()</code></pre>
-<p><img src="/home/l_herault/Documents/SuperCell/tutorials/figures/unnamed-chunk-17-1.png" alt="" width="960" /></p>
+<p><img src="SuperCell2.0_PBMC_10x_multiome_files/figure-html/unnamed-chunk-15-1.png" alt="" width="960" /></p>
 <p>We don’t need the single-cell object anymore</p>
 <pre class="r"><code># saveRDS(pbmc.mc.multi,&#39;pbmc_mc.rds&#39;)
 remove(pbmc)
 gc()
-#&gt;             used   (Mb) gc trigger   (Mb)  max used   (Mb)
-#&gt; Ncells  15228015  813.3   26399170 1409.9  26399170 1409.9
-#&gt; Vcells 374431248 2856.7  690320171 5266.8 861083164 6569.6</code></pre>
+#&gt;             used   (Mb) gc trigger   (Mb)   max used   (Mb)
+#&gt; Ncells  15538777  829.9   26979587 1440.9   26979587 1440.9
+#&gt; Vcells 589983661 4501.3 1114242096 8501.0 1158406029 8838.0</code></pre>
 </div>
 <div id="aggregating-fragment-file-at-the-metacell-level"
 class="section level2" number="3.3">
@@ -621,6 +622,7 @@ mc.frag.path &lt;- AggregateFragmentFile(input_file = dest.fragment.file,
                                       nb_cl = 4, # number of cores to use
                                       output_path = &quot;./PBMC_10Xmultiome/fragments/&quot;,
                                       membership = membership.vec)
+#&gt; [1] &quot;/home/l_herault/Documents/SuperCell/tutorials/PBMC_10Xmultiome/fragments/MC_pbmc_granulocyte_sorted_10k_atac_fragments.tsv.gz aggregated framgent files already exists, it will be overwritten&quot;
 #&gt; [1] &quot;Start fragments file split&quot;
 #&gt; [1] &quot;Start parallel update&quot;
 #&gt; [1] &quot;Start concat&quot;
@@ -634,13 +636,18 @@ frag.mc &lt;- CreateFragmentObject(mc.frag.path,
 Fragments(pbmc.mc.multi[[&quot;ATAC&quot;]]) &lt;- frag.mc
 
 gc()
-#&gt;             used   (Mb) gc trigger   (Mb)  max used   (Mb)
-#&gt; Ncells  15251018  814.5   26399170 1409.9  26399170 1409.9
-#&gt; Vcells 373797804 2851.9  690320171 5266.8 861083164 6569.6</code></pre>
+#&gt;             used   (Mb) gc trigger   (Mb)   max used   (Mb)
+#&gt; Ncells  15561775  831.1   26979587 1440.9   26979587 1440.9
+#&gt; Vcells 589350228 4496.4 1114242096 8501.0 1158406029 8838.0</code></pre>
 </div>
+</div>
+<div id="metacell-downstream-analysis" class="section level1"
+number="4">
+<h1><span class="header-section-number">4</span> Metacell downstream
+analysis</h1>
 <div id="gene-activities-at-the-metacell-level" class="section level2"
-number="3.4">
-<h2><span class="header-section-number">3.4</span> Gene activities at
+number="4.1">
+<h2><span class="header-section-number">4.1</span> Gene activities at
 the metacell level</h2>
 <p>Now that we have aggregated the fragment file at the metacell level
 we can compute gene activities (eg. gene body accessibility) in our
@@ -660,6 +667,10 @@ pbmc.mc.multi &lt;- NormalizeData(
   normalization.method = &quot;LogNormalize&quot;, 
   scale.factor = median(pbmc.mc.multi$nCount_ACTIVITY) 
 )</code></pre>
+</div>
+<div id="intermodality-correlation" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Intermodality
+correlation</h2>
 <p>Finally we can evaluate the correlation between gene activity and
 gene expression in our metacells for selected genes. For this we have to
 normalize the RNA assay in our metacells first. We can do this for TCF7
@@ -671,7 +682,7 @@ FeatureScatter.SuperCell(pbmc.mc.multi,
                          feature1 = &quot;rna_TCF7&quot;,
                          feature2 = &quot;activity_TCF7&quot;,
                          group.by = &quot;seurat_annotations&quot;)</code></pre>
-<p><img src="/home/l_herault/Documents/SuperCell/tutorials/figures/unnamed-chunk-21-1.png" alt="" width="960" /></p>
+<p><img src="SuperCell2.0_PBMC_10x_multiome_files/figure-html/unnamed-chunk-19-1.png" alt="" width="960" /></p>
 </div>
 </div>
 
