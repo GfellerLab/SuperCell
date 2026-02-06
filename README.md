@@ -81,7 +81,7 @@ you can install everything using conda like this:
 ``` bash
 conda create -n supercell_tuto_env -f tutorials/supercell_tuto_env.yaml
 conda activate supercell_tuto_env
-Rscript -e "devtools::remotes::install_github("GfellerLab/SuperCell@develop");library(SuperCell)"
+Rscript -e "devtools::remotes::install_github('GfellerLab/SuperCell@develop');library(SuperCell)"
 ```
 
 ## Tutorials
