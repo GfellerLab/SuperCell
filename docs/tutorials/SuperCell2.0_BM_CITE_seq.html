@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="SuperCell2.0 developers" />
+
+<meta name="date" content="2026-02-06" />
+
+<title>SuperCell 2.0 Tutorial: Bone Marrow CITE-seq Analysis</title>
+
+<script src="SuperCell2.0_BM_CITE_seq_files/header-attrs-2.30/header-attrs.js"></script>
+<script src="SuperCell2.0_BM_CITE_seq_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="SuperCell2.0_BM_CITE_seq_files/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="SuperCell2.0_BM_CITE_seq_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="SuperCell2.0_BM_CITE_seq_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="SuperCell2.0_BM_CITE_seq_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="SuperCell2.0_BM_CITE_seq_files/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="SuperCell2.0_BM_CITE_seq_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="SuperCell2.0_BM_CITE_seq_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="SuperCell2.0_BM_CITE_seq_files/navigation-1.1/tabsets.js"></script>
+<script src="SuperCell2.0_BM_CITE_seq_files/navigation-1.1/codefolding.js"></script>
+<link href="SuperCell2.0_BM_CITE_seq_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="SuperCell2.0_BM_CITE_seq_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">SuperCell 2.0 Tutorial: Bone Marrow
+CITE-seq Analysis</h1>
+<h4 class="author">SuperCell2.0 developers</h4>
+<h4 class="date">2026-02-06</h4>
+
+</div>
+
+
+<div id="tutorial-setup" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Tutorial setup</h1>
+<p>Installing SuperCell2.0 package from gitHub</p>
+<pre class="r"><code>  if (!requireNamespace(&quot;remotes&quot;)) install.packages(&quot;remotes&quot;)
+remotes::install_github(&quot;GfellerLab/SuperCell@develop&quot;)</code></pre>
+<div id="load-library" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Load library</h2>
+<pre class="r"><code>library(SuperCell)
+library(Seurat)
+library(dplyr)
+library(ggplot2)
+library(patchwork)</code></pre>
+</div>
+<div id="load-bone-marrow-cite-seq-data" class="section level2"
+number="1.2">
+<h2><span class="header-section-number">1.2</span> Load Bone Marrow
+CITE-seq data</h2>
+<p>Bone Marrow CITE-seq data were generated in <a
+href="https://doi.org/10.1016/j.cell.2019.05.031">Stuart et al.,
+2019</a> and finely annotated in <a
+href="https://doi.org/10.1016/j.cell.2021.04.048">Hao et al., 2021</a>.
+Data are available through the SeuratData R package.</p>
+<pre class="r"><code>options(timeout=200)
+SeuratData::InstallData(&quot;bmcite&quot;)
+bm &lt;- SeuratData::LoadData(ds = &quot;bmcite&quot;)
+bm
+#&gt; An object of class Seurat 
+#&gt; 17034 features across 30672 samples within 2 assays 
+#&gt; Active assay: RNA (17009 features, 2000 variable features)
+#&gt;  2 layers present: counts, data
+#&gt;  1 other assay present: ADT
+#&gt;  1 dimensional reduction calculated: spca</code></pre>
+<p>These data have already undergone quality control with the removal of
+poor-quality cells, and the cells are annotated on two levels.</p>
+<pre class="r"><code>head(FetchData(bm,c(&quot;celltype.l1&quot;,&quot;celltype.l2&quot;)))
+#&gt;                           celltype.l1 celltype.l2
+#&gt; a_AAACCTGAGCTTATCG-1 Progenitor cells    Prog_RBC
+#&gt; a_AAACCTGAGGTGGGTT-1           T cell         gdT
+#&gt; a_AAACCTGAGTACATGA-1           T cell   CD4 Naive
+#&gt; a_AAACCTGCAAACCTAC-1           T cell  CD4 Memory
+#&gt; a_AAACCTGCAAGGTGTG-1          Mono/DC   CD14 Mono
+#&gt; a_AAACCTGCACGGTAGA-1           B cell     Naive B</code></pre>
+</div>
+<div id="settings" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Settings</h2>
+<p>Lets define some settings for this tutorial.</p>
+</div>
+<div id="settings-1" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> Settings</h2>
+<pre class="r"><code>rna.comp &lt;- c(1:30) # components used from the dimension redcution of the RNA modality
+adt.comp &lt;- c(1:18) # components used from the dimension redcution of the Protein modality
+prop.annotated.cells &lt;- 0.5 # proportion of cell label to keep to illsutrate the semi-superveised workflow  (see below) 
+
+graining.level = 75 
+</code></pre>
+</div>
+</div>
+<div id="single-cell-preprocessing" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Single cell
+preprocessing</h1>
+<div id="dimension-reductions" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Dimension
+reductions</h2>
+<p>Before identifying metacells we have to preprocess the single cell
+data. This includes data normalization and dimension reduction of each
+modality. For this we can follow a standard Seurat workflow.</p>
+<pre class="r"><code>DefaultAssay(bm) &lt;- &#39;ADT&#39;
+VariableFeatures(bm) &lt;- rownames(bm[[&quot;ADT&quot;]])
+bm &lt;- NormalizeData(bm, normalization.method = &#39;CLR&#39;, margin = 2) %&gt;% 
+  ScaleData() %&gt;% RunPCA(reduction.name = &#39;apca&#39;)
+
+DefaultAssay(bm) &lt;- &quot;RNA&quot;
+bm &lt;- NormalizeData(bm,normalization.method = &quot;LogNormalize&quot;,assay = &quot;RNA&quot;) %&gt;% FindVariableFeatures() %&gt;% ScaleData() %&gt;% RunPCA()</code></pre>
+</div>
+<div id="single-cell-multimodal-integration" class="section level2"
+number="2.2">
+<h2><span class="header-section-number">2.2</span> Single-cell
+multimodal integration</h2>
+<p>Based on this dimension reductions we can integrate protein and RNA
+modalities together using the WNN approach from Seurat. This step is not
+required for metacell identification but we will use the single-cell
+final UMAP embedding to visually assess metacell quality.</p>
+<pre class="r"><code>
+bm &lt;- FindMultiModalNeighbors(
+  bm, 
+  reduction.list = list(&quot;pca&quot;, &quot;apca&quot;), 
+  dims.list = list(rna.comp, adt.comp), 
+  modality.weight.name = &quot;RNA.weight&quot;)
+
+bm &lt;- RunUMAP(bm, nn.name = &quot;weighted.nn&quot;, reduction.name = &quot;wnn.umap&quot;, reduction.key = &quot;wnnUMAP_&quot;)
+
+DimPlot(bm,reduction = &quot;wnn.umap&quot;, group.by = &#39;celltype.l1&#39;)</code></pre>
+<p><img src="figures/unnamed-chunk-5-1.png" alt="" width="960" /></p>
+<pre class="r"><code>DimPlot(bm,reduction = &quot;wnn.umap&quot;, group.by = &#39;celltype.l2&#39;)</code></pre>
+<p><img src="figures/unnamed-chunk-5-2.png" alt="" width="960" /></p>
+</div>
+</div>
+<div id="metacell-identification-with-supercell2.0"
+class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Metacell identification
+with SuperCell2.0</h1>
+<div id="unsupervised-multimodal-metacell-identification"
+class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Unsupervised
+multimodal metacell identification</h2>
+<p>We can identify metacells based on protein and RNA modalities.</p>
+<pre class="r"><code>bm.mc.multi &lt;- SCimplify_for_Seurat(
+  bm, 
+  assay = c(&quot;RNA&quot;,&quot;ADT&quot;),
+  reduction = list(&quot;pca&quot;, &quot;apca&quot;), 
+  dims = list(rna.comp, adt.comp), 
+  gamma = graining.level
+)
+#&gt; RNA ADT</code></pre>
+<p><code>SCimply_for_Seurat</code> function gives a seurat metacell
+object with aggregated (summed) raw counts for each modality. All
+categorical metadata available in the single cell seurat object are also
+aggregated in the resulting metacell object by assigning the metacell to
+the label with the maximum absolute abundance within it.</p>
+<pre class="r"><code>bm.mc.multi
+#&gt; An object of class Seurat 
+#&gt; 17034 features across 408 samples within 2 assays 
+#&gt; Active assay: RNA (17009 features, 0 variable features)
+#&gt;  1 layer present: counts
+#&gt;  1 other assay present: ADT
+head(FetchData(bm.mc.multi,c(&quot;celltype.l1&quot;,&quot;celltype.l1_purity&quot;,&quot;celltype.l2&quot;,&quot;celltype.l2_purity&quot;,&quot;size&quot;)))
+#&gt;            celltype.l1 celltype.l1_purity    celltype.l2 celltype.l2_purity
+#&gt; Metacell_1      B cell          1.0000000        Naive B          1.0000000
+#&gt; Metacell_2      B cell          1.0000000       Memory B          1.0000000
+#&gt; Metacell_3      T cell          0.9883721   CD8 Memory_1          0.5930233
+#&gt; Metacell_4      T cell          1.0000000      CD8 Naive          0.9964664
+#&gt; Metacell_5      T cell          0.9848485     CD4 Memory          0.9696970
+#&gt; Metacell_6      T cell          1.0000000 CD8 Effector_1          0.9761905
+#&gt;            size
+#&gt; Metacell_1  242
+#&gt; Metacell_2  102
+#&gt; Metacell_3   86
+#&gt; Metacell_4  283
+#&gt; Metacell_5   66
+#&gt; Metacell_6   84</code></pre>
+<p>The misc slot of the metacell seurat object contain information about
+SuperCell2.0 run that can be used for quality control such as coverage
+plot and direct rescaling (see below).</p>
+<pre class="r"><code>names(bm.mc.multi@misc)
+#&gt; [1] &quot;metacells_hierarchy&quot; &quot;walktrap_clusters&quot;   &quot;gamma&quot;              
+#&gt; [4] &quot;membership&quot;
+
+#graining level used
+head(bm.mc.multi@misc$gamma)
+#&gt; [1] 75
+
+# membership vector linking single cells to metacells
+head(bm.mc.multi@misc$membership)
+#&gt; a_AAACCTGAGCTTATCG-1 a_AAACCTGAGGTGGGTT-1 a_AAACCTGAGTACATGA-1 
+#&gt;                  301                    5                  149 
+#&gt; a_AAACCTGCAAACCTAC-1 a_AAACCTGCAAGGTGTG-1 a_AAACCTGCACGGTAGA-1 
+#&gt;                  147                   15                   16
+
+#metacells_hierarchy used for rescaling 
+head(bm.mc.multi@misc$metacells_hierarchy$merges)
+#&gt;       [,1]  [,2]
+#&gt; [1,] 22564 22595
+#&gt; [2,] 10466 30252
+#&gt; [3,] 12891 13231
+#&gt; [4,]  6042 13833
+#&gt; [5,] 21930 29883
+#&gt; [6,]  5677 30674</code></pre>
+<p>After identifying the metacells, a coverage plot of the single-cell
+latent space (if available) can be used to quickly assessed metacell
+quality.</p>
+<pre class="r"><code>cov.multi.unsup &lt;- DimPlotSC(bm,
+                             bm.mc.multi,
+                             reduction = &quot;wnn.umap&quot;,
+                             sc.col = &quot;celltype.l2&quot;,
+                             metacell.col = &quot;celltype.l2&quot;)
+cov.multi.unsup</code></pre>
+<p><img src="figures/unnamed-chunk-9-1.png" alt="" width="864" /></p>
+<p>We can appreciate the reduction in dropout noise on the RNA modality
+by looking at UMI counts and detected genes per
+single-cells/metacells</p>
+<pre class="r"><code>bm$graining_level &lt;- &quot;single_cells&quot;
+bm.mc.multi$graining_level &lt;- &quot;metacells (g75)&quot;
+
+coverage_results &lt;- rbind(FetchData(bm,c(&quot;nCount_RNA&quot;,&quot;nFeature_RNA&quot;,&quot;graining_level&quot;)),
+                        FetchData(bm.mc.multi,c(&quot;nCount_RNA&quot;,&quot;nFeature_RNA&quot;,&quot;graining_level&quot;))
+                        )
+
+
+
+p1 &lt;- ggplot(coverage_results,aes(x= graining_level,y = nCount_RNA,fill = graining_level)) + 
+  geom_boxplot() + 
+  theme_bw()
+
+p2 &lt;- ggplot(coverage_results,aes(x= graining_level,y = nFeature_RNA,fill = graining_level)) + 
+  geom_boxplot() + 
+  theme_bw()
+
+wrap_plots(p1 + NoLegend(), p2)</code></pre>
+<p><img src="figures/unnamed-chunk-10-1.png" alt="" width="960" /></p>
+<p>This can be further illustrated by improved correlations between RNA
+and protein measurements in metacells compared to single cells. To
+visualize these correlations we have to normalize metacell data
+first.</p>
+<pre class="r"><code>DefaultAssay(bm.mc.multi) &lt;- &#39;ADT&#39;
+VariableFeatures(bm.mc.multi) &lt;- rownames(bm.mc.multi[[&quot;ADT&quot;]])
+bm.mc.multi &lt;- NormalizeData(bm.mc.multi, normalization.method = &#39;CLR&#39;, margin = 2) 
+
+DefaultAssay(bm.mc.multi) &lt;- &quot;RNA&quot;
+bm.mc.multi &lt;- NormalizeData(bm.mc.multi,normalization.method = &quot;LogNormalize&quot;,assay = &quot;RNA&quot;)
+
+wrap_plots(FeatureScatter(bm,feature1 = &quot;rna_CD14&quot;,feature2 = &quot;adt_CD14&quot;,group.by = &quot;celltype.l1&quot;)+ NoLegend(), 
+           FeatureScatter.SuperCell(bm.mc.multi,feature1 = &quot;adt_CD14&quot;,feature2 = &quot;rna_CD14&quot;,group.by = &quot;celltype.l1&quot;))</code></pre>
+<p><img src="figures/unnamed-chunk-11-1.png" alt="" width="768" /></p>
+<pre class="r"><code>
+wrap_plots(FeatureScatter(bm,feature1 = &quot;rna_CD19&quot;,feature2 = &quot;adt_CD19&quot;,group.by = &quot;celltype.l1&quot;)+ NoLegend(), FeatureScatter.SuperCell(bm.mc.multi,feature1 = &quot;adt_CD19&quot;,feature2 = &quot;rna_CD19&quot;,group.by = &quot;celltype.l1&quot;))</code></pre>
+<p><img src="figures/unnamed-chunk-11-2.png" alt="" width="768" /></p>
+</div>
+<div id="unsupervised-unimodal-metacell-identification"
+class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> Unsupervised unimodal
+metacell identification</h2>
+<p>We can also identify metacells based only on one modallity (eg.
+RNA).</p>
+<pre class="r"><code>bm.mc.rna&lt;- SCimplify_for_Seurat(
+  bm, 
+  assay = c(&quot;RNA&quot;),
+  reduction = list(&quot;pca&quot;), 
+  dims = list(rna.comp), 
+  gamma = graining.level
+)
+
+bm.mc.rna
+#&gt; An object of class Seurat 
+#&gt; 17034 features across 408 samples within 2 assays 
+#&gt; Active assay: RNA (17009 features, 0 variable features)
+#&gt;  1 layer present: counts
+#&gt;  1 other assay present: ADT
+
+cov.rna.unsup &lt;- DimPlotSC(bm,
+                           bm.mc.rna,
+                           reduction = &quot;wnn.umap&quot;,
+                           sc.col = &quot;celltype.l2&quot;,
+                           metacell.col = &quot;celltype.l2&quot;)
+cov.rna.unsup</code></pre>
+<p><img src="figures/unnamed-chunk-12-1.png" alt="" width="960" /></p>
+</div>
+<div id="semi-supervised-metacell-identifications"
+class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> Semi-supervised
+metacell identifications</h2>
+<p>SuperCell2.0 can leverage prior knowledge of the cell type in the
+form of a partial annotation in order to help metacell
+identification.</p>
+<p>To illustrate this feature we can create a new annotation by hiding a
+certain amount of cell type labels.</p>
+<pre class="r"><code>prop.to.hide &lt;- 0.5
+bm[[&quot;partial_annotation&quot;]] &lt;- bm[[&quot;celltype.l2&quot;]]
+
+cells.to.hide &lt;- sample(colnames(bm),
+                        size = as.integer(prop.to.hide * ncol(bm) ))
+
+bm[[&quot;partial_annotation&quot;]][cells.to.hide,] &lt;- NA
+</code></pre>
+<p>We can now use the semi-supervised multimodal workflow</p>
+<pre class="r"><code>bm.mc.multi.sup &lt;- SCimplify_for_Seurat(
+  bm, 
+  assay = c(&quot;RNA&quot;,&quot;ADT&quot;),
+  reduction = list(&quot;pca&quot;, &quot;apca&quot;), 
+  dims = list(rna.comp, adt.comp), 
+  gamma = graining.level,
+  label = &quot;partial_annotation&quot;
+)
+
+
+cov.multi.sup &lt;- DimPlotSC(bm,
+                           bm.mc.multi,
+                           reduction = &quot;wnn.umap&quot;,
+                           sc.col = &quot;celltype.l2&quot;,
+                           metacell.col = &quot;celltype.l2&quot;)
+cov.multi.sup</code></pre>
+<p><img src="figures/unnamed-chunk-14-1.png" alt="" width="960" /></p>
+<p>And same using only RNA.</p>
+<pre class="r"><code>bm.mc.rna.sup&lt;- SCimplify_for_Seurat(
+  bm, 
+  assay = c(&quot;RNA&quot;),
+  reduction = list(&quot;pca&quot;), 
+  dims = list(rna.comp), 
+  gamma = graining.level,
+  label = &quot;partial_annotation&quot;
+)
+
+
+
+cov.rna.sup &lt;- DimPlotSC(bm,
+                         bm.mc.rna.sup,
+                         reduction = &quot;wnn.umap&quot;,
+                         sc.col = &quot;celltype.l2&quot;,
+                         metacell.col = &quot;celltype.l2&quot;)
+cov.rna.sup</code></pre>
+<p><img src="figures/unnamed-chunk-15-1.png" alt="" width="960" /></p>
+</div>
+<div id="comparison-of-metacell-workflows" class="section level2"
+number="3.4">
+<h2><span class="header-section-number">3.4</span> Comparison of
+metacell workflows</h2>
+<p>We can evaluate the different metacells workflows based on metacell
+purities with respect to the original single-cell annotation.</p>
+<pre class="r"><code>bm.mc.multi$workflow &lt;- &quot;unsup_multi&quot;
+bm.mc.multi.sup$workflow &lt;- &quot;semisup_multi&quot;
+bm.mc.rna$workflow &lt;- &quot;unsup_RNA&quot;
+bm.mc.rna.sup$workflow &lt;- &quot;semisup_RNA&quot;
+
+purity_results &lt;- rbind(FetchData(bm.mc.multi,c(&quot;celltype.l2_purity&quot;,&quot;workflow&quot;)),
+                        FetchData(bm.mc.multi.sup,c(&quot;celltype.l2_purity&quot;,&quot;workflow&quot;)),
+                        FetchData(bm.mc.rna,c(&quot;celltype.l2_purity&quot;,&quot;workflow&quot;)),
+                        FetchData(bm.mc.rna.sup,c(&quot;celltype.l2_purity&quot;,&quot;workflow&quot;)))
+
+purity_results$workflow &lt;- factor(purity_results$workflow,levels = c(&quot;semisup_multi&quot;,
+                                                                     &quot;unsup_multi&quot;,
+                                                                     &quot;semisup_RNA&quot;,
+                                                                     &quot;unsup_RNA&quot;))
+
+ggplot(purity_results,aes(x= workflow,y = celltype.l2_purity,fill = workflow)) + 
+  geom_boxplot() + 
+  theme_bw()</code></pre>
+<p><img src="figures/unnamed-chunk-16-1.png" alt="" width="960" /></p>
+<p>Multimodal workflow outperforms RNA-based workflow and
+semi-supervision using partial annotation improve metacell quality.</p>
+</div>
+<div id="rescaling" class="section level2" number="3.5">
+<h2><span class="header-section-number">3.5</span> Rescaling</h2>
+<p>A metacell object can be rescaled to another graining level, without
+re-identifying metacells.</p>
+<pre class="r"><code>bm.mc.multi &lt;- SCimplify_for_Seurat(seurat = bm,seurat.mc = bm.mc.multi,gamma = 20)
+bm.mc.multi
+#&gt; An object of class Seurat 
+#&gt; 17034 features across 1533 samples within 2 assays 
+#&gt; Active assay: RNA (17009 features, 0 variable features)
+#&gt;  1 layer present: counts
+#&gt;  1 other assay present: ADT
+DimPlotSC(bm,
+          bm.mc.multi,
+          reduction = &quot;wnn.umap&quot;,
+          sc.col = &quot;celltype.l2&quot;,
+          metacell.col = &quot;celltype.l2&quot;)</code></pre>
+<p><img src="figures/unnamed-chunk-17-1.png" alt="" width="960" /></p>
+</div>
+</div>
+<div id="metacell-downstream-analysis" class="section level1"
+number="4">
+<h1><span class="header-section-number">4</span> Metacell downstream
+analysis</h1>
+<p>We can use the metacells for faster and lighter downstream
+analysis.</p>
+<div id="dimention-reduction-and-multimodal-embeddings-of-metacells"
+class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Dimention reduction
+and multimodal embeddings of metacells</h2>
+<p>We use the same workflow as for single cells with first dimension
+reductions specific to each modality.</p>
+<pre class="r"><code>DefaultAssay(bm.mc.multi) &lt;- &#39;ADT&#39;
+VariableFeatures(bm.mc.multi) &lt;- rownames(bm.mc.multi[[&quot;ADT&quot;]])
+bm.mc.multi &lt;- NormalizeData(bm.mc.multi, normalization.method = &#39;CLR&#39;, margin = 2) %&gt;% 
+  ScaleData() %&gt;% RunPCA(reduction.name = &#39;apca&#39;)
+
+DefaultAssay(bm.mc.multi) &lt;- &quot;RNA&quot;
+bm.mc.multi &lt;- NormalizeData(bm.mc.multi,normalization.method = &quot;LogNormalize&quot;,assay = &quot;RNA&quot;) %&gt;% FindVariableFeatures() %&gt;% ScaleData() %&gt;% RunPCA()</code></pre>
+<p>Then we perform a multimodal integration of the metacells thanks to
+the WNN approach.</p>
+<pre class="r"><code>bm.mc.multi &lt;- FindMultiModalNeighbors(
+  bm.mc.multi, 
+  reduction.list = list(&quot;pca&quot;, &quot;apca&quot;), 
+  dims.list = list(rna.comp, adt.comp), 
+  modality.weight.name = &quot;RNA.weight&quot;)
+
+bm.mc.multi &lt;- RunUMAP(bm.mc.multi, nn.name = &quot;weighted.nn&quot;, reduction.name = &quot;wnn.umap&quot;, reduction.key = &quot;wnnUMAP_&quot;)
+
+DimPlot(bm.mc.multi,reduction = &quot;wnn.umap&quot;, group.by = &#39;celltype.l1&#39;)</code></pre>
+<p><img src="figures/unnamed-chunk-19-1.png" alt="" width="960" /></p>
+<pre class="r"><code>DimPlot(bm.mc.multi,reduction = &quot;wnn.umap&quot;, group.by = &#39;celltype.l2&#39;)</code></pre>
+<p><img src="figures/unnamed-chunk-19-2.png" alt="" width="960" /></p>
+<p>We can cluster metacells based on the WNN graph.</p>
+<pre class="r"><code>bm.mc.multi &lt;- FindClusters(bm.mc.multi,graph.name = &quot;wsnn&quot;)
+#&gt; Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
+#&gt; 
+#&gt; Number of nodes: 1533
+#&gt; Number of edges: 49497
+#&gt; 
+#&gt; Running Louvain algorithm...
+#&gt; Maximum modularity in 10 random starts: 0.8999
+#&gt; Number of communities: 14
+#&gt; Elapsed time: 0 seconds
+
+DimPlot(bm.mc.multi,reduction = &quot;wnn.umap&quot;)</code></pre>
+<p><img src="figures/unnamed-chunk-20-1.png" alt="" width="960" /></p>
+</div>
+<div id="visualization" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Visualization</h2>
+<p>SuperCell2.0 provides a set of functions to visualize metacell
+data.</p>
+<p><code>DimPlot.Supercell</code> function can be used to display
+metacell size in Seurat dimension plots.</p>
+<pre class="r"><code>DimPlot.SuperCell(bm.mc.multi,reduction = &quot;wnn.umap&quot;, group.by = &#39;celltype.l1&#39;)</code></pre>
+<p><img src="figures/unnamed-chunk-21-1.png" alt="" width="960" /></p>
+<pre class="r"><code>DimPlot.SuperCell(bm.mc.multi,reduction = &quot;wnn.umap&quot;, group.by = &#39;celltype.l2&#39;)</code></pre>
+<p><img src="figures/unnamed-chunk-21-2.png" alt="" width="960" /></p>
+<pre class="r"><code>DimPlot.SuperCell(bm.mc.multi,reduction = &quot;wnn.umap&quot;) + ggtitle(&quot;Metacell clusters&quot;)</code></pre>
+<p><img src="figures/unnamed-chunk-21-3.png" alt="" width="960" /></p>
+<p><code>VlnPlot.Supercell</code> function can be used for plotting
+violin plot weighted by metacell sizes.</p>
+<pre class="r"><code>VlnPlot.SuperCell(bm.mc.multi,features = c(&quot;CD19&quot;,&quot;CD14&quot;,&quot;GNLY&quot;,&quot;CD34&quot;,&quot;FLT3&quot;,&quot;CD3G&quot;),group.by = &quot;celltype.l1&quot;,
+                  ncol = 3)</code></pre>
+<p><img src="figures/unnamed-chunk-22-1.png" alt="" width="960" /></p>
+<pre class="r"><code>
+VlnPlot.SuperCell(bm.mc.multi,features = c(&quot;CD19&quot;,&quot;CD14&quot;,&quot;GNLY&quot;,&quot;CD34&quot;,&quot;FLT3&quot;,&quot;CD3G&quot;,&quot;CD4&quot;,&quot;CD8A&quot;),ncol = 2,stack = T,fill.by = &quot;ident&quot;,group.by = &quot;wsnn_res.0.8&quot;,flip = T)</code></pre>
+<p><img src="figures/unnamed-chunk-22-2.png" alt="" width="960" /></p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
