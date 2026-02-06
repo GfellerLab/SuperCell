@@ -93,12 +93,12 @@ conda activate supercell_tuto_env
 Rscript -e "devtools::remotes::install_github("GfellerLab/SuperCell@develop"),library(SuperCell)"
 ```
 
-## Tutorials {#tutorials}
+## Tutorials
 
 1.  [Building and analyzing metacells in Bone Marrow CITE-seq data with
-    SuperCell2.0](https://htmlpreview.github.io/?https://github.com/USERNAME/REPO/blob/develop/tutorials/SuperCell2.0_BM_CITE_seq.html)
+    SuperCell2.0](https://htmlpreview.github.io/?https://github.com/GfellerLab/SuperCell/blob/develop/docs/tutorials/SuperCell2.0_BM_CITE_seq.html)
 2.  [Building and analyzing metacells in PBMC 10X multiome data with
-    SuperCell2.0](./tutorial/.Rmd)
+    SuperCell2.0](https://htmlpreview.github.io/?https://github.com/GfellerLab/SuperCell/blob/develop/docs/tutorials/SuperCell2.0_PBMC_10x_multiome.html)
 
 ## [License]
 

@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="SuperCell2.0 developers" />
+
+<meta name="date" content="2026-02-06" />
+
+<title>SuperCell 2.0 Tutorial: Bone Marrow PBMC 10X multiome Analysis</title>
+
+<script src="SuperCell2.0_PBMC_10x_multiome_files/header-attrs-2.30/header-attrs.js"></script>
+<script src="SuperCell2.0_PBMC_10x_multiome_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="SuperCell2.0_PBMC_10x_multiome_files/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="SuperCell2.0_PBMC_10x_multiome_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="SuperCell2.0_PBMC_10x_multiome_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="SuperCell2.0_PBMC_10x_multiome_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="SuperCell2.0_PBMC_10x_multiome_files/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="SuperCell2.0_PBMC_10x_multiome_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="SuperCell2.0_PBMC_10x_multiome_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="SuperCell2.0_PBMC_10x_multiome_files/navigation-1.1/tabsets.js"></script>
+<script src="SuperCell2.0_PBMC_10x_multiome_files/navigation-1.1/codefolding.js"></script>
+<link href="SuperCell2.0_PBMC_10x_multiome_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="SuperCell2.0_PBMC_10x_multiome_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">SuperCell 2.0 Tutorial: Bone Marrow PBMC
+10X multiome Analysis</h1>
+<h4 class="author">SuperCell2.0 developers</h4>
+<h4 class="date">2026-02-06</h4>
+
+</div>
+
+
+<div id="tutorial-setup" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Tutorial setup</h1>
+<p>Installing SuperCell2.0 package from gitHub</p>
+<pre class="r"><code>if (!requireNamespace(&quot;remotes&quot;)) install.packages(&quot;remotes&quot;)
+remotes::install_github(&quot;GfellerLab/SuperCell@develop&quot;)
+
+if (!requireNamespace(&quot;SeuratData&quot;)) {remotes::install_github(&#39;satijalab/seurat-data&#39;)}
+</code></pre>
+<div id="load-library" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Load library</h2>
+<pre class="r"><code>library(Seurat)
+library(Signac)
+library(dplyr)
+library(EnsDb.Hsapiens.v86)
+library(BSgenome.Hsapiens.UCSC.hg38)
+library(SuperCell)
+library(ggplot2)
+library(patchwork)</code></pre>
+</div>
+<div id="load-pbmc-10x-multiome-datasets" class="section level2"
+number="1.2">
+<h2><span class="header-section-number">1.2</span> Load PBMC 10X
+multiome datasets</h2>
+<p>Bone Marrow CITE-seq data were generated by 10X genomics <a
+href="https://doi.org/10.1016/j.cell.2019.05.031">Stuart et al.,
+2019</a> and finely annotated in <a
+href="https://doi.org/10.1016/j.cell.2021.04.048">Hao et al.,
+2021</a>.</p>
+<p>First we have to download the ATAC fragment file for this dataset
+from 10X website. This can take few minutes (2.2 GB)</p>
+<pre class="r"><code>dir.create(&quot;./PBMC_10Xmultiome/fragments/&quot;,recursive = T)
+dest.fragment.file &lt;- &quot;./PBMC_10Xmultiome/fragments/pbmc_granulocyte_sorted_10k_atac_fragments.tsv.gz&quot;
+url.fragment.file &lt;- &quot;https://cf.10xgenomics.com/samples/cell-arc/2.0.0/pbmc_granulocyte_sorted_10k/pbmc_granulocyte_sorted_10k_atac_fragments.tsv.gz&quot;
+
+if (!file.exists(dest.fragment.file)) {
+  options(timeout = 600)  
+  download.file(url, dest.fragment.file = dest, mode = &quot;wb&quot;)
+}</code></pre>
+<p>We also need the corresponding index file.</p>
+<pre class="r"><code>dest.index.file &lt;- &quot;./PBMC_10Xmultiome/fragments/pbmc_granulocyte_sorted_10k_atac_fragments.tsv.gz.tbi&quot;
+url.index.file &lt;- &quot;https://cf.10xgenomics.com/samples/cell-arc/2.0.0/pbmc_granulocyte_sorted_10k/pbmc_granulocyte_sorted_10k_atac_fragments.tsv.gz.tbi&quot;
+
+if (!file.exists(dest.index.file)) {
+  download.file(url.index.file, destfile = dest.index.file, mode = &quot;wb&quot;)
+}</code></pre>
+<p>Then we can install the Seurat dataset with RNA counts using the
+SeuratData package.</p>
+<pre class="r"><code>options(timeout=600)
+SeuratData::InstallData(&quot;pbmcMultiome&quot;)
+
+pbmc &lt;- SeuratData::LoadData(&quot;pbmcMultiome&quot;, &quot;pbmc.atac&quot;)
+
+grange.counts &lt;- StringToGRanges(rownames(pbmc)) 
+grange.use &lt;- seqnames(grange.counts) %in% standardChromosomes(grange.counts) 
+pbmc &lt;- pbmc[as.vector(grange.use), ] 
+
+
+annotations &lt;- GetGRangesFromEnsDb(ensdb = EnsDb.Hsapiens.v86) 
+
+
+# seqlevelsStyle(annotations)
+# seqlevelsStyle(annotations) &lt;- &quot;UCSC&quot; 
+
+# Manual conversion if seqlevelsStyle(annotations) isn&#39;t working
+seqlevels(annotations) &lt;- paste0(&quot;chr&quot;, seqlevels(annotations))
+# Fix mitochondrial chromosome 
+seqlevels(annotations)[seqlevels(annotations) == &quot;chrMT&quot;] &lt;- &quot;chrM&quot;
+
+
+genome(annotations) &lt;- &quot;hg38&quot; 
+
+#Updating chromatine assay with fragment file
+pbmc[[&quot;ATAC&quot;]] &lt;- CreateChromatinAssay(counts = GetAssayData(pbmc,layer = &quot;counts&quot;), 
+                                       genome = &quot;hg38&quot;, 
+                                       fragments = dest.fragment.file, 
+                                       annotation = annotations 
+) 
+
+# load RNA assay from the pbmc.rna datasets 
+# and add it to the pbmc object
+# SuperCell2.0 can handle both v3 and v5 assay
+pbmc[[&quot;RNA&quot;]] &lt;- CreateAssay5Object(counts = GetAssayData(SeuratData::LoadData(&quot;pbmcMultiome&quot;, &quot;pbmc.rna&quot;)[[&quot;RNA&quot;]],
+                                                          layer = &quot;counts&quot;)) 
+
+gc()
+#&gt;             used (Mb) gc trigger   (Mb)  max used   (Mb)
+#&gt; Ncells  14548795  777   26399170 1409.9  26399170 1409.9
+#&gt; Vcells 211542996 1614  703391290 5366.5 695999984 5310.1</code></pre>
+<p>These data have already undergone quality control an are annotated in
+<code>"seurat_annotations"</code> poor-quality cells as
+<code>"filtered"</code>. We discard these cells for the following og
+this tutorial.</p>
+<pre class="r"><code>head(FetchData(pbmc,c(&quot;seurat_annotations&quot;)))
+#&gt;                    seurat_annotations
+#&gt; AAACAGCCAAGGAATC-1          CD4 Naive
+#&gt; AAACAGCCAATCCCTT-1            CD4 TCM
+#&gt; AAACAGCCAATGCGCT-1          CD4 Naive
+#&gt; AAACAGCCACACTAAT-1           filtered
+#&gt; AAACAGCCACCAACCG-1          CD8 Naive
+#&gt; AAACAGCCAGGATAAC-1          CD4 Naive
+
+pbmc &lt;- subset(pbmc,seurat_annotations != &quot;filtered&quot;)
+gc(verbose = F)
+#&gt;             used   (Mb) gc trigger   (Mb)  max used   (Mb)
+#&gt; Ncells  14552271  777.2   26399170 1409.9  26399170 1409.9
+#&gt; Vcells 323635637 2469.2  703391290 5366.5 695999984 5310.1
+
+pbmc
+#&gt; An object of class Seurat 
+#&gt; 144945 features across 10412 samples within 2 assays 
+#&gt; Active assay: ATAC (108344 features, 0 variable features)
+#&gt;  2 layers present: counts, data
+#&gt;  1 other assay present: RNA</code></pre>
+</div>
+<div id="settings" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Settings</h2>
+<p>Lets define some settings for this tutorial.</p>
+</div>
+<div id="settings-1" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> Settings</h2>
+<pre class="r"><code>graining.level &lt;- 75</code></pre>
+</div>
+</div>
+<div id="single-cell-preprocessing" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Single cell
+preprocessing</h1>
+<div id="peak-calling-with-macs2-optional" class="section level2"
+number="2.1">
+<h2><span class="header-section-number">2.1</span> Peak calling with
+MACS2 (optional)</h2>
+<p>Seurat object contain broad peaks. In this tutorial, as in
+SuperCell2.0 manuscript we propose to call narrow peaks with MACS2.
+Narrow peaks are expected to be better for TF motif analysis.</p>
+<pre class="r"><code>DefaultAssay(pbmc) &lt;- &quot;ATAC&quot;
+pbmc[[&quot;ATAC&quot;]] &lt;- subset(pbmc[[&quot;ATAC&quot;]] , features = rownames(pbmc[[&quot;ATAC&quot;]] )[1:2]) #a trick to save memory as we are calling new peaks
+gc()
+
+peaks &lt;- CallPeaks(
+  object = pbmc,
+  macs2.path = &quot;/home/l_herault/miniconda3/envs/macs2_env/bin/macs2&quot;,
+  group.by = &quot;seurat_annotations&quot;,
+  additional.args = &quot;--max-gap 50&quot;
+)
+
+peaks &lt;- keepStandardChromosomes(peaks, pruning.mode = &quot;coarse&quot;)
+peaks &lt;- subsetByOverlaps(x = peaks, ranges = blacklist_hg38_unified, invert = TRUE) 
+
+peak.counts &lt;- FeatureMatrix(
+  fragments = Fragments(pbmc),
+  features = peaks,
+  cells = colnames(pbmc)
+)
+
+
+
+
+pbmc[[&quot;ATAC&quot;]] &lt;- CreateChromatinAssay(
+  counts = peak.counts,
+  genome = &#39;hg38&#39;,
+  min.cells = 1, 
+  annotation=annotations,
+  fragments = Fragments(pbmc)
+)
+
+remove(peak.counts)
+gc()</code></pre>
+</div>
+<div id="dimension-reductions" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Dimension
+reductions</h2>
+<p>Before identifying metacells we have to preprocess the single cell
+data. This includes data normalization and dimension reduction of each
+modality. For this we can follow the SCTransform Seurat workflow and the
+LSI Signac workflow as in SuperCell2.0 manuscript.</p>
+<pre class="r"><code>
+DefaultAssay(pbmc) &lt;- &quot;RNA&quot;
+options(future.globals.maxSize = 1.5 * 1024 ^ 3) 
+pbmc &lt;- SCTransform(pbmc, verbose = FALSE,conserve.memory = T) %&gt;% RunPCA()
+
+DefaultAssay(pbmc) &lt;- &quot;ATAC&quot;
+
+pbmc[[&quot;SCT&quot;]] &lt;- NULL #once we have the PCA we can discard the SCT assay
+
+DefaultAssay(pbmc) &lt;- &quot;ATAC&quot;
+pbmc &lt;- RunTFIDF(pbmc)
+pbmc &lt;- FindTopFeatures(pbmc, min.cutoff = &quot;q0&quot;)
+pbmc &lt;- RunSVD(pbmc)
+
+gc()
+#&gt;             used   (Mb) gc trigger   (Mb)  max used   (Mb)
+#&gt; Ncells  14794435  790.2   26399170 1409.9  26399170 1409.9
+#&gt; Vcells 351608707 2682.6  690320171 5266.8 861083164 6569.6</code></pre>
+<p>The fist compenent of lsi dimension reduction is correlated with
+sequencing depth of the ATAC modality. Thus, we discard it for metacell
+identification and downstream analysis.</p>
+<pre class="r"><code>DepthCor(pbmc)</code></pre>
+<p><img src="/home/l_herault/Documents/SuperCell/tutorials/figures/unnamed-chunk-10-1.png" alt="" width="960" /></p>
+<pre class="r"><code>
+rna.comp &lt;- c(1:40) # components used from the dimension redcution of the RNA modality
+atac.comp &lt;- c(2:40) # components used from the dimension reduction of the ATAC modality
+</code></pre>
+</div>
+<div id="single-cell-multimodal-integration" class="section level2"
+number="2.3">
+<h2><span class="header-section-number">2.3</span> Single-cell
+multimodal integration</h2>
+<p>Based on this dimension reductions we can integrate protein and RNA
+modalities together using the WNN approach from Seurat. This step is not
+required for metacell identification but we will use the single-cell
+final UMAP embedding to visually assess metacell quality.</p>
+<pre class="r"><code>
+
+pbmc &lt;- FindMultiModalNeighbors(pbmc, 
+                                reduction.list = list(&quot;pca&quot;, &quot;lsi&quot;), 
+                                dims.list = list(rna.comp, atac.comp)
+)
+
+pbmc &lt;- RunUMAP(pbmc, nn.name = &quot;weighted.nn&quot;, 
+                reduction.name = &quot;wnn.umap&quot;, 
+                reduction.key = &quot;wnnUMAP_&quot;)
+
+DimPlot(pbmc,group.by = &quot;seurat_annotations&quot;)</code></pre>
+<p><img src="/home/l_herault/Documents/SuperCell/tutorials/figures/unnamed-chunk-11-1.png" alt="" width="960" /></p>
+</div>
+</div>
+<div id="metacell-identification-with-supercell2.0"
+class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Metacell identification
+with SuperCell2.0</h1>
+<div id="unsupervised-multimodal-metacell-identification"
+class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Unsupervised
+multimodal metacell identification</h2>
+<p>We can identify metacells based on protein and RNA modalities.</p>
+<pre class="r"><code>pbmc.mc.multi &lt;- SCimplify_for_Seurat(
+  pbmc, 
+  assay = c(&quot;RNA&quot;,&quot;ADT&quot;),
+  reduction = list(&quot;pca&quot;, &quot;lsi&quot;), 
+  dims = list(rna.comp, atac.comp), 
+  gamma = graining.level
+)
+#&gt; RNA ADT</code></pre>
+<p><code>SCimply_for_Seurat</code> function gives a seurat metacell
+object with aggregated (summed) raw counts for each modality. All
+categorical metadata available in the single cell seurat object are also
+aggregated in the resulting metacell object by assigning the metacell to
+the label with the maximum absolute abundance within it.</p>
+<pre class="r"><code>pbmc.mc.multi
+#&gt; An object of class Seurat 
+#&gt; 192703 features across 138 samples within 2 assays 
+#&gt; Active assay: RNA (36601 features, 0 variable features)
+#&gt;  1 layer present: counts
+#&gt;  1 other assay present: ATAC
+head(FetchData(pbmc.mc.multi,c(&quot;seurat_annotations&quot;,&quot;seurat_annotations_purity&quot;,&quot;size&quot;)))
+#&gt;            seurat_annotations seurat_annotations_purity size
+#&gt; Metacell_1                cDC                 0.9571429   70
+#&gt; Metacell_2          CD4 Naive                 0.9682540  126
+#&gt; Metacell_3          CD8 Naive                 1.0000000   87
+#&gt; Metacell_4          CD8 TEM_2                 0.9911504  113
+#&gt; Metacell_5          CD14 Mono                 0.9921875  256
+#&gt; Metacell_6            CD4 TEM                 0.9674797  123</code></pre>
+<p>The misc slot of the metacell seurat object contain information about
+SuperCell2.0 run that can be used for quality control such as coverage
+plot and direct rescaling (see below).</p>
+<pre class="r"><code>names(pbmc.mc.multi@misc)
+#&gt; [1] &quot;metacells_hierarchy&quot; &quot;walktrap_clusters&quot;   &quot;gamma&quot;               &quot;membership&quot;
+
+#graining level used
+head(pbmc.mc.multi@misc$gamma)
+#&gt; [1] 75
+
+# membership vector linking single cells to metacells
+head(pbmc.mc.multi@misc$membership)
+#&gt; AAACAGCCAAGGAATC-1 AAACAGCCAATCCCTT-1 AAACAGCCAATGCGCT-1 AAACAGCCACCAACCG-1 AAACAGCCAGGATAAC-1 AAACAGCCAGTAGGTG-1 
+#&gt;                 15                 10                 15                112                  2                  3
+
+#metacells_hierarchy used for rescaling 
+head(pbmc.mc.multi@misc$metacells_hierarchy$merges)
+#&gt;       [,1]  [,2]
+#&gt; [1,]  2958  4644
+#&gt; [2,]  8536  8894
+#&gt; [3,]  4621  9523
+#&gt; [4,]  3605  4065
+#&gt; [5,] 10230 10413
+#&gt; [6,]   964  2299</code></pre>
+<p>After identifying the metacells, a coverage plot of the single-cell
+latent space (if available) can be used to quickly assessed metacell
+quality.</p>
+<pre class="r"><code>cov.multi.unsup &lt;- DimPlotSC(pbmc,
+                             pbmc.mc.multi,
+                             reduction = &quot;wnn.umap&quot;,
+                             sc.col = &quot;seurat_annotations&quot;,
+                             metacell.col = &quot;seurat_annotations&quot;)
+cov.multi.unsup</code></pre>
+<p><img src="/home/l_herault/Documents/SuperCell/tutorials/figures/unnamed-chunk-15-1.png" alt="" width="864" /></p>
+<p>We can appreciate the reduction in dropout noise on the RNA and ATAC
+modalities by looking at UMI counts and detected features per
+single-cells/metacells</p>
+<pre class="r"><code>pbmc$graining_level &lt;- &quot;single_cells&quot;
+pbmc.mc.multi$graining_level &lt;- &quot;metacells (g75)&quot;
+
+coverage_results &lt;- rbind(FetchData(pbmc,c(&quot;nCount_RNA&quot;,&quot;nFeature_RNA&quot;,
+                                           &quot;nCount_ATAC&quot;,&quot;nFeature_ATAC&quot;,
+                                           &quot;graining_level&quot;)),
+                          FetchData(pbmc.mc.multi,c(&quot;nCount_RNA&quot;,&quot;nFeature_RNA&quot;,
+                                                    &quot;nCount_ATAC&quot;,&quot;nFeature_ATAC&quot;,
+                                                    &quot;graining_level&quot;))
+)
+
+
+
+p1 &lt;- ggplot(coverage_results,aes(x= graining_level,y = nCount_RNA,fill = graining_level)) + 
+  geom_boxplot() + theme_bw()
+
+p2 &lt;- ggplot(coverage_results,aes(x= graining_level,y = nCount_ATAC,fill = graining_level)) + 
+  geom_boxplot() + theme_bw()
+
+
+p3 &lt;- ggplot(coverage_results,aes(x= graining_level,y = nFeature_RNA,fill = graining_level)) + 
+  geom_boxplot() + theme_bw()
+
+p4 &lt;- ggplot(coverage_results,aes(x= graining_level,y = nFeature_ATAC,fill = graining_level)) + 
+  geom_boxplot()+ theme_bw()
+
+wrap_plots(p1 + NoLegend(), p2, p3+ NoLegend(), p4 + NoLegend())   </code></pre>
+<p><img src="/home/l_herault/Documents/SuperCell/tutorials/figures/unnamed-chunk-16-1.png" alt="" width="960" /></p>
+</div>
+<div id="metacells-purity" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> Metacells purity</h2>
+<p>We can evaluate the obtained metacells based on their purities with
+respect to the original single-cell annotation.</p>
+<pre class="r"><code>
+ggplot(FetchData(pbmc.mc.multi,c(&quot;graining_level&quot;,&quot;seurat_annotations_purity&quot;)),
+       aes(x= graining_level, fill = graining_level,y = seurat_annotations_purity)) + 
+  geom_boxplot() + 
+  theme_bw()</code></pre>
+<p><img src="/home/l_herault/Documents/SuperCell/tutorials/figures/unnamed-chunk-17-1.png" alt="" width="960" /></p>
+<p>We don’t need the single-cell object anymore</p>
+<pre class="r"><code># saveRDS(pbmc.mc.multi,&#39;pbmc_mc.rds&#39;)
+remove(pbmc)
+gc()
+#&gt;             used   (Mb) gc trigger   (Mb)  max used   (Mb)
+#&gt; Ncells  15228015  813.3   26399170 1409.9  26399170 1409.9
+#&gt; Vcells 374431248 2856.7  690320171 5266.8 861083164 6569.6</code></pre>
+</div>
+<div id="aggregating-fragment-file-at-the-metacell-level"
+class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> Aggregating fragment
+file at the metacell level</h2>
+<p>Some downstream analysis for the ATAC modality require a fragment
+file. We can create one for our metacell object using the membership
+vector and the <code>AggregateFragmentFile</code> function.</p>
+<p>This aggregation can be multithreaded by specifying a number of cores
+to use with the <code>nb_cl</code> arguments.</p>
+<pre class="r"><code>
+membership.vec &lt;- paste0(&quot;Metacell_&quot;,pbmc.mc.multi@misc$membership)
+names(membership.vec) &lt;- names(pbmc.mc.multi@misc$membership)
+
+mc.frag.path &lt;- AggregateFragmentFile(input_file = dest.fragment.file,
+                                      tmp_path = &quot;./tmp/&quot;, # has to be empty
+                                      nb_cl = 4, # number of cores to use
+                                      output_path = &quot;./PBMC_10Xmultiome/fragments/&quot;,
+                                      membership = membership.vec)
+#&gt; [1] &quot;Start fragments file split&quot;
+#&gt; [1] &quot;Start parallel update&quot;
+#&gt; [1] &quot;Start concat&quot;
+#&gt; [1] &quot;End concat, start bgzip&quot;
+#&gt; [1] &quot;End bgzip, start tabix&quot;
+#&gt; [1] &quot;End tabix&quot;
+
+frag.mc &lt;- CreateFragmentObject(mc.frag.path,
+                                cells = colnames(pbmc.mc.multi))
+
+Fragments(pbmc.mc.multi[[&quot;ATAC&quot;]]) &lt;- frag.mc
+
+gc()
+#&gt;             used   (Mb) gc trigger   (Mb)  max used   (Mb)
+#&gt; Ncells  15251018  814.5   26399170 1409.9  26399170 1409.9
+#&gt; Vcells 373797804 2851.9  690320171 5266.8 861083164 6569.6</code></pre>
+</div>
+<div id="gene-activities-at-the-metacell-level" class="section level2"
+number="3.4">
+<h2><span class="header-section-number">3.4</span> Gene activities at
+the metacell level</h2>
+<p>Now that we have aggregated the fragment file at the metacell level
+we can compute gene activities (eg. gene body accessibility) in our
+metacells. We can do this for the top variable genes in the RNA
+modality.</p>
+<pre class="r"><code>DefaultAssay(pbmc.mc.multi) &lt;- &quot;ATAC&quot;
+
+gene.activities &lt;- GeneActivity(object = pbmc.mc.multi, 
+                                assay = &quot;ATAC&quot;,
+                                features = rownames(pbmc.mc.multi[[&quot;RNA&quot;]]))
+
+pbmc.mc.multi[[&quot;ACTIVITY&quot;]] &lt;- CreateAssayObject(counts = gene.activities)
+DefaultAssay(pbmc.mc.multi) &lt;- &quot;ACTIVITY&quot;
+
+pbmc.mc.multi &lt;- NormalizeData(
+  pbmc.mc.multi, assay = &quot;ACTIVITY&quot;,
+  normalization.method = &quot;LogNormalize&quot;, 
+  scale.factor = median(pbmc.mc.multi$nCount_ACTIVITY) 
+)</code></pre>
+<p>Finally we can evaluate the correlation between gene activity and
+gene expression in our metacells for selected genes. For this we have to
+normalize the RNA assay in our metacells first. We can do this for TCF7
+a TF of naive T cells.</p>
+<pre class="r"><code>DefaultAssay(pbmc.mc.multi) &lt;- &quot;RNA&quot;
+pbmc.mc.multi &lt;- NormalizeData(pbmc.mc.multi)
+
+FeatureScatter.SuperCell(pbmc.mc.multi,
+                         feature1 = &quot;rna_TCF7&quot;,
+                         feature2 = &quot;activity_TCF7&quot;,
+                         group.by = &quot;seurat_annotations&quot;)</code></pre>
+<p><img src="/home/l_herault/Documents/SuperCell/tutorials/figures/unnamed-chunk-21-1.png" alt="" width="960" /></p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
