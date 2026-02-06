@@ -96,7 +96,8 @@ Rscript -e "devtools::remotes::install_github("GfellerLab/SuperCell@develop"),li
 ## Tutorials {#tutorials}
 
 1.  [Building and analyzing metacells in Bone Marrow CIE-seq data with
-    SuperCell2.0](./tutorial/a_SuperCell.Rmd)
+    SuperCell2.0]([View tutorial](https://htmlpreview.github.io/?https://github.com/USERNAME/REPO/blob/develop/docs/SuperCell2.0_BM_CITE_seq.html)
+)
 2.  [Building and analyzing metacells in PBMC 10X multiome data with
     SuperCell2.0](./tutorial/.Rmd)
 
