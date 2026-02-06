@@ -350,9 +350,9 @@ bm &lt;- FindMultiModalNeighbors(
 bm &lt;- RunUMAP(bm, nn.name = &quot;weighted.nn&quot;, reduction.name = &quot;wnn.umap&quot;, reduction.key = &quot;wnnUMAP_&quot;)
 
 DimPlot(bm,reduction = &quot;wnn.umap&quot;, group.by = &#39;celltype.l1&#39;)</code></pre>
-<p><img src="figures/unnamed-chunk-5-1.png" alt="" width="960" /></p>
+<p><img src="SuperCell2.0_BM_CITE_seq_files/figure-html/unnamed-chunk-5-1.png" alt="" width="960" /></p>
 <pre class="r"><code>DimPlot(bm,reduction = &quot;wnn.umap&quot;, group.by = &#39;celltype.l2&#39;)</code></pre>
-<p><img src="figures/unnamed-chunk-5-2.png" alt="" width="960" /></p>
+<p><img src="SuperCell2.0_BM_CITE_seq_files/figure-html/unnamed-chunk-5-2.png" alt="" width="960" /></p>
 </div>
 </div>
 <div id="metacell-identification-with-supercell2.0"
@@ -434,7 +434,7 @@ quality.</p>
                              sc.col = &quot;celltype.l2&quot;,
                              metacell.col = &quot;celltype.l2&quot;)
 cov.multi.unsup</code></pre>
-<p><img src="figures/unnamed-chunk-9-1.png" alt="" width="864" /></p>
+<p><img src="SuperCell2.0_BM_CITE_seq_files/figure-html/unnamed-chunk-9-1.png" alt="" width="864" /></p>
 <p>We can appreciate the reduction in dropout noise on the RNA modality
 by looking at UMI counts and detected genes per
 single-cells/metacells</p>
@@ -456,7 +456,7 @@ p2 &lt;- ggplot(coverage_results,aes(x= graining_level,y = nFeature_RNA,fill = g
   theme_bw()
 
 wrap_plots(p1 + NoLegend(), p2)</code></pre>
-<p><img src="figures/unnamed-chunk-10-1.png" alt="" width="960" /></p>
+<p><img src="SuperCell2.0_BM_CITE_seq_files/figure-html/unnamed-chunk-10-1.png" alt="" width="960" /></p>
 <p>This can be further illustrated by improved correlations between RNA
 and protein measurements in metacells compared to single cells. To
 visualize these correlations we have to normalize metacell data
@@ -470,10 +470,10 @@ bm.mc.multi &lt;- NormalizeData(bm.mc.multi,normalization.method = &quot;LogNorm
 
 wrap_plots(FeatureScatter(bm,feature1 = &quot;rna_CD14&quot;,feature2 = &quot;adt_CD14&quot;,group.by = &quot;celltype.l1&quot;)+ NoLegend(), 
            FeatureScatter.SuperCell(bm.mc.multi,feature1 = &quot;adt_CD14&quot;,feature2 = &quot;rna_CD14&quot;,group.by = &quot;celltype.l1&quot;))</code></pre>
-<p><img src="figures/unnamed-chunk-11-1.png" alt="" width="768" /></p>
+<p><img src="SuperCell2.0_BM_CITE_seq_files/figure-html/unnamed-chunk-11-1.png" alt="" width="768" /></p>
 <pre class="r"><code>
 wrap_plots(FeatureScatter(bm,feature1 = &quot;rna_CD19&quot;,feature2 = &quot;adt_CD19&quot;,group.by = &quot;celltype.l1&quot;)+ NoLegend(), FeatureScatter.SuperCell(bm.mc.multi,feature1 = &quot;adt_CD19&quot;,feature2 = &quot;rna_CD19&quot;,group.by = &quot;celltype.l1&quot;))</code></pre>
-<p><img src="figures/unnamed-chunk-11-2.png" alt="" width="768" /></p>
+<p><img src="SuperCell2.0_BM_CITE_seq_files/figure-html/unnamed-chunk-11-2.png" alt="" width="768" /></p>
 </div>
 <div id="unsupervised-unimodal-metacell-identification"
 class="section level2" number="3.2">
@@ -502,7 +502,7 @@ cov.rna.unsup &lt;- DimPlotSC(bm,
                            sc.col = &quot;celltype.l2&quot;,
                            metacell.col = &quot;celltype.l2&quot;)
 cov.rna.unsup</code></pre>
-<p><img src="figures/unnamed-chunk-12-1.png" alt="" width="960" /></p>
+<p><img src="SuperCell2.0_BM_CITE_seq_files/figure-html/unnamed-chunk-12-1.png" alt="" width="960" /></p>
 </div>
 <div id="semi-supervised-metacell-identifications"
 class="section level2" number="3.3">
@@ -538,7 +538,7 @@ cov.multi.sup &lt;- DimPlotSC(bm,
                            sc.col = &quot;celltype.l2&quot;,
                            metacell.col = &quot;celltype.l2&quot;)
 cov.multi.sup</code></pre>
-<p><img src="figures/unnamed-chunk-14-1.png" alt="" width="960" /></p>
+<p><img src="SuperCell2.0_BM_CITE_seq_files/figure-html/unnamed-chunk-14-1.png" alt="" width="960" /></p>
 <p>And same using only RNA.</p>
 <pre class="r"><code>bm.mc.rna.sup&lt;- SCimplify_for_Seurat(
   bm, 
@@ -557,7 +557,7 @@ cov.rna.sup &lt;- DimPlotSC(bm,
                          sc.col = &quot;celltype.l2&quot;,
                          metacell.col = &quot;celltype.l2&quot;)
 cov.rna.sup</code></pre>
-<p><img src="figures/unnamed-chunk-15-1.png" alt="" width="960" /></p>
+<p><img src="SuperCell2.0_BM_CITE_seq_files/figure-html/unnamed-chunk-15-1.png" alt="" width="960" /></p>
 </div>
 <div id="comparison-of-metacell-workflows" class="section level2"
 number="3.4">
@@ -583,7 +583,7 @@ purity_results$workflow &lt;- factor(purity_results$workflow,levels = c(&quot;se
 ggplot(purity_results,aes(x= workflow,y = celltype.l2_purity,fill = workflow)) + 
   geom_boxplot() + 
   theme_bw()</code></pre>
-<p><img src="figures/unnamed-chunk-16-1.png" alt="" width="960" /></p>
+<p><img src="SuperCell2.0_BM_CITE_seq_files/figure-html/unnamed-chunk-16-1.png" alt="" width="960" /></p>
 <p>Multimodal workflow outperforms RNA-based workflow and
 semi-supervision using partial annotation improve metacell quality.</p>
 </div>
@@ -603,7 +603,7 @@ DimPlotSC(bm,
           reduction = &quot;wnn.umap&quot;,
           sc.col = &quot;celltype.l2&quot;,
           metacell.col = &quot;celltype.l2&quot;)</code></pre>
-<p><img src="figures/unnamed-chunk-17-1.png" alt="" width="960" /></p>
+<p><img src="SuperCell2.0_BM_CITE_seq_files/figure-html/unnamed-chunk-17-1.png" alt="" width="960" /></p>
 </div>
 </div>
 <div id="metacell-downstream-analysis" class="section level1"
@@ -636,9 +636,9 @@ the WNN approach.</p>
 bm.mc.multi &lt;- RunUMAP(bm.mc.multi, nn.name = &quot;weighted.nn&quot;, reduction.name = &quot;wnn.umap&quot;, reduction.key = &quot;wnnUMAP_&quot;)
 
 DimPlot(bm.mc.multi,reduction = &quot;wnn.umap&quot;, group.by = &#39;celltype.l1&#39;)</code></pre>
-<p><img src="figures/unnamed-chunk-19-1.png" alt="" width="960" /></p>
+<p><img src="SuperCell2.0_BM_CITE_seq_files/figure-html/unnamed-chunk-19-1.png" alt="" width="960" /></p>
 <pre class="r"><code>DimPlot(bm.mc.multi,reduction = &quot;wnn.umap&quot;, group.by = &#39;celltype.l2&#39;)</code></pre>
-<p><img src="figures/unnamed-chunk-19-2.png" alt="" width="960" /></p>
+<p><img src="SuperCell2.0_BM_CITE_seq_files/figure-html/unnamed-chunk-19-2.png" alt="" width="960" /></p>
 <p>We can cluster metacells based on the WNN graph.</p>
 <pre class="r"><code>bm.mc.multi &lt;- FindClusters(bm.mc.multi,graph.name = &quot;wsnn&quot;)
 #&gt; Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
@@ -652,7 +652,7 @@ DimPlot(bm.mc.multi,reduction = &quot;wnn.umap&quot;, group.by = &#39;celltype.l
 #&gt; Elapsed time: 0 seconds
 
 DimPlot(bm.mc.multi,reduction = &quot;wnn.umap&quot;)</code></pre>
-<p><img src="figures/unnamed-chunk-20-1.png" alt="" width="960" /></p>
+<p><img src="SuperCell2.0_BM_CITE_seq_files/figure-html/unnamed-chunk-20-1.png" alt="" width="960" /></p>
 </div>
 <div id="visualization" class="section level2" number="4.2">
 <h2><span class="header-section-number">4.2</span> Visualization</h2>
@@ -661,19 +661,19 @@ data.</p>
 <p><code>DimPlot.Supercell</code> function can be used to display
 metacell size in Seurat dimension plots.</p>
 <pre class="r"><code>DimPlot.SuperCell(bm.mc.multi,reduction = &quot;wnn.umap&quot;, group.by = &#39;celltype.l1&#39;)</code></pre>
-<p><img src="figures/unnamed-chunk-21-1.png" alt="" width="960" /></p>
+<p><img src="SuperCell2.0_BM_CITE_seq_files/figure-html/unnamed-chunk-21-1.png" alt="" width="960" /></p>
 <pre class="r"><code>DimPlot.SuperCell(bm.mc.multi,reduction = &quot;wnn.umap&quot;, group.by = &#39;celltype.l2&#39;)</code></pre>
-<p><img src="figures/unnamed-chunk-21-2.png" alt="" width="960" /></p>
+<p><img src="SuperCell2.0_BM_CITE_seq_files/figure-html/unnamed-chunk-21-2.png" alt="" width="960" /></p>
 <pre class="r"><code>DimPlot.SuperCell(bm.mc.multi,reduction = &quot;wnn.umap&quot;) + ggtitle(&quot;Metacell clusters&quot;)</code></pre>
-<p><img src="figures/unnamed-chunk-21-3.png" alt="" width="960" /></p>
+<p><img src="SuperCell2.0_BM_CITE_seq_files/figure-html/unnamed-chunk-21-3.png" alt="" width="960" /></p>
 <p><code>VlnPlot.Supercell</code> function can be used for plotting
 violin plot weighted by metacell sizes.</p>
 <pre class="r"><code>VlnPlot.SuperCell(bm.mc.multi,features = c(&quot;CD19&quot;,&quot;CD14&quot;,&quot;GNLY&quot;,&quot;CD34&quot;,&quot;FLT3&quot;,&quot;CD3G&quot;),group.by = &quot;celltype.l1&quot;,
                   ncol = 3)</code></pre>
-<p><img src="figures/unnamed-chunk-22-1.png" alt="" width="960" /></p>
+<p><img src="SuperCell2.0_BM_CITE_seq_files/figure-html/unnamed-chunk-22-1.png" alt="" width="960" /></p>
 <pre class="r"><code>
 VlnPlot.SuperCell(bm.mc.multi,features = c(&quot;CD19&quot;,&quot;CD14&quot;,&quot;GNLY&quot;,&quot;CD34&quot;,&quot;FLT3&quot;,&quot;CD3G&quot;,&quot;CD4&quot;,&quot;CD8A&quot;),ncol = 2,stack = T,fill.by = &quot;ident&quot;,group.by = &quot;wsnn_res.0.8&quot;,flip = T)</code></pre>
-<p><img src="figures/unnamed-chunk-22-2.png" alt="" width="960" /></p>
+<p><img src="SuperCell2.0_BM_CITE_seq_files/figure-html/unnamed-chunk-22-2.png" alt="" width="960" /></p>
 </div>
 </div>
 
