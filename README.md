@@ -1,4 +1,4 @@
-# SuperCell2.0 enables construction of semi-supervised multimodal metacell atlases
+# SuperCell2.0 enables semi-supervised construction of multimodal metacell atlases
 
 SuperCell2.0 now handles single-cell multimodal data such as CITE-seq
 (joint measurements of RNA and epitope in single cells) and 10X multiome
