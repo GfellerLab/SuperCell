@@ -100,9 +100,9 @@ Lausanne.
 SuperCell2.0 is available under GPL-3 License.
 
 For scientific questions, please contact Léonard Hérault
-([leonard.herault\@gustaveroussy.fr](mailto:leonard.herault@gustaveroussy.fr){.email})
+([leonard.herault\@gustaveroussy.fr](mailto:leonard.herault@gustaveroussy.fr))
 or David Gfeller
-([David.Gfeller\@unil.ch](mailto:David.Gfeller@unil.ch){.email}).
+([David.Gfeller\@unil.ch](mailto:David.Gfeller@unil.ch)).
 
 ## How to cite
 
