@@ -7,7 +7,8 @@ ComputeUnimodalKnn <- function(seurat,
                                reduction = list("pca"), 
                                dims = list(c(1:30)), 
                                label = NULL, 
-                               subsetLabel = NULL) 
+                               subsetLabel = NULL,
+                               verbose = FALSE) 
 {
   if (!is.null(subsetLabel) & !is.null(label)) {
     seurat <- seurat[, seurat[[label]][, 1] == subsetLabel]
@@ -28,6 +29,7 @@ ComputeUnimodalKnn <- function(seurat,
                                     reduction = reduction[[1]], 
                                     dims = dims[[1]], 
                                     k.param = k.knn, 
+                                    verbose = verbose,
                                     return.neighbor = T)
     if (kernel) {
       message("computing kernel")
@@ -96,7 +98,8 @@ ComputeMultimodalKnn <- function(seurat,
                                  reduction = list("pca","apca"), 
                                  dims = list(c(1:30),c(1:30)),
                                  label = NULL,
-                                 subsetLabel = NULL) {
+                                 subsetLabel = NULL,
+                                 verbose = FALSE) {
   kernelOri <- kernel
   if (!is.null(subsetLabel) & !is.null(label)) {
     seurat <- seurat[,seurat[[label]][,1] == subsetLabel]
@@ -132,7 +135,8 @@ ComputeMultimodalKnn <- function(seurat,
                                                             reduction = reduction,
                                                             dims = dims,
                                                             k.nn = k.knn,
-                                                            knn.range = knn.range) }
+                                                            knn.range = knn.range,
+                                                            verbose = verbose) }
                 , error = function(e) {searchingMn <<- T})
       knn.range <- knn.range - 1
       if(k.knn >= knn.range & searchingMn) {

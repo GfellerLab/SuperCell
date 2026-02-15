@@ -38,7 +38,8 @@ SCimplify_for_Seurat <- function(seurat,
                                  peakSep = c("-", "-"), 
                                  label = NULL, 
                                  return.seurat = T, 
-                                 nb_cl = NULL) 
+                                 nb_cl = NULL,
+                                 verbose = FALSE) 
 {
   if (!is.null(label)) {
     seurat[[paste0(label,"_with_unknown")]] <- seurat[[label]]
@@ -49,9 +50,10 @@ SCimplify_for_Seurat <- function(seurat,
       if (is.null(graph.name)) {graph.name = "nn"}
       if (is.null(label)) {
         graph <- ComputeUnimodalKnn(seurat = seurat, 
-                                       k.knn = k.knn, kith = kith, kernel = kernel, 
-                                       graph.name = graph.name, assay = assay, reduction = reduction, 
-                                       dims = dims)
+                                    k.knn = k.knn, kith = kith, kernel = kernel, 
+                                    graph.name = graph.name, assay = assay, reduction = reduction, 
+                                    dims = dims,
+                                    verbose = verbose)
       }
       else {
         if (length(which(is.na(seurat[[label]][, 1]))) > 
@@ -60,9 +62,11 @@ SCimplify_for_Seurat <- function(seurat,
           unknowns <- colnames(seurat)[which(is.na(seurat[[label]][, 
                                                                    1]))]
           graphUnknown <- ComputeUnimodalKnn(seurat = seurat, 
-                                                k.knn = k.knn, kith = kith, kernel = kernel, 
-                                                graph.name = graph.name, assay = assay, reduction = reduction, 
-                                                dims = dims)
+                                             k.knn = k.knn, kith = kith, kernel = kernel, 
+                                             graph.name = graph.name, assay = assay, reduction = reduction, 
+                                             dims = dims,
+                                             verbose = verbose)
+          
           igraph::V(graphUnknown)$label <- seurat[[label]][, 
                                                            1]
           unknownAndNeighbors <- unique(c(unknowns, unlist(sapply(which(is.na(seurat[[label]][, 
@@ -81,9 +85,10 @@ SCimplify_for_Seurat <- function(seurat,
         graphList <- lapply(X = as.vector(na.exclude(unique(seurat[[label]][, 
                                                                             1]))), FUN = function(X) {
                                                                               ComputeUnimodalKnn(seurat = seurat, k.knn = k.knn, 
-                                                                                                    kith = kith, kernel = kernel, graph.name = graph.name, 
-                                                                                                    assay = assay, reduction = reduction, dims = dims, 
-                                                                                                    label = label, subsetLabel = X)
+                                                                                                 kith = kith, kernel = kernel, graph.name = graph.name, 
+                                                                                                 assay = assay, reduction = reduction, dims = dims, 
+                                                                                                 label = label, subsetLabel = X,
+                                                                                                 verbose = verbose)
                                                                             })
         if (length(which(is.na(seurat[[label]][, 1]))) > 
             0) {
@@ -112,7 +117,8 @@ SCimplify_for_Seurat <- function(seurat,
         graph <- ComputeMultimodalKnn(seurat = seurat, 
                                       k.knn = k.knn, kith = kith, kernel = kernel, 
                                       graph.name = graph.name, assay = assay, reduction = reduction, 
-                                      dims = dims)
+                                      dims = dims,
+                                      verbose = verbose)
       }
       else {
         if (length(which(is.na(seurat[[label]][, 1]))) > 
@@ -123,7 +129,8 @@ SCimplify_for_Seurat <- function(seurat,
           graphUnknown <- ComputeMultimodalKnn(seurat = seurat, 
                                                k.knn = k.knn, kith = kith, kernel = kernel, 
                                                graph.name = graph.name, assay = assay, reduction = reduction, 
-                                               dims = dims)
+                                               dims = dims,
+                                               verbose = verbose)
           igraph::V(graphUnknown)$label <- seurat[[label]][, 
                                                            1]
           unknownAndNeighbors <- unique(c(unknowns, unlist(sapply(which(is.na(seurat[[label]][, 
@@ -141,10 +148,17 @@ SCimplify_for_Seurat <- function(seurat,
         }
         graphList <- lapply(X = na.exclude(unique(seurat[[label]][, 
                                                                   1])), FUN = function(X) {
-                                                                    ComputeMultimodalKnn(seurat = seurat, k.knn = k.knn, 
-                                                                                         kith = kith, kernel = kernel, graph.name = graph.name, 
-                                                                                         assay = assay, reduction = reduction, dims = dims, 
-                                                                                         label = label, subsetLabel = X)
+                                                                    ComputeMultimodalKnn(seurat = seurat, 
+                                                                                         k.knn = k.knn, 
+                                                                                         kith = kith, 
+                                                                                         kernel = kernel, 
+                                                                                         graph.name = graph.name, 
+                                                                                         assay = assay, 
+                                                                                         reduction = reduction, 
+                                                                                         dims = dims, 
+                                                                                         label = label, 
+                                                                                         subsetLabel = X,
+                                                                                         verbose = verbose)
                                                                   })
         if (length(which(is.na(seurat[[label]][, 1]))) > 
             0) {
