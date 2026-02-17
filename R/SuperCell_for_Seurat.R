@@ -32,15 +32,17 @@ ComputeUnimodalKnn <- function(seurat,
                                     verbose = verbose,
                                     return.neighbor = T)
     if (kernel) {
-      message("computing kernel")
+      if (verbose) {message("computing kernel")}
       if (is.null(kith)) {
         kith = k.knn%/%2
       }
       if (kith == 1) {
         kith = kith + 1
       }
-      message("Using assay:")
-      message(assay[[1]])
+      if (verbose) {
+        message("Using assay:")
+        message(assay[[1]])
+      }
       graph.name = paste0(assay[[1]], ".", graph.name)
       # print(graph.name)
       # print(k.knn)
@@ -158,21 +160,25 @@ ComputeMultimodalKnn <- function(seurat,
       
     }
     
-    message("multimodal neighbors found")
+    if (verbose) {message("multimodal neighbors found")}
     
     # FindMultiModalNeighbors Seurat function does not consider the cell itself as the first neighbor (contrary to FindNeighbors)
     
     
     if (kernel) {
-      message("computing kernel")
+      if (verbose) {message("computing kernel")}
       if (is.null(kith)) { # regarding previous comment on exact number of neighbors, this will differ a little bit from unimodal mode
         kith = k.knn%/%2
       }
       if(kith == 1) { #This is not needed regarding previous comment on exact number of neighbors contrary to the unimodal mode  
         kith = kith+1
       }
-      message("Using assay:")
-      message(cat(assay))
+      if (verbose) {
+        message("Using assay:")
+        message(cat(assay))
+      }
+      
+      
       # print(k.knn)
       graph.name <- "weighted.nn"
       j <- as.numeric(x = t(x = seurat@neighbors[[graph.name]]@nn.idx))
