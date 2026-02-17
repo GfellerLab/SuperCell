@@ -1,9 +1,13 @@
 Package: SuperCell
 Type: Package
-Title: Simplification of scRNA-Seq Data by Merging Together Similar Cells
+Title: Simplification of Single-cell Data by Merging Together Highly Similar Cells
 Version: 2.0
-Authors@R: c(person("Leonard","Herault",role="aut",email = "mariia.bilous@unil.ch"),person("Leonard","Herault",role="cre",email = "leonard.herault@unil.ch"))
-Description: Aggregates large single-cell data into metacell dataset by merging together gene expression of very similar cells.
+Authors@R: c(person("Léonard","Hérault",role=c("aut","cre"),email = "leonard.herault@gustaveroussy.fr"),
+person(Mariia","Bilous",role=c("aut"),email = "mariia.bilous@unil.ch"),
+person("Aurelie","Gabriel",role=c("aut"),email = "aurelie.gabriel@unil.ch"),
+person("David","Gfeller",role=c("aut"),email = "david.gfeller@unil.ch"),
+person("Matei","Teleman",role=c("ctb"),email = "matei.teleman@unil.ch"))
+Description: Aggregates large single-cell (multi)omics data into metacell dataset".
 License: GPL-3
 BugReports: https://github.com/GfellerLab/SuperCell/issues
 Encoding: UTF-8
