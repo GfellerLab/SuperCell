@@ -2,7 +2,7 @@
 
 SuperCell2.0 now handles single-cell multimodal data such as CITE-seq (joint measurements of RNA and epitope in single cells) and 10X multiome (joint measurements of RNA and ATAC in single nuclei).
 
-Leveraging the Weighted Nearest Neighbor (WNN) framework of Seurat, SuperCell2.0 performs **multimodal metacell identfication**. SuperCell2.0 also proposes a **semi-supervised** workflow in which partial cell annotation can be used to help metacell identification. See our [tutorials](#tutorials) for examples.
+Leveraging the Weighted Nearest Neighbor (WNN) framework of [Seurat](https://satijalab.org/seurat/), SuperCell2.0 performs **multimodal metacell identfication**. SuperCell2.0 also proposes a **semi-supervised** workflow in which partial cell annotation can be used to help metacell identification. See our [tutorials](#tutorials) for examples.
 
 <p align="center">
 
