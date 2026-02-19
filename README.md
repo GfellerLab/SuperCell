@@ -6,7 +6,7 @@ Leveraging the Weighted Nearest Neighbor (WNN) framework of Seurat, SuperCell2.0
 
 <p align="center">
 
-<img src="docs/figure_1_workflows.svg" width="750"/>
+<img src="docs/figure_1_workflow.svg" width="750"/>
 
 </p>
 
@@ -36,7 +36,6 @@ library(SuperCell)
 1.  [Building and analyzing metacells in Bone Marrow CITE-seq data with SuperCell2.0](https://htmlpreview.github.io/?https://github.com/GfellerLab/SuperCell/blob/supercell-2.0/docs/tutorials/SuperCell2.0_BM_CITE_seq.html)
 2.  [Building and analyzing metacells in PBMC 10X multiome data with SuperCell2.0](https://htmlpreview.github.io/?https://github.com/GfellerLab/SuperCell/blob/supercell-2.0/docs/tutorials/SuperCell2.0_PBMC_10x_multiome.html)
 3.  [Building and analyzing a PBMC CITE-seq atlas with SuperCell2.0 and STACAS](https://htmlpreview.github.io/?https://github.com/GfellerLab/SuperCell/blob/supercell-2.0/docs/tutorials/SuperCell2.0_PBMC_CITE_seq_atlas.html)
-
 
 ## [License]
 
