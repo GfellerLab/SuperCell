@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Léonard Héraut" />
+
+<meta name="date" content="2026-02-17" />
+
+<title>SuperCell 2.0 Tutorial: PBMC CITE-seq metacell atlas</title>
+
+<script src="SuperCell2.0_PBMC_CITE_seq_atlas_files/header-attrs-2.30/header-attrs.js"></script>
+<script src="SuperCell2.0_PBMC_CITE_seq_atlas_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="SuperCell2.0_PBMC_CITE_seq_atlas_files/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="SuperCell2.0_PBMC_CITE_seq_atlas_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="SuperCell2.0_PBMC_CITE_seq_atlas_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="SuperCell2.0_PBMC_CITE_seq_atlas_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="SuperCell2.0_PBMC_CITE_seq_atlas_files/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="SuperCell2.0_PBMC_CITE_seq_atlas_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="SuperCell2.0_PBMC_CITE_seq_atlas_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="SuperCell2.0_PBMC_CITE_seq_atlas_files/navigation-1.1/tabsets.js"></script>
+<script src="SuperCell2.0_PBMC_CITE_seq_atlas_files/navigation-1.1/codefolding.js"></script>
+<link href="SuperCell2.0_PBMC_CITE_seq_atlas_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="SuperCell2.0_PBMC_CITE_seq_atlas_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">SuperCell 2.0 Tutorial: PBMC CITE-seq
+metacell atlas</h1>
+<h4 class="author">Léonard Héraut</h4>
+<h4 class="date">2026-02-17</h4>
+
+</div>
+
+
+<p>In this tutorial we will construct a multimodal metacell atlas of
+PBMC CITE-seq data using a semi-supervised workflow composed of
+SuperCell2.0 and STACAS.</p>
+<p>The single-cell atlas was originally constructed and annotated in <a
+href="https://doi.org/10.1016/j.cell.2021.04.048">Hao et al.,
+2021</a>.</p>
+<div id="tutorial-setup" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Tutorial setup</h1>
+<p>Installing SuperCell2.0 package from github if needed.</p>
+<pre class="r"><code>if (!requireNamespace(&quot;remotes&quot;)) install.packages(&quot;remotes&quot;)
+remotes::install_github(&quot;GfellerLab/SuperCell@supercell-2.0&quot;)</code></pre>
+<p>We will use STACAS for batch correction of the RNA and ADT
+modalities.</p>
+<pre class="r"><code>if (!requireNamespace(&quot;STACAS&quot;)) {
+  remotes::install_github(&quot;carmonalab/STACAS&quot;)
+}
+</code></pre>
+<div id="load-libraries" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Load libraries</h2>
+<pre class="r"><code>library(SuperCell)
+library(Seurat)
+library(dplyr)
+library(ggplot2)
+library(patchwork)
+library(STACAS)
+</code></pre>
+</div>
+<div id="download-data-from-geo" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Download data from
+GEO</h2>
+<p>The two following chunks provide example command lines to download
+the atlas count matrices as well as atlas single-cell metadata from GEO
+(GSE164378) and place them locally in
+<code>"./PBMC_CITE_seq_atlas/input/GSM5008737_RNA_3P/"</code> and
+<code>"PBMC_CITE_seq_atlas/input/GSM5008738_ADT_3P/"</code>. The
+tutorial will use this path structure.</p>
+<p>First, create input directory.</p>
+<pre class="bash"><code>mkdir -p PBMC_CITE_seq_atlas/input &amp;&amp;
+cd PBMC_CITE_seq_atlas/input &amp;&amp;</code></pre>
+<p>Then download data.</p>
+<pre class="bash"><code>cd PBMC_CITE_seq_atlas/input &amp;&amp;
+wget &quot;https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE164378&amp;format=file&amp;file=GSE164378%5Fsc%2Emeta%2Edata%5F3P%2Ecsv%2Egz&quot; -O GSE164378_sc.meta.data_3P.csv.gz &amp;&amp;
+gunzip GSE164378_sc.meta.data_3P.csv.gz &amp;&amp;
+wget &quot;https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE164378&amp;format=file&quot; -O GSE164378_RAW.tar &amp;&amp;
+mkdir -p GSE164378_RAW &amp;&amp; tar -C GSE164378_RAW -xvf GSE164378_RAW.tar &amp;&amp;
+cd GSE164378_RAW &amp;&amp;
+mkdir -p GSM5008737_RNA_3P &amp;&amp; mv GSM5008737_RNA_3P-* GSM5008737_RNA_3P/ &amp;&amp;
+mkdir -p GSM5008738_ADT_3P &amp;&amp; mv GSM5008738_ADT_3P-* GSM5008738_ADT_3P/ &amp;&amp;
+cd GSM5008737_RNA_3P/ &amp;&amp;
+for file in GSM5008737_RNA_3P-*; do
+mv &quot;$file&quot; &quot;${file#GSM5008737_RNA_3P-}&quot;
+done &amp;&amp;
+cd ../GSM5008738_ADT_3P/ &amp;&amp;
+for file in GSM5008738_ADT_3P-*; do
+mv &quot;$file&quot; &quot;${file#GSM5008738_ADT_3P-}&quot;
+done </code></pre>
+<p>In the end, some cleaning.</p>
+<pre class="bash"><code>cd PBMC_CITE_seq_atlas/input &amp;&amp;
+rm -f GSE164378_RAW/*.gz &amp;&amp;
+mv GSE164378_RAW/* . &amp;&amp;
+rm -r GSE164378_RAW</code></pre>
+</div>
+<div id="settings" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Settings</h2>
+<pre class="r"><code>adt.comp &lt;- 1:50
+rna.comp &lt;- 1:40
+graining.level = 20</code></pre>
+</div>
+<div id="load-single-cell-data-as-a-seurat-object"
+class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> Load single-cell data
+as a seurat object</h2>
+<p>This atlas contain more than 160,000 cells profiled with CITE-seq
+(RNA + surface proteins) using more than 200 antibody derived tags
+(ADTs).</p>
+<pre class="r"><code>rna.counts &lt;- Read10X(&quot;PBMC_CITE_seq_atlas/input/GSM5008737_RNA_3P/&quot;)
+meta &lt;- read.csv(&quot;PBMC_CITE_seq_atlas/input/GSE164378_sc.meta.data_3P.csv&quot;,row.names = 1)
+pbmc &lt;- CreateSeuratObject(counts = rna.counts,meta.data = meta)
+remove(rna.counts)
+remove(meta)
+gc()
+#&gt;             used   (Mb) gc trigger    (Mb)   max used    (Mb)
+#&gt; Ncells   4541970  242.6    7175221   383.2    7175221   383.2
+#&gt; Vcells 542829701 4141.5 1883883583 14372.9 1970221213 15031.6
+
+adt.counts &lt;-  Read10X(&quot;PBMC_CITE_seq_atlas/input/GSM5008738_ADT_3P/&quot;)
+pbmc[[&quot;ADT&quot;]] &lt;- CreateAssayObject(counts = adt.counts)
+remove(adt.counts)
+gc()
+#&gt;             used   (Mb) gc trigger    (Mb)   max used    (Mb)
+#&gt; Ncells   4544649  242.8    7175221   383.2    7175221   383.2
+#&gt; Vcells 593720713 4529.8 1883883583 14372.9 1970221213 15031.6
+
+pbmc
+#&gt; An object of class Seurat 
+#&gt; 33766 features across 161764 samples within 2 assays 
+#&gt; Active assay: RNA (33538 features, 0 variable features)
+#&gt;  1 layer present: counts
+#&gt;  1 other assay present: ADT</code></pre>
+<p>This seurat single-cell object is annotated on different levels.</p>
+<pre class="r"><code>head(FetchData(pbmc,c(&quot;donor&quot;,&quot;time&quot;,&quot;celltype.l1&quot;,&quot;celltype.l2&quot;)))
+#&gt;                     donor time celltype.l1 celltype.l2
+#&gt; L1_AAACCCAAGAAACTCA    P2    7        Mono   CD14 Mono
+#&gt; L1_AAACCCAAGACATACA    P1    7       CD4 T     CD4 TCM
+#&gt; L1_AAACCCACAACTGGTT    P4    2       CD8 T   CD8 Naive
+#&gt; L1_AAACCCACACGTACTA    P3    7          NK          NK
+#&gt; L1_AAACCCACAGCATACT    P4    7       CD8 T   CD8 Naive
+#&gt; L1_AAACCCACATCAGTCA    P3    2       CD8 T     CD8 TEM</code></pre>
+<p>This atlas is composed of 8 donors profiled at 3 time points during
+the vaccine trial for a total of 24 samples.</p>
+<pre class="r"><code>table(pbmc$donor,pbmc$time)
+#&gt;     
+#&gt;         0    2    7
+#&gt;   P1 6443 5917 5775
+#&gt;   P2 5978 5714 5513
+#&gt;   P3 4698 5002 4960
+#&gt;   P4 5307 5793 5990
+#&gt;   P5 7020 6933 7858
+#&gt;   P6 6093 7583 7066
+#&gt;   P7 8909 8200 8762
+#&gt;   P8 8916 9203 8131</code></pre>
+<p>We can add the <code>"sample"</code> metadata by concatenating donor
+and time.</p>
+<pre class="r"><code>pbmc$sample &lt;- paste0(pbmc$donor,&quot;_&quot;,pbmc$time)</code></pre>
+<p>We also add a prefix to the <code>"time"</code> metadata (in order to
+enable its aggregation at the metacell level with the
+<code>SCimplify_for_Seurat</code> function).</p>
+<pre class="r"><code>pbmc$time &lt;- paste0(&quot;time_&quot;,pbmc$time)</code></pre>
+<p>We can remove annotated doublets from the atlas.</p>
+<pre class="r"><code>pbmc &lt;- pbmc[,pbmc$celltype.l2 != &quot;Doublet&quot;]
+# pbmc &lt;- pbmc[,pbmc$celltype.l2 != &quot;Doublet&quot; &amp; pbmc$donor %in% c(&quot;P1&quot;,&quot;P2&quot;,&quot;P3&quot;)]
+pbmc
+#&gt; An object of class Seurat 
+#&gt; 33766 features across 161159 samples within 2 assays 
+#&gt; Active assay: RNA (33538 features, 0 variable features)
+#&gt;  1 layer present: counts
+#&gt;  1 other assay present: ADT</code></pre>
+<p>As in SuperCell2.0 manuscript, we add an intermediate level of
+annotation that we will used for the semi-supervised metacell
+workflow.</p>
+<pre class="r"><code>pbmc$celltype.l1.5 &lt;- pbmc$celltype.l1
+pbmc$celltype.l1.5[pbmc$celltype.l1 == &quot;other&quot;] &lt;- pbmc$celltype.l2[pbmc$celltype.l1 == &quot;other&quot;]
+pbmc$celltype.l1.5[pbmc$celltype.l1 ==&quot;other T&quot;] &lt;- pbmc$celltype.l2[pbmc$celltype.l1 == &quot;other T&quot;]</code></pre>
+</div>
+</div>
+<div id="metacell-construction" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Metacell
+construction</h1>
+<p>We will process each single-cell sample separately for identifying
+metacells.</p>
+<pre class="r"><code>pbmc.smp.list &lt;- SplitObject(pbmc,split.by = &quot;sample&quot;)
+remove(pbmc)
+gc()
+#&gt;             used   (Mb) gc trigger    (Mb)   max used    (Mb)
+#&gt; Ncells   4562085  243.7    7175222   383.2    7175222   383.2
+#&gt; Vcells 642804342 4904.3 1883883583 14372.9 1970221213 15031.6</code></pre>
+<p>We preprocess the single-cell modalities using standard Seurat
+workflows. Then metacells are identified using the semi-supervised
+multimodal SuperCell2.0 workflow with <code>"celltype.l1.5"</code> as
+input cell labels. This step can take around 15 min but could be further
+accelerated using parallelisation.</p>
+<pre class="r"><code>options(future.globals.maxSize = 1.5 * 1024 ^ 3) 
+
+t0 &lt;- Sys.time()
+pbmc.smp.list &lt;- lapply(pbmc.smp.list, function(x) {
+  #single-cell RNA preprocessing
+  DefaultAssay(x) &lt;- &quot;RNA&quot;
+  x &lt;- NormalizeData(x,verbose = FALSE) %&gt;%
+    FindVariableFeatures(verbose = FALSE) %&gt;%
+    ScaleData(verbose = FALSE)%&gt;%
+    RunPCA(verbose = FALSE)
+  
+  #single-cell ADT preprocessing
+  DefaultAssay(x) &lt;- &quot;ADT&quot;
+  VariableFeatures(x) &lt;- rownames(x)
+  x &lt;- NormalizeData(x, normalization.method = &quot;CLR&quot;, margin = 2,verbose = FALSE) %&gt;%
+    ScaleData(verbose = FALSE) %&gt;%
+    RunPCA(reduction.name = &quot;apca&quot;,verbose = FALSE)
+  
+  #metacell identificaiton with the semi-supervised multimodal SuperCell2.0 workflow
+  x &lt;- SCimplify_for_Seurat(
+    seurat    = x,
+    assay     = c(&quot;RNA&quot;, &quot;ADT&quot;),
+    reduction = list(&quot;pca&quot;, &quot;apca&quot;),
+    dims      = list(rna.comp, adt.comp),
+    label     = &quot;celltype.l1.5&quot;,
+    gamma     = graining.level
+  )
+  return(x)
+})
+
+tf &lt;- Sys.time()
+
+tf - t0
+#&gt; Time difference of 13.22511 mins</code></pre>
+<p><code>pbmc.smp.list</code> now contains seurat metacell objects that
+we can integrate using STACAS.</p>
+</div>
+<div id="metacell-integration" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Metacell
+integration</h1>
+<p>Here we will correct batch effect in each modality before performing
+a multimodal integration at the metacell level.</p>
+<p>We define the samples at day 0 of the vaccine trial as the reference
+for integration of RNA and ADT modalities.</p>
+<pre class="r"><code>reference &lt;- which(endsWith(names(pbmc.smp.list),suffix = &quot;_0&quot;))
+print(reference)
+#&gt; [1]  8  9 11 12 14 16 18 23</code></pre>
+<div id="integration-of-the-rna-modality" class="section level2"
+number="3.1">
+<h2><span class="header-section-number">3.1</span> Integration of the
+RNA modality</h2>
+<p>First we preprocess the metacell RNA data. We rename the metacells by
+adding a sample name prefix to avoid duplicated names at the integration
+step.</p>
+<p>Accordingly, we also have to rename the metacell membership vector of
+each metacell object.</p>
+<pre class="r"><code>pbmc.smp.list &lt;- lapply(X = pbmc.smp.list, FUN = function(x) { 
+  
+  x &lt;- RenameCells(x,add.cell.id = unique(x$sample))
+  x@misc$new.membership &lt;- paste0(unique(x$sample),&quot;_Metacell_&quot;, x@misc$membership)
+  names(x@misc$new.membership) &lt;- names(x@misc$membership)
+  DefaultAssay(x) &lt;- &quot;RNA&quot;
+  x &lt;- NormalizeData(x, verbose = FALSE) %&gt;% FindVariableFeatures()
+  
+  return(x)}
+)</code></pre>
+<p>Then we integrate the RNA modality at the metacell level using the
+batch correction tool STACAS.</p>
+<pre class="r"><code>
+features &lt;- SelectIntegrationFeatures(object.list = pbmc.smp.list)
+
+pbmc.combined &lt;- Run.STACAS(object.list = pbmc.smp.list, 
+                            assay = rep(&quot;RNA&quot;,length(pbmc.smp.list)),
+                            anchor.features = features, 
+                            dims = 50,  
+                            cell.labels = &quot;celltype.l1.5&quot;,
+                            reference = reference)
+
+stacas_rna  &lt;- pbmc.combined[[&quot;pca&quot;]]
+</code></pre>
+</div>
+<div id="integration-of-the-adt-modality" class="section level2"
+number="3.2">
+<h2><span class="header-section-number">3.2</span> Integration of the
+ADT modality</h2>
+<p>First preprocessing of metacell ADT data.</p>
+<pre class="r"><code>
+pbmc.smp.list &lt;- lapply(X = pbmc.smp.list, FUN = function(x) {
+  DefaultAssay(x) &lt;- &quot;ADT&quot;
+  VariableFeatures(x) &lt;- rownames(x[[&quot;ADT&quot;]])
+  x &lt;- NormalizeData(x, normalization.method = &#39;CLR&#39;, margin = 2) 
+  
+  return(x)
+})</code></pre>
+<p>Then integration with STACAS.</p>
+<pre class="r"><code>
+features &lt;- rownames(pbmc.combined[[&quot;ADT&quot;]]) # we use all ADTs
+
+pbmc.combined &lt;- Run.STACAS(object.list = pbmc.smp.list, 
+                            assay = rep(&quot;ADT&quot;,length(pbmc.smp.list)),
+                            anchor.features = features,
+                            scale.data = T,
+                            dims = 50,
+                            cell.labels = &quot;celltype.l1.5&quot;,
+                            reference = reference)
+
+pbmc.combined[[&quot;stacas_adt&quot;]] &lt;- pbmc.combined[[&quot;pca&quot;]]
+pbmc.combined[[&quot;pca&quot;]] &lt;- NULL
+pbmc.combined[[&quot;stacas_rna&quot;]] &lt;- stacas_rna 
+</code></pre>
+<p>Finally we add a membership vector to the combined object.</p>
+<pre class="r"><code>pbmc.combined@misc$membership &lt;- unlist(lapply(pbmc.smp.list,FUN = function(x) {x@misc$new.membership}))</code></pre>
+</div>
+<div id="final-metacell-multimodal-integration" class="section level2"
+number="3.3">
+<h2><span class="header-section-number">3.3</span> Final metacell
+multimodal integration</h2>
+<pre class="r"><code>
+pbmc.combined &lt;- FindMultiModalNeighbors(pbmc.combined,
+                                         reduction.list = list(&quot;stacas_rna&quot;,&quot;stacas_adt&quot;),
+                                         dims.list = list(rna.comp,adt.comp),prune.SNN = 0,
+                                         verbose = F)
+
+pbmc.combined &lt;- RunUMAP(pbmc.combined, 
+                         nn.name = &quot;weighted.nn&quot;, 
+                         reduction.name = &quot;wnn.umap&quot;, 
+                         reduction.key = &quot;wnnUMAP_&quot;,return.model = T) 
+
+DimPlot(pbmc.combined,reduction = &quot;wnn.umap&quot;,label = T,repel = T,group.by = c(&quot;celltype.l2&quot;),shuffle = T)</code></pre>
+<p><img src="SuperCell2.0_PBMC_CITE_seq_atlas_files/figure-html/unnamed-chunk-21-1.png" alt="" width="768" /></p>
+<pre class="r"><code>DimPlot(pbmc.combined,reduction = &quot;wnn.umap&quot;,group.by = c(&quot;sample&quot;),shuffle = T)</code></pre>
+<p><img src="SuperCell2.0_PBMC_CITE_seq_atlas_files/figure-html/unnamed-chunk-21-2.png" alt="" width="768" /></p>
+<p>This final embedding is slightly different from the one in our
+manuscript were we used SCTransform workflow to preprocess single-cell
+RNA modality (as in the original study) while here we use standard log
+normalization for both single-cell and metacell RNA processing in order
+to speed up the analysis. Overall the results are consistent.</p>
+</div>
+<div id="comparison-without-batch-correction" class="section level2"
+number="3.4">
+<h2><span class="header-section-number">3.4</span> Comparison without
+batch correction</h2>
+<p>Without batch correction a batch effect is clearly present at the
+metacell level.</p>
+<pre class="r"><code>DefaultAssay(pbmc.combined) &lt;- &quot;RNA&quot;
+pbmc.combined &lt;- ScaleData(pbmc.combined) %&gt;% RunPCA()
+
+DefaultAssay(pbmc.combined) &lt;- &quot;ADT&quot;
+VariableFeatures(pbmc.combined) &lt;- rownames(pbmc.combined[[&quot;ADT&quot;]])
+pbmc.combined &lt;- ScaleData(pbmc.combined) %&gt;% RunPCA(reduction.name = &quot;apca&quot;)
+
+pbmc.combined &lt;- FindMultiModalNeighbors(pbmc.combined, 
+                        weighted.nn.name = &quot;unintegrated.weighted.nn&quot;,
+                        knn.graph.name = &quot;unintegrated.wknn&quot;,
+                        snn.graph.name = &quot;unintegrated.wsnn&quot;,
+                        reduction.list = list(&quot;pca&quot;,&quot;apca&quot;),
+                        dims.list = list(rna.comp,adt.comp),
+                        verbose = F)
+
+pbmc.combined &lt;- RunUMAP(pbmc.combined, 
+                         nn.name = &quot;unintegrated.weighted.nn&quot;, 
+                         reduction.name = &quot;unintegrated.wnn.umap&quot;, 
+                         reduction.key = &quot;unintegrated.wnnUMAP_&quot;
+                         )
+
+DimPlot(pbmc.combined,reduction = &quot;unintegrated.wnn.umap&quot;,label = T,group.by = c(&quot;celltype.l2&quot;),shuffle = T)</code></pre>
+<p><img src="SuperCell2.0_PBMC_CITE_seq_atlas_files/figure-html/unnamed-chunk-22-1.png" alt="" width="768" /></p>
+<pre class="r"><code>DimPlot(pbmc.combined,reduction = &quot;unintegrated.wnn.umap&quot;,group.by = c(&quot;sample&quot;),shuffle = T)</code></pre>
+<p><img src="SuperCell2.0_PBMC_CITE_seq_atlas_files/figure-html/unnamed-chunk-22-2.png" alt="" width="768" /></p>
+</div>
+</div>
+<div id="identification-of-interferon-primed-cd14-monocytes"
+class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Identification of
+interferon-primed CD14 monocytes</h1>
+<p>Let’s perform an unsupervised clustering of our metacells based on
+the (batch corrected) multimodal metacell network we just obtained.</p>
+<pre class="r"><code>DefaultAssay(pbmc.combined) &lt;- &quot;RNA&quot;
+pbmc.combined &lt;- FindClusters(pbmc.combined,graph.name = &quot;wsnn&quot;,resolution = 0.5,algorithm = 3)
+#&gt; Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
+#&gt; 
+#&gt; Number of nodes: 8046
+#&gt; Number of edges: 570006
+#&gt; 
+#&gt; Running smart local moving algorithm...
+#&gt; Maximum modularity in 10 random starts: 0.9373
+#&gt; Number of communities: 26
+#&gt; Elapsed time: 4 seconds
+
+DimPlot(pbmc.combined, reduction = &quot;wnn.umap&quot;,label = T)</code></pre>
+<p><img src="SuperCell2.0_PBMC_CITE_seq_atlas_files/figure-html/unnamed-chunk-23-1.png" alt="" width="960" /></p>
+<pre class="r"><code>pbmc.combined$metacell_cluster &lt;- pbmc.combined$wsnn_res.0.5</code></pre>
+<p>Cluster 0 corresponds to CD14 monocytes, cluster 2 to CD16 monocytes
+and cluster 16 is an unannotated cluster of CD14 monocytes expressing an
+interferon signature.</p>
+<pre class="r"><code>pbmc.combined[[&quot;RNA&quot;]] &lt;- JoinLayers(object = pbmc.combined[[&quot;RNA&quot;]])
+rna.vln &lt;- VlnPlot.SuperCell(pbmc.combined[,pbmc.combined$metacell_cluster %in% c(0,2,16)],
+                  features = c(&#39;CD14&#39;,&quot;FCGR3A&quot;,&quot;ISG15&quot;,&quot;SIGLEC1&quot;,&quot;IFIT1&quot;),
+                  stack = T,fill.by = &quot;ident&quot;) + xlab(&quot;RNA exp&quot;)
+
+adt.vln &lt;- VlnPlot.SuperCell(pbmc.combined[,pbmc.combined$metacell_cluster %in% c(0,2,16)],
+                  features = c(&#39;CD14&#39;,&quot;CD16&quot;), assay = &quot;ADT&quot;,
+                  stack = T,fill.by = &quot;ident&quot;) + xlab(&quot;Prot exp&quot;)
+
+wrap_plots(adt.vln,rna.vln,guides = &quot;collect&quot;,axis_titles = &quot;collect&quot;,widths = c(2,4.5))</code></pre>
+<p><img src="SuperCell2.0_PBMC_CITE_seq_atlas_files/figure-html/unnamed-chunk-24-1.png" alt="" width="576" /></p>
+<p>We can appreciate CD14 interferon-primed monocyte dynamic during the
+vaccine trial. These monocytes are present before the vaccination, their
+level decrease at during the trial before replenishing at the end.</p>
+<pre class="r"><code>DimPlot.SuperCell(pbmc.combined[,pbmc.combined$metacell_cluster %in% c(0,2,16) ],split.by = &quot;time&quot;,reduction = &quot;wnn.umap&quot;)</code></pre>
+<p><img src="SuperCell2.0_PBMC_CITE_seq_atlas_files/figure-html/unnamed-chunk-25-1.png" alt="" width="1344" /></p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

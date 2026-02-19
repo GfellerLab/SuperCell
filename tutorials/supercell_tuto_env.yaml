@@ -120,7 +120,6 @@ dependencies:
   - libxml2-16=2.15.1
   - libxml2-devel=2.15.1
   - libzlib=1.3.1
-  - macs2=2.2.9.1
   - make=4.4.1
   - ncurses=6.5
   - nlopt=2.10.0

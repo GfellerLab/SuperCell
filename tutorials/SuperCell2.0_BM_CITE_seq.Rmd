@@ -31,10 +31,10 @@ Installing SuperCell2.0 package from gitHub
 
 ```{r library, warning=FALSE, eval=FALSE}
   if (!requireNamespace("remotes")) install.packages("remotes")
-remotes::install_github("GfellerLab/SuperCell@develop")
+remotes::install_github("GfellerLab/SuperCell@supercell-2.0")
 ```
 
-## Load library
+## Load libraries
 
 ```{r load library, warning=FALSE, message=FALSE}
 library(SuperCell)
@@ -49,7 +49,7 @@ library(patchwork)
 Bone Marrow CITE-seq data were generated in [Stuart et al., 2019](https://doi.org/10.1016/j.cell.2019.05.031) and finely annotated in [Hao et al., 2021](https://doi.org/10.1016/j.cell.2021.04.048). Data are available through the SeuratData R package.
 
 ```{r load data}
-options(timeout=200)
+options(timeout=1000)
 SeuratData::InstallData("bmcite")
 bm <- SeuratData::LoadData(ds = "bmcite")
 bm
@@ -64,8 +64,6 @@ head(FetchData(bm,c("celltype.l1","celltype.l2")))
 ## Settings
 
 Lets define some settings for this tutorial.
-
-## Settings
 
 ```{r}
 rna.comp <- c(1:30) # components used from the dimension redcution of the RNA modality
@@ -136,7 +134,7 @@ head(FetchData(bm.mc.multi,c("celltype.l1","celltype.l1_purity","celltype.l2","c
 
 ```
 
-The misc slot of the metacell seurat object contain information about SuperCell2.0 run that can be used for quality control such as coverage plot and direct rescaling (see below).
+The misc slot of the metacell seurat object contains information about SuperCell2.0 run that can be used for quality control such as coverage plot and direct rescaling (see below).
 
 ```{r}
 names(bm.mc.multi@misc)
@@ -333,7 +331,7 @@ We can use the metacells for faster and lighter downstream analysis.
 
 ## Dimention reduction and multimodal embeddings of metacells
 
-We use the same workflow as for single cells with first dimension reductions specific to each modality.
+We use the same workflow as for single-cells with first dimension reductions specific to each modality.
 
 ```{r}
 DefaultAssay(bm.mc.multi) <- 'ADT'
