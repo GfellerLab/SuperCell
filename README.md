@@ -6,7 +6,7 @@ Leveraging the Weighted Nearest Neighbor (WNN) framework of Seurat, SuperCell2.0
 
 <p align="center">
 
-<img src="docs/figure_1_workflow.svg" width="750"/>
+<img src="docs/figure_1_workflow.png" width="750"/>
 
 </p>
 
