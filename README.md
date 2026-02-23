@@ -49,6 +49,8 @@ For scientific questions, please contact Léonard Hérault ([leonard.herault\@gu
 
 If you use SuperCell2.0 in a publication, please cite:
 
+-   [Hérault et al. SuperCell2.0 enables semi-supervised construction of multimodal metacell atlases](https://doi.org/10.64898/2026.02.19.706848)
+
 -   [Bilous et al. Metacells untangle large and complex single-cell transcriptome networks, BMC Bioinformatics (2022).](https://doi.org/10.1186/s12859-022-04861-1)
 
 -   [Bilous et al. Building and analyzing metacells in single-cell genomics data, Mol Syst Bio (2024).](https://doi.org/10.1038/s44320-024-00045-6)
