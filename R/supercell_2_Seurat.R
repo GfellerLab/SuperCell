@@ -94,7 +94,7 @@ supercell_2_Seurat <- function(SC.GE, SC, fields = c(),
   }
   m.seurat <- Seurat::CreateSeuratObject(counts = SC.GE, meta.data = meta)
   
-  if(packageVersion("Seurat") >= 5){
+  if(packageVersion("Seurat") >= "5.0.0"){
     m.seurat[["RNA"]] <- as(object = m.seurat[["RNA"]], Class = "Assay")
   }
   
@@ -173,7 +173,7 @@ supercell_2_Seurat <- function(SC.GE, SC, fields = c(),
     warning("Super-cell graph was not found in SC object, no super-cell graph was added to Seurat object")
   }
   
-  if(packageVersion("Seurat") >= 5 & output.assay.version == "v5"){
+  if(packageVersion("Seurat") >= "5.0.0" & output.assay.version == "v5"){
     m.seurat[["RNA"]] <- as(object = m.seurat[["RNA"]], Class = "Assay5")
   }
   return(m.seurat)
