@@ -37,6 +37,7 @@ Imports:
     proxy,
     methods,
     rlang,
+    withr,
 RoxygenNote: 7.2.3
 Suggests:
     SingleCellExperiment,
