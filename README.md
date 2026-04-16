@@ -34,8 +34,11 @@ library(SuperCell)
 ## Tutorials
 
 1.  [Building and analyzing metacells in Bone Marrow CITE-seq data with SuperCell2.0](https://htmlpreview.github.io/?https://github.com/GfellerLab/SuperCell/blob/supercell-2.0/docs/tutorials/SuperCell2.0_BM_CITE_seq.html)
-2.  [Building and analyzing metacells in PBMC 10X multiome data with SuperCell2.0](https://htmlpreview.github.io/?https://github.com/GfellerLab/SuperCell/blob/supercell-2.0/docs/tutorials/SuperCell2.0_PBMC_10x_multiome.html)
+(duration ~20 min)
+2.  [Building and analyzing metacells in PBMC 10X multiome data with SuperCell2.0](https://htmlpreview.github.io/?https://github.com/GfellerLab/SuperCell/blob/supercell-2.0/docs/tutorials/SuperCell2.0_PBMC_10x_multiome.html) 
+(duration ~40 min, inculding peak calling and metacell fragment aggregation)
 3.  [Building and analyzing a PBMC CITE-seq atlas with SuperCell2.0 and STACAS](https://htmlpreview.github.io/?https://github.com/GfellerLab/SuperCell/blob/supercell-2.0/docs/tutorials/SuperCell2.0_PBMC_CITE_seq_atlas.html)
+(duration ~40 min, without raw data download)
 
 ## [License]
 
@@ -51,6 +54,6 @@ If you use SuperCell2.0 in a publication, please cite:
 
 -   [Hérault et al. SuperCell2.0 enables semi-supervised construction of multimodal metacell atlases](https://doi.org/10.64898/2026.02.19.706848)
 
--   [Bilous et al. Metacells untangle large and complex single-cell transcriptome networks, BMC Bioinformatics (2022).](https://doi.org/10.1186/s12859-022-04861-1)
+-   [Bilous et al. Metacells untangle large and complex single-cell transcriptome networks, BMC Bioinformatics (2022).](https://doi.org/10.1186/s12859-022-04861-1) 
 
 -   [Bilous et al. Building and analyzing metacells in single-cell genomics data, Mol Syst Bio (2024).](https://doi.org/10.1038/s44320-024-00045-6)
